@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>js网页特效代码_网页图片特效_网页导航特效_网页菜单特效_网页文字特效</title>
+    <meta name="keywords" content="js网页特效代码,网页图片特效,网页导航特效,网页菜单特效,网页文字特效">
+    <meta name="description" content="js网页特效代码主要分为网页图片特效、网页导航特效、网页菜单特效、网页文字特效等js网页特效。">
+    {#    <link rel="stylesheet" href="/static/layui/layui.css" media="all">#}
+    {#    <link rel="stylesheet" href="/static/layui/common.css" media="all">#}
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <style type="text/css">
+        {% include "t/style.css" %}
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+
+{% include "header.html" %}
+<div class="outer_container">
+    <div class="inner_container">
+        <div class="filter">
+            <div class="items">
+                <span>分类：</span>
+                <dl>
+                    <dt class="active">
+                        <a href="/t/"> 全部</a>
+                    </dt>
+                    {% for c in category %}
+                        <dd>
+                            <a href="/t/{{ 1 }}-{{ order }}?cate={{ c.id }}&tag={{ tag }}">{{ c.name }}</a>
+                        </dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <div class="items more">
+                <span>标签：</span>
+                <dl id="more_tag" class="collapse">
+                    <dt class="active">
+                        <a href="/t/"> 全部</a>
+                    </dt>
+                    {% for t in tag_list %}
+                        <dd>
+                            <a href="/t/{{ 1 }}-{{ order }}?cate={{ cate }}&tag={{ t.id }}">{{ t.name }}</a>
+                        </dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <div class="items line">
+                <a href="javascript:;"
+                   onclick="document.getElementById('more_tag').className = document.getElementById('more_tag').className? '':'collapse';"
+                >展开更多 <i class="iconfont icon-xiala"></i
+                ></a>
+            </div>
+            <!--排序-->
+            <div class="items orderby">
+                <span>排序：</span>
+                <dl>
+                    <dd class="new active">
+                        <a href="/t/{{ 1 }}-{{ 'n' }}?cate={{ cate }}&tag={{ tag }}"
+                        >最新上传</a
+                        >
+                    </dd>
+                    <dd class="">
+                        <a href="/t/{{ 1 }}-{{ 'd' }}?cate={{ cate }}&tag={{ tag }}"
+                        >下载最多</a
+                        >
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="pins-list waterfall">
+            <ul>
+                {% for o in page_obj %}
+                    <li class="item masonry-brick">
+                        <div class="pic">
+                            <a href="/t/{{ o.id }}" target="_blank">
+                                {# <img class="lazyload" src="/static/img/ztf.webp" alt="{{ item.title }}">#}
+                                <img class="lazyload" src="{{ o.cover_url }}" alt="{{ o.name }}" rel="nofollow"
+                                     referrerpolicy="no-referrer"
+                                /></a>
+                            <div class="view"></div>
+                        </div>
+                        <h3 class="title">
+                            <a href="/t/{{ o.id }}" target="_blank">{{ o.name }}</a>
+                        </h3>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="pagination">
+    {% if page_obj.previous_page %}
+        <a href="/t/">首页</a>
+        <a href="/t/{{ page_obj.previous_page }}-{{ order }}?cate={{ cate }}&tag={{ tag }}">上一页</a>
+    {% endif %}
+    {% for p in page_range %}
+        {% if page_obj.page == p %}
+            <a class="page_num active" href="/t/{{ p }}-{{ order }}?cate={{ cate }}&tag={{ tag }}">{{ p }}</a>
+        {% else %}
+            <a class="page_num" href="/t/{{ p }}-{{ order }}?cate={{ cate }}&tag={{ tag }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if  page_obj.next_page %}
+        <a href="/t/{{ page_obj.next_page }}-{{ order }}?cate={{ cate }}&tag={{ tag }}">下一页</a>
+        <a href="/t/{{ page_obj.num_pages }}-{{ order }}?cate={{ cate }}&tag={{ tag }}">尾页</a>
+    {% endif %}
+
+    <a href="javascript:void(0)">共 {{ page_obj.count }} 条</a>
+</div>
+
+{% include "footer.html" %}
+</body>
+</html>

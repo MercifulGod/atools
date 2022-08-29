@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线小游戏,手机游戏</title>
+    <meta name="keywords" content="在线小游戏提供，小游戏专题,系列小游戏">
+    <meta name="description" content="在线小游戏提供，小游戏专题,系列小游戏">
+    <meta name="robots” content=" nofollow”/>
+
+    {#    <link rel="stylesheet" href="/static/layui/layui.css" media="all">#}
+    {#    <link rel="stylesheet" href="/static/layui/common.css" media="all">#}
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <style type="text/css">
+        * {
+            /* -webkit-box-sizing: border-box; */
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .container {
+            margin-top: 39px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        p {
+            margin: 0 0 10px;
+        }
+
+        .booklist {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .booklist:after {
+            content: " ";
+            flex: auto;
+        }
+
+        .booklist li {
+            text-align: left;
+            padding: 0;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+
+        .booklist .hsuggestsRight {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .booklist .suggestCover {
+            width: 80px;
+            max-height: 64px;
+            -webkit-box-shadow: 0 0 10px #666;
+            -moz-box-shadow: 0 0 10px #666;
+            box-shadow: 0 0 10px #666;
+        }
+
+        .booklist .hsuggestsLeft h3 {
+            font-size: 13px;
+            /* line-height: 20px; */
+            font-weight: 600;
+            margin: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .booklist .hsuggestsLeft p {
+            font-size: 13px;
+            margin: 2px 0 5px 0;
+        {#overflow: hidden;#} white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .text-lightgrey,
+        .text-lightgrey:hover,
+        .text-lightgrey:focus {
+            color: #969696;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .booklist .hsuggestsLeft {
+            width: 80px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .list-inline {
+            /* padding-left: 0;
+              margin-left: -5px; */
+            list-style: none;
+
+        }
+
+        .booklist li {
+            text-align: left;
+            padding: 0;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+
+        .list-inline > li {
+            display: inline-block;
+        }
+
+        .booklist .hsuggestsIcon {
+            margin-right: 10px;
+        }
+
+        @media screen and (max-width: 800px) {
+            .booklist .hsuggestsLeft h3 {
+                width: auto;
+                /* font-size: 14px;
+                  line-height: 20px; */
+                margin-bottom: 10px;
+            }
+
+            .booklist {
+                margin-top: 20px;
+                display: block;
+            }
+
+            .booklist li {
+                display: block;
+                margin: 10px 0 20px 0;
+            }
+
+            .booklist > li > p {
+                display: inline-block;
+                float: left;
+            }
+
+            .booklist .suggestCover {
+                width: 90px;
+                max-height: 120px;
+                margin-right: 5px;
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none;
+            }
+
+            .booklist .hsuggestsLeft {
+                display: block;
+                height: 121px;
+                width: auto;
+                /* margin-left: 100px; */
+                border-bottom: 1px solid #eee;
+            }
+
+            .booklist .hsuggestsRight {
+                display: none;
+            }
+
+            .booklist li div[class="text-lightgrey"] {
+                display: none;
+            }
+        }
+
+        body {
+            background: aliceblue;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "header.html" %}
+<div class="container" id="app">
+    <ul class="list-inline booklist">
+        <li v-for="(o, index) in games" :key="index">
+            <p class="text-center">
+                <a :href="o.url"> <img :alt="o.name" :src="o.image_url" class="suggestCover"/></a>
+            </p>
+            <div class="hsuggestsLeft text-left">
+                <h3>
+                    <a :href="o.url" class="text-muted" v-html="o.name"></a>
+                </h3>
+                {#                <p class="hidden-lg hidden-md">6060人玩过</p>#}
+                <p class="hidden-lg hidden-md" style="white-space: nowrap; text-overflow: ellipsis">
+                    标签:
+                    <a
+                            :href="tag.url"
+                            rel="nofollow"
+                            referrerpolicy="no-referrer"
+                            class="text-lightgrey"
+                            v-for="(tag, t_index) in o.tags"
+                            :key="t_index"
+                    >{[ tag.name ]}</a>
+                </p>
+            </div>
+
+        </li>
+    </ul>
+
+    <div style="color: red; font-size: 11px">
+        免责声明：网站该作品来自网上收集，版权归原作者所有!原作者如果认为本站侵犯了您的版权,请留言告知,我们会立即删除!
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+\
+<script>
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                games: [
+                    {
+                        name: "坦克大战",
+                        image_url: "https://ztf.net.cn/games/tank/cover.png",
+                        url: "https://ztf.net.cn/games/tank/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "贪吃蛇",
+                        image_url: "https://ztf.net.cn/games/snake/cover.png",
+                        url: "https://ztf.net.cn/games/snake/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "五子棋",
+                        image_url: "https://ztf.net.cn/games/five-chess/cover.png",
+                        url: "https://ztf.net.cn/games/five-chess/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "拼图",
+                        image_url: "https://ztf.net.cn/games/puzzle/cover.png",
+                        url: "https://ztf.net.cn/games/puzzle/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "猜灯谜",
+                        {#image_url: "https://ztf.net.cn/games/riddle/bg_rule.jpg",#}
+                        {#url: "https://ztf.net.cn/game/zimi",#}
+                        image_url: "https://ztf.net.cn/games/riddle/images/bg_blessing1.png",
+                        url: "https://ztf.net.cn/games/riddle/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "冰桶挑战",
+                        image_url: "https://ztf.net.cn/games/icon/ice_bucket.png",
+                        url: "https://ztf.net.cn/games/ice_bucket/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "糖果乐园",
+                        image_url: "https://ztf.net.cn/games/icon/tangguo.png",
+                        url: "https://ztf.net.cn/games/tangguo/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "3D熊出没",
+                        image_url: "https://ztf.net.cn/games/icon/xiongchumo.png",
+                        url: "https://ztf.net.cn/games/xiongchumo/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "监狱风云",
+                        image_url: "https://ztf.net.cn/games/icon/jyfy2.png",
+                        url: "https://ztf.net.cn/games/jyfy2/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "扔鸡蛋",
+                        image_url: "https://ztf.net.cn/games/icon/rjd.png",
+                        url: "https://ztf.net.cn/games/rjd/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "宇宙激战",
+                        image_url: "https://ztf.net.cn/games/icon/ld.png",
+                        url: "https://ztf.net.cn/games/ld/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "点亮所有电灯泡",
+                        image_url: "https://ztf.net.cn/games/icon/diandeng.png",
+                        url: "https://ztf.net.cn/games/diandeng/index.html",
+                        tags: [
+                            {name: "手机游戏", url: "#"},
+                            {name: "益智", url: "#"},
+                        ],
+                    },
+                    {
+                        name: "扫雷",
+                        image_url: "https://ztf.net.cn/games/icon/saolei.png",
+                        url: "https://ztf.net.cn/games/saolei/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "切西瓜",
+                        image_url: "https://ztf.net.cn/games/icon/qiexigua.png",
+                        url: "https://ztf.net.cn/games/qiexigua/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "打地鼠",
+                        image_url: "https://ztf.net.cn/games/icon/pxfzm.png",
+                        url: "https://ztf.net.cn/games/pxfzm/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "黄金矿工",
+                        image_url: "https://ztf.net.cn/games/icon/hjkg.png",
+                        url: "https://ztf.net.cn/games/hjkg/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "滚滚足球",
+                        image_url: "https://ztf.net.cn/games/icon/zuqiu.png",
+                        url: "https://ztf.net.cn/games/zuqiu/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "新疆话方言测试",
+                        image_url: "https://ztf.net.cn/games/icon/fangyan.png",
+                        url: "https://ztf.net.cn/games/fangyan/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "堆木头",
+                        image_url: "https://ztf.net.cn/games/icon/duimutou.png",
+                        url: "https://ztf.net.cn/games/duimutou/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "小青蛙过河",
+                        image_url: "https://ztf.net.cn/games/icon/qingwa.png",
+                        url: "https://ztf.net.cn/games/qingwa/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "吃包子大赛",
+                        image_url: "https://ztf.net.cn/games/icon/baozi.png",
+                        url: "https://ztf.net.cn/games/baozi/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "吃月饼大赛",
+                        image_url: "https://ztf.net.cn/games/icon/yuebing.png",
+                        url: "https://ztf.net.cn/games/yuebing/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "数钱数到手抽筋",
+                        image_url: "https://ztf.net.cn/games/icon/sqsdscj.png",
+                        url: "https://ztf.net.cn/games/sqsdscj/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "岛国么么哒",
+                        image_url: "https://ztf.net.cn/games/icon/daoguo.png",
+                        url: "https://ztf.net.cn/games/daoguo/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "对对碰",
+                        image_url: "https://ztf.net.cn/games/icon/jyfy.png",
+                        url: "https://ztf.net.cn/games/jyfy/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "飞翔吧小帅",
+                        image_url: "https://ztf.net.cn/games/icon/xiaoshuai.png",
+                        url: "https://ztf.net.cn/games/xiaoshuai/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "影子传说",
+                        image_url: "https://ztf.net.cn/games/icon/yzcs.png",
+                        url: "https://ztf.net.cn/games/yzcs/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "小鳄鱼",
+                        image_url: "https://ztf.net.cn/games/icon/dl.png",
+                        url: "https://ztf.net.cn/games/hl/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "全民寻摇可乐",
+                        image_url: "https://ztf.net.cn/games/icon/qmykl.png",
+                        url: "https://ztf.net.cn/games/qmykl/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "企鹅大复仇",
+                        image_url: "https://ztf.net.cn/games/icon/qedfc.png",
+                        url: "https://ztf.net.cn/games/qedfc/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "疯狂打企鹅",
+                        image_url: "https://ztf.net.cn/games/icon/qie.png",
+                        url: "https://ztf.net.cn/games/qie/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "气球砰砰砰",
+                        image_url: "https://ztf.net.cn/games/icon/qqppp.png",
+                        url: "https://ztf.net.cn/games/qqppp/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "奇葩连连看",
+                        image_url: "https://ztf.net.cn/games/icon/qbllk.png",
+                        url: "https://ztf.net.cn/games/qbllk/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "变态俄罗斯方块",
+                        image_url: "https://ztf.net.cn/games/icon/cube.png",
+                        url: "https://ztf.net.cn/games/cube/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "小鸟飞飞飞",
+                        image_url: "https://ztf.net.cn/games/icon/xiaoniaofeifei.png",
+                        url: "https://ztf.net.cn/games/xiaoniaofeifei/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "jg",
+                        image_url: "https://ztf.net.cn/games/icon/jg.png",
+                        url: "https://ztf.net.cn/games/jg/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "飞跃天空之城",
+                        image_url: "https://ztf.net.cn/games/icon/fytkzc.png",
+                        url: "https://ztf.net.cn/games/fytkzc/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "青蛙跳",
+                        image_url: "https://ztf.net.cn/games/icon/qwt.png",
+                        url: "https://ztf.net.cn/games/qwt/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "密室逃亡",
+                        image_url: "https://ztf.net.cn/games/icon/mishi.png",
+                        url: "https://ztf.net.cn/games/mishi/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "小猪宝宝",
+                        image_url: "https://ztf.net.cn/games/icon/pigbaby.png",
+                        url: "https://ztf.net.cn/games/pigbaby/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "最强大脑",
+                        image_url: "https://ztf.net.cn/games/icon/zqdn.png",
+                        url: "https://ztf.net.cn/games/zqdn/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "神奇读心术",
+                        image_url: "https://ztf.net.cn/games/icon/duxinshu.png",
+                        url: "https://ztf.net.cn/games/duxinshu/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "烟花",
+                        image_url: "https://ztf.net.cn/games/icon/yh.png",
+                        url: "https://ztf.net.cn/games/yh/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "贱人配对",
+                        image_url: "https://ztf.net.cn/games/icon/jianren.png",
+                        url: "https://ztf.net.cn/games/jianren/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "木乃伊归来",
+                        image_url: "https://ztf.net.cn/games/icon/mnygl.png",
+                        url: "https://ztf.net.cn/games/mnygl/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "你的童年让狗吃了吗？",
+                        image_url: "https://ztf.net.cn/games/icon/ndtnrgclm.png",
+                        url: "https://ztf.net.cn/games/ndtnrgclm/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "小兔子快快跑",
+                        image_url: "https://ztf.net.cn/games/icon/tuzi.png",
+                        url: "https://ztf.net.cn/games/tuzi/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "能打多少下",
+                        image_url: "https://ztf.net.cn/games/icon/nddsc.png",
+                        url: "https://ztf.net.cn/games/nddsc/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "打我呀打我呀",
+                        image_url: "https://ztf.net.cn/games/icon/dwy.png",
+                        url: "https://ztf.net.cn/games/dwy/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "Galactians",
+                        image_url: "https://ztf.net.cn/games/icon/zz.png",
+                        url: "https://ztf.net.cn/games/zz/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "萝莉来了",
+                        image_url: "https://ztf.net.cn/games/icon/llll.png",
+                        url: "https://ztf.net.cn/games/llll/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "戳泡泡",
+                        image_url: "https://ztf.net.cn/games/icon/cpp.png",
+                        url: "https://ztf.net.cn/games/cpp/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "捡钱大战",
+                        image_url: "https://ztf.net.cn/games/icon/money.png",
+                        url: "https://ztf.net.cn/games/money/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "横冲直闯",
+                        image_url: "https://ztf.net.cn/games/icon/hczz.png",
+                        url: "https://ztf.net.cn/games/hczz/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "打击者",
+                        image_url: "https://ztf.net.cn/games/icon/djz.png",
+                        url: "https://ztf.net.cn/games/djz/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "强力小方块",
+                        image_url: "https://ztf.net.cn/games/icon/dlxfk.png",
+                        url: "https://ztf.net.cn/games/dlxfk/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "捉鬼",
+                        image_url: "https://ztf.net.cn/games/icon/zhuogui.png",
+                        url: "https://ztf.net.cn/games/zhuogui/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "小苹果",
+                        image_url: "https://ztf.net.cn/games/icon/xiaopingguo.png",
+                        url: "https://ztf.net.cn/games/xiaopingguo/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "飞的更高",
+                        image_url: "https://ztf.net.cn/games/icon/feidegenggao.png",
+                        url: "https://ztf.net.cn/games/feidegenggao/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "一个都不能死",
+                        image_url: "https://ztf.net.cn/games/icon/bunengsi.png",
+                        url: "https://ztf.net.cn/games/bunengsi/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "植物大战僵尸",
+                        image_url: "https://ztf.net.cn/games/zwdzjs/icon.png",
+                        url: "https://ztf.net.cn/games/zwdzjs/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "围住小鬼子",
+                        image_url: "https://ztf.net.cn/games/icon/wzxgz.png",
+                        url: "https://ztf.net.cn/games/wzxgz/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "吃星星",
+                        image_url: "https://ztf.net.cn/games/icon/jb.png",
+                        url: "https://ztf.net.cn/games/jb/index.htm",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "一笔画",
+                        image_url: "https://ztf.net.cn/games/icon/ybh.png",
+                        url: "https://ztf.net.cn/games/yibihua/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "祈福",
+                        image_url: "https://ztf.net.cn/games/icon/qifu.png",
+                        url: "https://ztf.net.cn/games/qifu/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "疯狂飙车",
+                        image_url: "https://ztf.net.cn/games/icon/biaoche.png",
+                        url: "https://ztf.net.cn/games/biaoche/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "大力射X",
+                        image_url: "https://ztf.net.cn/games/icon/dlss.png",
+                        url: "https://ztf.net.cn/games/dlss/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "名字大作战",
+                        image_url: "https://ztf.net.cn/games/icon/mzpk.png",
+                        url: "https://ztf.net.cn/games/mzpk/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+
+                    {
+                        name: "开心消消乐",
+                        image_url: "https://ztf.net.cn/games/icon/kaixinlian.png",
+                        url: "https://ztf.net.cn/games/kaixinlian/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "激射神经猫",
+                        image_url: "https://ztf.net.cn/games/icon/jssjm.png",
+                        url: "https://ztf.net.cn/games/jssjm/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "转你妹",
+                        image_url: "https://ztf.net.cn/games/icon/znm.png",
+                        url: "https://ztf.net.cn/games/znm/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "红还是绿",
+                        image_url: "https://ztf.net.cn/games/icon/honghaishilv.png",
+                        url: "https://ztf.net.cn/games/honghaishilv/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                    {
+                        name: "命悬一线",
+                        image_url: "https://ztf.net.cn/games/icon/mingxuanyixian.png",
+                        url: "https://ztf.net.cn/games/mingxuanyixian/index.html",
+                        tags: [{name: "手机游戏", url: "#"}],
+                    },
+                ],
+            };
+        },
+        methods: {}
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

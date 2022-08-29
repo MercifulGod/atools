@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线Ascii/Native互转-在线工具</title>
+    <meta name="keywords"
+          content="native,ascii,native转ascii,在线,在线native,native在线转ascii,NATIVE/ASCII编码,NATIVE/ASCII编码互转">
+    <meta name="description"
+          content="Ascii/Native互转工具主要用于各类代码中本地字符的Unicode转换。\\u开头+数字的编码是叫Unicode编码，原理:获得输入框里的值，然后逐个转换为unicode编码（这个返回值是 0 – 65535 之间的整数），unicode转化为16进制,再添加上”\\u”前缀。">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>在线Ascii/Native互转</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/encode/encodeTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="value" placeholder="请输入要转换的内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline" @click="ignore=!ignore">
+                                    <div :class="['layui-unselect','layui-form-checkbox',ignore?'layui-form-checked':null]">
+                                        <span>不转换字母和数字</span>
+                                        <i class="layui-icon layui-icon-ok"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-inline layui-btn-group">
+                                    <button @click="ascii2native" type="button" class="layui-btn">Ascii转Native</button>
+                                    <button @click="native2ascii" type="button" class="layui-btn">Native转Ascii</button>
+                                    <button @click="value = ''" type="button" class="layui-btn  layui-btn-primary">
+                                        <i class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                    <!--<button id="copy-btn" type="button" class="layui-btn layui-btn-normal">复制结果</button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线Ascii/Native互转</h2><br>
+                        <p>本工具主要用于各类代码中各类本地字符的Unicode转换，可以将整个代码直接拷入转换，系统将自动跳过字母、数字与字符。
+                            原理：获得输入框里的值，然后逐个转换为unicode编码（这个返回值是 0 – 65535 之间的整数），unicode转化为16进制,再添加上”\\u”前缀</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/other/jquery.js"></script>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                value: "",
+                ignore: false,
+                morebar: false, // tab more bar switch
+                tabIndex: 4  // tab 索引
+            };
+        },
+        methods: {
+            ascii2native() {
+                this.value = CoreTool.ascii2native(this.value)
+            },
+            native2ascii() {
+                this.value = CoreTool.native2ascii(this.value, this.ignore)
+            }
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

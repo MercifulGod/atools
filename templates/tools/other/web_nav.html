@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html style="font-size: 28.125px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>简约导航</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta content="telephone=no,email=no" name="format-detection">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="keywords" content="简约导航">
+    <meta name="description" content="一个简单美观可自定义的网址导航">
+    <link rel="shortcut icon" href="https://www.jianavi.com/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/static/tools/web_nav.css">
+    <!--<script type="text/javascript" src="/static/js/jquery.js"></script>-->
+    {#    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>#}
+</head>
+
+<body style="background-color: thistle;">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; width: 0; height: 0"
+     aria-hidden="true" id="__SVG_SPRITE_NODE__">
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="svg-auto">
+        <path d="M16 2.667C8.64 2.667 2.667 8.64 2.667 16S8.64 29.333 16 29.333 29.333 23.36 29.333 16 23.36 2.667 16 2.667zm0 2.666c5.893 0 10.667 4.773 10.667 10.667S21.894 26.667 16 26.667V5.334z"></path>
+    </symbol>
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" id="svg-clear">
+        <path d="M575.328 510.496l371.456-369.824c17.568-17.504 17.664-45.824.192-63.424-17.504-17.632-45.792-17.664-63.36-.192L512.032 446.944 143.712 77.216c-17.408-17.504-45.792-17.568-63.328-.096-17.536 17.504-17.568 45.888-.096 63.456l368.224 369.632-371.296 369.6c-17.568 17.504-17.664 45.824-.192 63.424 8.736 8.8 20.256 13.216 31.776 13.216 11.424 0 22.848-4.352 31.584-13.056l371.36-369.696 371.68 373.088C892.192 955.616 903.68 960 915.168 960a44.735 44.735 0 0031.648-13.088c17.504-17.504 17.568-45.824.096-63.392L575.328 510.496zm0 0"></path>
+    </symbol>
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.056 512.056" id="svg-cloud">
+        <path d="M426.635 188.224C402.969 93.946 307.358 36.704 213.08 60.37 139.404 78.865 85.907 142.542 80.395 218.303 28.082 226.93-7.333 276.331 1.294 328.644c7.669 46.507 47.967 80.566 95.101 80.379h80v-32h-80c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64 8.837 0 16-7.163 16-16-.08-79.529 64.327-144.065 143.856-144.144 68.844-.069 128.107 48.601 141.424 116.144a16 16 0 0013.6 12.8c43.742 6.229 74.151 46.738 67.923 90.479-5.593 39.278-39.129 68.523-78.803 68.721h-64v32h64c61.856-.187 111.848-50.483 111.66-112.339-.156-51.49-35.4-96.241-85.42-108.46z"></path>
+        <path d="M245.035 253.664l-64 64 22.56 22.56 36.8-36.64v153.44h32v-153.44l36.64 36.64 22.56-22.56-64-64c-6.241-6.204-16.319-6.204-22.56 0z"></path>
+    </symbol>
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" id="svg-customize">
+        <path d="M8 0a1 1 0 00-1 1v1H0v2h7v1a1 1 0 001 1h1a1 1 0 001-1V1a1 1 0 00-1-1H8zm4 2v2h8V2h-8zm1 5a1 1 0 00-1 1v1H0v2h12v1a1 1 0 001 1h1a1 1 0 001-1V8a1 1 0 00-1-1h-1zm4 2v2h3V9h-3zM3 14a1 1 0 00-1 1v1H0v2h2v1a1 1 0 001 1h1a1 1 0 001-1v-4a1 1 0 00-1-1H3zm4 2v2h13v-2H7z"></path>
+    </symbol>
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="svg-dark">
+        <path d="M13.333 2.667c-2.427 0-4.707.667-6.667 1.8 4 2.307 6.667 6.6 6.667 11.533s-2.667 9.227-6.667 11.533c1.96 1.133 4.24 1.8 6.667 1.8 7.36 0 13.333-5.973 13.333-13.333S20.693 2.667 13.333 2.667z"></path>
+    </symbol>
+    <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="svg-light">
+        <path d="M4.733 24.72l1.88 1.88 2.4-2.387L7.12 22.32zm9.934 5.213h2.667V26h-2.667zM16 7.333c-4.413 0-8 3.587-8 8s3.587 8 8 8 8-3.587 8-8c0-4.427-3.587-8-8-8zm10.667 9.334h4V14h-4zm-3.68 7.546l2.4 2.387 1.88-1.88-2.387-2.4zm4.28-18.266l-1.88-1.88-2.4 2.387 1.893 1.893zM17.333.733h-2.667v3.933h2.667zM5.333 14h-4v2.667h4zm3.68-7.547l-2.4-2.387-1.88 1.88 2.387 2.4 1.893-1.893z"
+              fill="currentColor"></path>
+    </symbol>
+</svg>
+<!-- 自定义按钮start -->
+<div class="zdy_button" onclick="zyd_show();">
+    <svg class="svg">
+        <use xlink:href="#svg-customize"></use>
+    </svg>
+</div>
+<!-- 自定义按钮end -->
+
+<!-- 自定义弹窗start -->
+<div class="zdy">
+
+    <div class="zdy_content">
+        <div class="zdy_top">
+            <span class="zdy_edit"></span>自定义链接
+            <span class="zdy_close" onclick="zdy_close();"></span>
+        </div>
+        <div class="zdy_mi">
+            <div class="z_m_i">
+                <span class="z_i_img_1"></span>
+                <input type="text" class="zdy_input zdy_name" placeholder="微博">
+            </div>
+            <div class="z_m_i">
+                <span class="z_i_img_2"></span>
+                <input type="text" class="zdy_input zdy_link" placeholder="http://www.weibo.com/">
+            </div>
+            <div>
+                <font size="2" color="gray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请注意：数据是临时存储在本地电脑上，数据丢失无法找回</font>
+            </div>
+        </div>
+        <div class="zdy_foot">
+            <div class="zdy_false zdy_b" onclick="zdy_false();">取消</div>
+            <div class="zdy_true zdy_b" onclick="zdy_true();">确定</div>
+        </div>
+    </div>
+</div>
+<!-- 自定义弹窗end -->
+
+<!-- 搜索栏start -->
+<div class="baidu baidu-2">
+    <form name="f" action="https://duckduckgo.com/" target="_blank">
+        <div class="Select-box-2" id="baidu">
+            <ul style="height: 48px;">
+                <li class="this_s">duck</li>
+                <li class="miji_s">duck</li>
+                <li class="bing_s">必 应</li>
+                <li class="google_s">谷 歌</li>
+                <li class="baidu_s">百 度</li>
+                <li class="ff_s">F 搜</li>
+            </ul>
+        </div>
+        <div class="in5">
+            <input name="q" id="kw-2" maxlength="100" autocomplete="off" type="text">
+            <div class="qingkong" id="qingkong" title="清空">x</div>
+        </div>
+        <input value="搜 索" id="su-2" type="submit">
+    </form>
+    <ul class="keylist"></ul>
+</div>
+<!-- 搜索栏end -->
+
+<!-- 内容start -->
+<div class="body">
+    <div class="content">
+        <div class="jianjie">
+            <div class="jj-list">
+                <div class="jj-list-tit">学习 · 生活</div>
+                <ul class="jj-list-con _b">
+                    <li><a href="https://www.taobao.com/" class="link-3" target="_blank" rel="nofollow">淘宝</a>
+                        <div class="i_r_edit" onclick="zyd_edit('0');"></div>
+                    </li>
+                    <li><a href="https://www.jd.com/" class="link-3" target="_blank" rel="nofollow">京东</a>
+                        <div class="i_r_edit" onclick="zyd_edit('1');"></div>
+                    </li>
+                    <li><a href="https://guiderank-app.com/" class="link-3" target="_blank" rel="nofollow">盖得排行</a>
+                        <div class="i_r_edit" onclick="zyd_edit('2');"></div>
+                    </li>
+                    <li><a href="http://www.hao123.com/bank" class="link-3" target="_blank" rel="nofollow">银行</a>
+                        <div class="i_r_edit" onclick="zyd_edit('3');"></div>
+                    </li>
+                    <li><a href="https://www.amap.com/" class="link-3" target="_blank" rel="nofollow">地图</a>
+                        <div class="i_r_edit" onclick="zyd_edit('4');"></div>
+                    </li>
+                    <li><a href="https://translate.google.cn/" class="link-3" target="_blank" rel="nofollow">翻译</a>
+                        <div class="i_r_edit" onclick="zyd_edit('5');"></div>
+                    </li>
+                    <li><a href="http://www.hao123.com/mail" class="link-3" target="_blank" rel="nofollow">邮箱</a>
+                        <div class="i_r_edit" onclick="zyd_edit('6');"></div>
+                    </li>
+                    <li><a href="https://www.runoob.com/" class="link-3" target="_blank" rel="nofollow">菜鸟教程</a>
+                        <div class="i_r_edit" onclick="zyd_edit('7');"></div>
+                    </li>
+                    <li><a href="https://www.icourse163.org/" class="link-3" target="_blank" rel="nofollow">MOOC</a>
+                        <div class="i_r_edit" onclick="zyd_edit('8');"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="jj-list">
+                <div class="jj-list-tit">常用 · 社区</div>
+                <ul class="jj-list-con _b">
+                    <li><a href="https://orbit.chat/" class="link-3" target="_blank" rel="nofollow">orbit聊天</a>
+                        <div class="i_r_edit" onclick="zyd_edit('9');"></div>
+                    </li>
+                    <li><a href="https://weibo.com/" class="link-3" target="_blank" rel="nofollow">微博</a>
+                        <div class="i_r_edit" onclick="zyd_edit('10');"></div>
+                    </li>
+                    <li><a href="https://www.zhihu.com/" class="link-3" target="_blank" rel="nofollow">知乎</a>
+                        <div class="i_r_edit" onclick="zyd_edit('11');"></div>
+                    </li>
+                    <li><a href="https://tieba.baidu.com/" class="link-3" target="_blank" rel="nofollow">贴吧</a>
+                        <div class="i_r_edit" onclick="zyd_edit('12');"></div>
+                    </li>
+                    <li><a href="http://www.soomal.com/" class="link-3" target="_blank" rel="nofollow">Soomal</a>
+                        <div class="i_r_edit" onclick="zyd_edit('13');"></div>
+                    </li>
+                    <li><a href="https://topbook.cc/overview" class="link-3" target="_blank" rel="nofollow">Topbook</a>
+                        <div class="i_r_edit" onclick="zyd_edit('14');"></div>
+                    </li>
+                    <li><a href="https://github.com/" class="link-3" target="_blank" rel="nofollow">GitHub</a>
+                        <div class="i_r_edit" onclick="zyd_edit('15');"></div>
+                    </li>
+                    <li><a href="https://www.douban.com/" class="link-3" target="_blank" rel="nofollow">豆瓣</a>
+                        <div class="i_r_edit" onclick="zyd_edit('16');"></div>
+                    </li>
+                    <li><a href="https://www.v2ex.com/" class="link-3" target="_blank" rel="nofollow">V2EX</a>
+                        <div class="i_r_edit" onclick="zyd_edit('17');"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="jj-list">
+                <div class="jj-list-tit">影音 · 娱乐</div>
+                <ul class="jj-list-con _b">
+                    <li><a href="https://ujomusic.com/" class="link-3" target="_blank" rel="nofollow">ujomusic音乐</a>
+                        <div class="i_r_edit" onclick="zyd_edit('18');"></div>
+                    </li>
+                    <li><a href="https://d.tube/" class="link-3" target="_blank" rel="nofollow">d.tube视频</a>
+                        <div class="i_r_edit" onclick="zyd_edit('19');"></div>
+                    </li>
+                    <li><a href="https://www.bilibili.com/" class="link-3" target="_blank" rel="nofollow">哔哩哔哩</a>
+                        <div class="i_r_edit" onclick="zyd_edit('20');"></div>
+                    </li>
+                    <li><a href="https://www.mgtv.com/" class="link-3" target="_blank" rel="nofollow">芒果TV</a>
+                        <div class="i_r_edit" onclick="zyd_edit('21');"></div>
+                    </li>
+                    <li><a href="https://www.youku.com/" class="link-3" target="_blank" rel="nofollow">优酷</a>
+                        <div class="i_r_edit" onclick="zyd_edit('22');"></div>
+                    </li>
+                    <li><a href="https://music.163.com/" class="link-3" target="_blank" rel="nofollow">音乐</a>
+                        <div class="i_r_edit" onclick="zyd_edit('23');"></div>
+                    </li>
+                    <li><a href="https://dianyi.ng/" class="link-3" target="_blank" rel="nofollow">电影先生</a>
+                        <div class="i_r_edit" onclick="zyd_edit('24');"></div>
+                    </li>
+                    <li><a href="https://ddrk.me/" class="link-3" target="_blank" rel="nofollow">低端影视</a>
+                        <div class="i_r_edit" onclick="zyd_edit('25');"></div>
+                    </li>
+                    <li><a href="http://www.zzzfun.com/" class="link-3" target="_blank" rel="nofollow">ZzzFun</a>
+                        <div class="i_r_edit" onclick="zyd_edit('26');"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="jj-list">
+                <div class="jj-list-tit">发现 · 世界</div>
+                <ul class="jj-list-con _b">
+                    <li><a href="https://news.ifeng.com/" class="link-3" target="_blank" rel="nofollow">凤凰资讯</a>
+                        <div class="i_r_edit" onclick="zyd_edit('27');"></div>
+                    </li>
+                    <li><a href="https://ef.zhiweidata.com/" class="link-3" target="_blank" rel="nofollow">知微事见</a>
+                        <div class="i_r_edit" onclick="zyd_edit('28');"></div>
+                    </li>
+                    <li><a href="https://cn.investing.com/" class="link-3" target="_blank" rel="nofollow">英为财情</a>
+                        <div class="i_r_edit" onclick="zyd_edit('29');"></div>
+                    </li>
+                    <li><a href="https://sspai.com/" class="link-3" target="_blank" rel="nofollow">少数派</a>
+                        <div class="i_r_edit" onclick="zyd_edit('30');"></div>
+                    </li>
+                    <li><a href="https://jikipedia.com/" class="link-3" target="_blank" rel="nofollow">小鸡词典</a>
+                        <div class="i_r_edit" onclick="zyd_edit('31');"></div>
+                    </li>
+                    <li><a href="https://jandan.net/" class="link-3" target="_blank" rel="nofollow">煎蛋</a>
+                        <div class="i_r_edit" onclick="zyd_edit('32');"></div>
+                    </li>
+                    <li><a href="https://youquhome.com/" class="link-3" target="_blank" rel="nofollow">有趣网址</a>
+                        <div class="i_r_edit" onclick="zyd_edit('33');"></div>
+                    </li>
+                    <li><a href="https://ac.scmor.com/" class="link-3" target="_blank" rel="nofollow">思谋学术</a>
+                        <div class="i_r_edit" onclick="zyd_edit('34');"></div>
+                    </li>
+                    <li><a href="https://houxu.app/" class="link-3" target="_blank" rel="nofollow">后续</a>
+                        <div class="i_r_edit" onclick="zyd_edit('35');"></div>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="jj-list">
+                <div class="jj-list-tit">在线 · 工具</div>
+                <ul class="jj-list-con _b">
+                    <li><a href="https://peergos.net/" class="link-3" target="_blank" rel="nofollow">peergos网盘</a>
+                        <div class="i_r_edit" onclick="zyd_edit('36');"></div>
+                    </li>
+                    <li><a href="https://ztf.net.cn/tools/urlEncode.html" class="link-3" target="_blank" rel="nofollow">在线工具箱</a>
+                        <div class="i_r_edit" onclick="zyd_edit('37');"></div>
+                    </li>
+                    <li><a href="https://cli.im/" class="link-3" target="_blank" rel="nofollow">二维码</a>
+                        <div class="i_r_edit" onclick="zyd_edit('38');"></div>
+                    </li>
+                    <li><a href="https://www.linshiyouxiang.net/" class="link-3" target="_blank" rel="nofollow">临时邮箱</a>
+                        <div class="i_r_edit" onclick="zyd_edit('39');"></div>
+                    </li>
+                    <li><a href="https://www.storytrain.info/" class="link-3" target="_blank" rel="nofollow">临时短信</a>
+                        <div class="i_r_edit" onclick="zyd_edit('40');"></div>
+                    </li>
+                    <li><a href="https://convertio.co/zh/" class="link-3" target="_blank" rel="nofollow">格式转换</a>
+                        <div class="i_r_edit" onclick="zyd_edit('41');"></div>
+                    </li>
+                    <li><a href="http://www.html22.com/zh/" class="link-3" target="_blank" rel="nofollow">文档下载</a>
+                        <div class="i_r_edit" onclick="zyd_edit('42');"></div>
+                    </li>
+                    <li><a href="https://weibomiaopai.com/" class="link-3" target="_blank" rel="nofollow">视频下载</a>
+                        <div class="i_r_edit" onclick="zyd_edit('43');"></div>
+                    </li>
+                    <li><a href="https://www.eggvod.cn/music/" class="link-3" target="_blank" rel="nofollow">音乐下载</a>
+                        <div class="i_r_edit" onclick="zyd_edit('44');"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="jj-list">
+                <div class="jj-list-tit">搜索 · 资源</div>
+                <ul class="jj-list-con _b">
+                    <li><a href="https://www.ipse.io/" class="link-3" target="_blank" rel="nofollow">ipse搜索引擎</a>
+                        <div class="i_r_edit" onclick="zyd_edit('45');"></div>
+                    </li>
+                    <li><a href="https://arxiv.org/" class="link-3" target="_blank" rel="nofollow">arxiv</a>
+                        <div class="i_r_edit" onclick="zyd_edit('46');"></div>
+                    </li>
+                    <li><a href="http://cw.hubwiz.com/card/c/ipfs/1/1/6/" class="link-3" target="_blank" rel="nofollow">IPFS 命令文档</a>
+                        <div class="i_r_edit" onclick="zyd_edit('47');"></div>
+                    </li>
+                    <li><a href="https://tools.miku.ac/" class="link-3" target="_blank" rel="nofollow">MikuTools</a>
+                        <div class="i_r_edit" onclick="zyd_edit('48');"></div>
+                    </li>
+                    <li><a href="https://www.coolist.net/" class="link-3" target="_blank" rel="nofollow">酷软清单</a>
+                        <div class="i_r_edit" onclick="zyd_edit('49');"></div>
+                    </li>
+                    <li><a href="https://www.ghxi.com/" class="link-3" target="_blank" rel="nofollow">果核剥壳</a>
+                        <div class="i_r_edit" onclick="zyd_edit('50');"></div>
+                    </li>
+                    <li><a href="https://www.jiumodiary.com/" class="link-3" target="_blank" rel="nofollow">电子书</a>
+                        <div class="i_r_edit" onclick="zyd_edit('51');"></div>
+                    </li>
+                    <li><a href="https://pixabay.com/zh/photos/" class="link-3" target="_blank" rel="nofollow">图片素材</a>
+                        <div class="i_r_edit" onclick="zyd_edit('52');"></div>
+                    </li>
+                    <li><a href="https://bookfere.com/" class="link-3" target="_blank" rel="nofollow">书伴</a>
+                        <div class="i_r_edit" onclick="zyd_edit('53');"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="jj-list zdy_list" style="display: none;">
+                <div class="jj-list-tit">自定义</div>
+                <ul class="jj-list-con zdy_li">
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- 底部版权start -->
+    <!-- 开源不易，请勿去除下方版权信息 -->
+    <!-- 如果您想修改下方版权信息，请打赏并留言您的网址 >> https://afdian.net/@appts -->
+    <!-- 暂时没钱，打赏延后 -->
+    <div class="footer">Copyright © 2022
+        <a href="https://www.appts.cn/" style="color:#ffffff;" target="_blank" rel="nofollow">软件探索 </a>
+        <a href="https://support.qq.com/products/93263" style="color:#ffffff;" target="_blank" rel="nofollow">反馈</a>
+        <a href="https://support.qq.com/products/93263/faqs/66548" style="color:#ffffff;" target="_blank" rel="nofollow">支持我们 </a>
+        <a href="https://www.jianavi.com/random.html" style="color:#ffffff;" target="_blank" rel="nofollow">随机背景 </a>
+    </div>
+    <!-- 底部版权end -->
+</div>
+
+<script src="/static/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="/static/tools/web_nav.js"></script>
+</body>
+</html>

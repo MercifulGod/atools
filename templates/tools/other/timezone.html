@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link REL="SHORTCUT ICON" href="/favicon.ico"/>
+    <title>在线Unicode编码转换工具-在线工具</title>
+    <meta name="keywords"
+          content="在线Unicode编码转换,Unicode,ASCII,Unicode编码转换,Unicode转ASCII,ASCII转Unicode,中文转Unicode,Unicode转中文">
+    <meta name="description"
+          content="Unicode编码转换工具:提供ASCII与Unicode互转,Unicode与中文互转,Unicode转ASCII,ASCII转Unicode,中文转Unicode,Unicode转中文">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+    </style>
+
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>unicode编码转换</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/encode/encodeTab.html" %}
+                <div class="layui-tab-content">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="50">
+                            <col width="150">
+                            <col width="250">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>时区</th>
+                            <th>中文名称</th>
+                            <th>时间</th>
+                            <th>时间戳</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr v-for="(o, t_index) in fullValue" :key="t_index" :value="o">
+                            <td>{[ o.timezone ]}</td>
+                            <td>{[ o.name ]}</td>
+                            <td>{[ o.time ]}</td>
+                            <td>{[ o.timestamp ]}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线Unicode编码转换工具</h2>
+                        <br>
+                        <p>1. 提供Unicode和中文互相转换</p>
+                        <p>2. 附带提供中文符号转成英文符号</p>
+                        <p>3. 附带提供ASCII码和Unicode互转的功能 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-tips"></i> Unicode编码简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="text-indent: 2em;">
+                        <p> unicode编码可兼容所有语言的操作系统。
+                            在计算机科学领域中，Unicode（统一码、万国码、单一码、标准万国码）是业界的一种标准，它可以使电脑得以呈现世界上数十种文字的系统。Unicode是基于通用字符集（Universal
+                            Character
+                            Set）的标准来发展,Unicode包含了超过十万个字符（在2005年，Unicode的第十万个字符被采纳且认可成为标准之一）、一组可用以作为视觉参考的代码图表、一套编码方法与一组标准字符编码、一套包含了上标字、下标字等字符特性的列举等。</p>
+                        <p> Unicode组织（The Unicode
+                            Consortium）是由一个非营利性的机构所运作，并主导Unicode的后续发展，其目标在于：将既有的字符编码方案，以Unicode编码方案来加以取代，特别是既有的方案在多语环境下，皆仅有有限的空间以及不相容的问题。
+                            Unicode在字符集认可的成功，使其得以在电脑软件的国际化与本地化领域中，广泛且具优势的被采用。这标准已在近年来的多种新科技当中被加以采用，包含了可扩展置标语言（XML）、Java编程语言、以及最新的操作系统中。</p>
+                        <p> unicode编码的编码规则
+                            比如要把“杨”编码，我们可以新建一个记事本，输入“杨”保存时选择存为unicode编码，然后查看文件二进制内容，前面的FF FE两个字节是unicode编码文件头标志，接着的68
+                            67两个字节就是“杨”的unicode编码，用计算器换算为十进制就是26472，现在可以在一个html文件里面写入“杨”，IE打开就显示一个“杨”字。
+                            当然，对于一般ASCII码，unicode编码与ASCII编码一致，所以A可以显示一个大写字母“A”.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+{#<script src="/static/other/jquery.js"></script>#}
+<script>
+    function getLocalTime(i, d = new Date()) {
+        //参数i为时区值数字，比如北京为东八区则输进8,西5输入-5
+        if (typeof i !== 'number') return;
+        {#var d = new Date();#}
+        //得到1970年一月一日到现在的秒数
+        var len = d.getTime();
+        //本地时间与GMT时间的时间偏移差
+        var offset = d.getTimezoneOffset() * 60000;
+        //得到现在的格林尼治时间
+        var utcTime = len + offset;
+        return new Date(utcTime + 3600000 * i);
+    }
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                value: [
+                    {"timezone": "Europe/London", "diff": 0, "name": "零时区-伦敦时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Europe/Berlin", "diff": 1, "name": "东一区-柏林时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Europe/Athens", "diff": 2, "name": "东二区-雅典时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Europe/Moscow", "diff": 3, "name": "东三区-莫斯科时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 4, "name": "东四区-时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 5, "name": "东五区-伊斯兰堡时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 6, "name": "东六区-科伦坡时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Bangkok", "diff": 7, "name": "东七区-曼谷时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 8, "name": "东八区-北京时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 9, "name": "东九区-东京时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 10, "name": "东十区-悉尼时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": 12, "name": "东十二区-斐济时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": -10, "name": "西十区-斐济时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": -9, "name": "西九区-阿拉斯加时间", "time": "2022-02-02", "timestamp": "11111111"},
+                    {"timezone": "Asia/Shanghai", "diff": -8, "name": "西八区-太平洋时间（美国和加拿大）", "time": "2022-02-02", "timestamp": "11111111"},
+                    {
+                        "timezone": "Asia/Shanghai", "diff": -7,
+                        "name": "西七区-山地时间（美国和加拿大）",
+                        "time": "2022-02-02",
+                        "timestamp": "11111111"
+                    },
+                    {
+                        "timezone": "Asia/Shanghai", "diff": -6,
+                        "name": "西六区-中部时间（美国和加拿大）",
+                        "time": "2022-02-02",
+                        "timestamp": "11111111"
+                    },
+                    {
+                        "timezone": "Asia/Shanghai", "diff": -5,
+                        "name": "西五区-东部时间（美国和加拿大）",
+                        "time": "2022-02-02",
+                        "timestamp": "11111111"
+                    },
+                    {
+                        "timezone": "Asia/Shanghai", "diff": -4,
+                        "name": "西四区-大西洋时间（加拿大）",
+                        "time": "2022-02-02",
+                        "timestamp": "11111111"
+                    },
+                    {"timezone": "Asia/Shanghai", "diff": -3, "name": "西三区-巴西利亚时间", "time": "2022-02-02", "timestamp": "11111111"},
+                ],
+                options: {
+                    year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    hour12: false, timeZoneName: 'short'
+                }
+            }
+
+        },
+        watch: {
+            value: {
+                handler(newName, oldName) {
+                },
+                immediate: true
+            }
+        },
+        computed: {
+            fullValue: function () {
+                {#var date = new Date(Date.UTC());#}
+                var date = new Date()
+                for (var i = 0; i < this.value.length; i++) {
+                    let opt = {...this.options, timezone: this.value[i].timezone}
+                    this.value[i]['time'] = date.toLocaleString('en-US', opt)
+                    this.value[i]['timestamp'] = getLocalTime(this.value[i].diff, date)
+                }
+                return this.value
+            }
+        },
+        methods: {
+            htmlEncode() {
+                /*1.用浏览器内部转换器实现html编码（转义）*/
+                //1.首先动态创建一个容器标签元素，如DIV
+                var temp = document.createElement("div");
+                //2.然后将要转换的字符串设置为这个元素的innerText或者textContent
+                if (temp.textContent !== undefined) {
+                    temp.textContent = this.value
+                } else {
+                    temp.innerText = this.value
+                }
+                //3.最后返回这个元素的innerHTML，即得到经过HTML编码转换的字符串了
+                this.result1 = temp.innerHTML;
+            },
+            htmlDecode() {
+                //1.首先动态创建一个容器标签元素，如DIV
+                var temp = document.createElement("div");
+                //2.然后将要转换的字符串设置为这个元素的innerHTML(ie，火狐，google都支持)
+                temp.innerHTML = this.value;
+                //3.最后返回这个元素的innerText或者textContent，即得到经过HTML解码的字符串了。
+                this.result1 = temp.innerText || temp.textContent;
+            },
+
+
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

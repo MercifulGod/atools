@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>推背图_详解_全文 第{{ data.page }}页</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="applicable-device" content="mobile">
+    <meta content="always" name="referrer">
+    <meta name="robots” content=" nofollow”/>
+    <style type="text/css">
+        {% include "yijing/style.min.css" %}
+        {% include "yijing/common.css" %}
+    </style>
+</head>
+<body>
+{% include "yijing/header.html" %}
+<div class="bgff mt10">
+    <ul class="m_article_list">
+        {% for index,item in enumerate(data.items) %}
+            <li>
+                <div class="m_list_leftimg">
+                    <a href="/fs/tuibeitu/{{ index }}.html">
+                        <img src="/static/img/fs/{{ index % 4 }}.jpeg" alt="{{ item.title }}"></a>
+                    <a href="/fs/tuibeitu/{{ index }}.html" class="m_lr_title">{{ item.title }}</a>
+                    <div class="m_lr_tags"></div>
+                </div>
+            </li>
+        {% endfor %}
+        <li style="margin:0; padding:0; list-style:none; list-style-type: none; border-bottom: 1px solid #ececec;padding: .16rem 0.2rem;list-style-type: none;background-color:#fff;">
+            <div style="margin-top: .2rem; display: flex; ">
+                <a href="#"
+                   class="J_styleFieldEdit" data-plate="a0" data-key="1"
+                   style="width: 25%;display: block;border-radius: 4px; overflow: hidden;margin-bottom:.2rem;"
+                   apu-sourcea="xingzuo360_m_flow_1651.2775">
+                    <img src="/static/img/fs/taluo.png" alt="塔罗占卜"
+                         style="width: 80%;display: block; margin: 0 auto;">
+                    <p style="margin-top: .05rem;text-align: center;overflow: hidden;font-size:0.3rem; white-space: nowrap;">塔罗占卜</p></a>
+                <a
+                        href="#"
+                        class="J_styleFieldEdit" data-plate="a0" data-key="2"
+                        style="width: 25%;display: block;border-radius: 4px; overflow: hidden;margin-bottom:.2rem;"
+                        apu-sourcea="xingzuo360_m_flow_1651.2775">
+                    <img src="/static/img/fs/peidui.png" alt="姓名配对"
+                         style="width: 80%;display: block; margin: 0 auto;">
+                    <p style="margin-top: .05rem;text-align: center;overflow: hidden;font-size:0.3rem; white-space: nowrap;">姓名配对</p></a>
+                <a
+                        href="#"
+                        class="J_styleFieldEdit" data-plate="a0" data-key="3"
+                        style="width: 25%;display: block;border-radius: 4px; overflow: hidden;margin-bottom:.2rem;"
+                        apu-sourcea="xingzuo360_m_flow_1651.2775">
+                    <img src="/static/img/fs/yuanfen.png" alt="缘份测试"
+                         style="width: 80%;display: block; margin: 0 auto;">
+                    <p style="margin-top: .05rem;text-align: center;overflow: hidden;font-size:0.3rem; white-space: nowrap;">缘份测试</p></a>
+                <a
+                        href="#"
+                        class="J_styleFieldEdit" data-plate="a0" data-key="4"
+                        style="width: 25%;display: block;border-radius: 4px; overflow: hidden;margin-bottom:.2rem;"
+                        apu-sourcea="xingzuo360_m_flow_1651.2775">
+                    <img src="/static/img/fs/bazi.png" alt="八字测算"
+                         style="width: 80%;display: block; margin: 0 auto;">
+                    <p style="margin-top: .05rem;text-align: center;overflow: hidden;font-size:0.3rem; white-space: nowrap;">八字测算</p></a></div>
+        </li>
+    </ul>
+</div>
+<div class="m_pages_mod mt10 bgf9">
+    <a href="/fs/tuibeitu/p_{{ data.previous }}" class="m_pm_prev">上页</a>
+    <div class="m_pm_con"><span>第 {{ data.page }}/{{ data.total_pages }} 页</span></div>
+    <a href="/fs/tuibeitu/p_{{ data.next }}" class="m_pm_next">下页</a>
+</div>
+
+<footer class="m_footer_mod bgf9 mt10">
+    <div class="m_fm_more">
+        <a class="#">网站地图</a><span class="m_fm_cut">|</span><a class="#">我要投稿</a></div>
+    <div class="m_fm_copyright">
+        <p>法律声明：如有侵权，请告知网站管理员，我们会在30个工作日内处理</p>
+    </div>
+</footer>
+
+</body>
+</html>

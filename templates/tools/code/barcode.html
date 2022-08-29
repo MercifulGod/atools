@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线条形码生成器-条形码在线生成工具</title>
+    <meta name="keywords" content="条形码生成器,在线条形码生成器,查询条形码,条形码在线生成工具"/>
+    <meta name="description" content="在线条形码生成工具:可在线生成条形码扫描查询条形码,条形码生成器支持条形码生成,条形码用于一般商品扫描使用"/>
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    {#    <link rel="stylesheet" href="/static/css/base.css" media="all">#}
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+        .layui-form input[type=radio] {
+            display: inline-block;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label {
+            background-color: #5FB878;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label .circle {
+            left: 64px;
+        }
+
+        div.checkbox .label {
+            width: 93px;
+            line-height: 30px;
+            margin: 4px 0;
+        }
+
+        .layui-input-block {
+            line-height: 38px;
+        }
+    </style>
+{% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+
+
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>条形码在线生成器</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/code/codeTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">原始数据</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" v-model="text" required lay-verify="required" placeholder="二维码数据" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">宽度</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="title" v-model="options.width" placeholder="宽度" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">高度</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="title" v-model="options.height" placeholder="高度" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">显示文本</label>
+                            <div class="checkbox layui-inline">
+                                <input type="checkbox" id="ignoreLetter" v-model="options.displayValue" title="显示文本"/>
+                                <label class="label layui-unselect layui-form-checkbox" for="ignoreLetter" chkV="显示" nchkV="不显示">
+                                    <span class="circle"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文本对齐</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="align" v-model="options.textAlign" value="left" title="左">左
+                                <input type="radio" name="align" v-model="options.textAlign" value="center" title="中间" checked>中间
+                                <input type="radio" name="align" v-model="options.textAlign" value="right" title="右">右
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文本位置</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="sex" value="底部" v-model="options.textPosition" title="底部">底部
+                                <input type="radio" name="sex" value="右边" v-model="options.textPosition" title="右边" checked>右边
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">文本域</label>
+                            <div class="layui-input-block">
+                                <svg id="barcode"></svg>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" type="button" @click="run">立即生成</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线条形码工具</h2>
+                        <br>
+                        <p>1. 条形码(barcode)是将宽度不等的多个黑条和空白，按照一定的编码规则排列，用以表达一组信息的图形标识符。</p>
+                        <p>2. 常见的条形码是由反射率相差很大的黑条（简称条）和白条（简称空）排成的平行线图案。</p>
+                        <p>3. 条形码可以标出物品的生产国、制造厂家、商品名称、生产日期、图书分类号、邮件起止地点、类别、日期等许多信息。 </p>
+                        <p>3. 因而在商品流通、图书管理、邮政管理、银行系统等许多领域都得到广泛的应用。 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js" ,></script>
+{#<script src="/static/layui/layui.all.js"></script>#}
+{#<script src="/static/other/jquery.js"></script>#}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+{#<script src="/static/other/jquery.js"></script>#}
+<script>
+
+
+    const HelloVueApp = {
+        data() {
+            return {
+                text: "Hello world",
+                options: {
+                    format: "CODE39",
+                    background: "#000000",
+                    lineColor: "#ffffff",
+                    width: 2,
+                    height: 40,
+                    margin: 10,
+                    marginLeft: 10,
+                    displayValue: true,
+                    font: "monospace",
+                    fontSize: 20,
+                    fontOptions: "",
+                    textAlign: "center",
+                    textPosition: "bottom",
+                    textMargin: 2,
+                },
+                input_style: {
+                    height: "150px",
+                },
+            };
+        },
+        methods: {
+            run() {
+                JsBarcode("#barcode", this.text, this.options);
+            },
+        },
+        mounted: function () {
+            this.run()
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/static/components/dragmove/vue-drag-resize.css" media="all">
+    <style type="text/css">
+
+        /**css样式*/
+        .input {
+            width: 200px;
+            height: 24px;
+            line-height: 24px;
+            font-size: 14px;
+            padding: 5px 8px;
+        {#border: 1px solid #ddd;#}
+        }
+
+        .input:empty::before {
+            content: attr(placeholder);
+        }
+
+        /**css样式*/
+        .input {
+            width: 200px;
+            height: 24px;
+            line-height: 24px;
+            font-size: 14px;
+            padding: 5px 8px;
+        {#border: 1px solid #ddd;#}
+        }
+
+        .input:empty::before {
+            content: attr(placeholder);
+        }
+
+        div.operation {
+            position: fixed;
+            z-index: 99999;
+            bottom: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #canvas {
+        {#background: url(https://img0.baidu.com/it/u=1168565197,2790641263&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=1311) no-repeat center center;#} background-size: contain;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://img0.baidu.com/it/u=1168565197,2790641263&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=1311') no-repeat center center;
+        {#background: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2020-11-19%2F5fb63774e174d.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659493760&t=1eb3b1e4a8c83bed2c07819de00546de') no-repeat center center;#} background-size: contain;
+        }
+    </style>
+</head>
+<body>
+
+<div class="es-content" id="app">
+
+    <div id="canvas">
+        <vue-drag-resize :isActive="true" :x="item.left" :y="item.top" :w="item.width" :h="item.height"
+                         v-on:resizing="resize" v-on:dragging="resize" @clicked="elementClick"
+                         v-for="(item, index) in textWaterMark" :key="index">
+            <div class='input' contenteditable placeholder='请输入文字' v-html="item.value" @input="item.value=$event.target.innerHTML"></div>
+        </vue-drag-resize>
+        <vue-drag-resize :isActive="true" :x="item.left" :y="item.top" :w="item.width" :h="item.height"
+                         v-on:resizing="resize" v-on:dragging="resize"
+                         v-for="(item, index) in imgWaterMark" :key="index" @click="handleClick(item)">
+            <img :src="item.image.src" style="width: 100%;height: 100%">
+        </vue-drag-resize>
+    </div>
+
+
+    <div class="operation">
+        <button @click="openAddFile(addImgWater)">添加图片水印</button>
+        <button @click="openAddFile(addOriginImage)">原始凸显</button>
+        <button @click="addTextWater()">添加文字水印</button>
+        <button @click="save"> 保存</button>
+    </div>
+</div>
+
+<script src="/static/js/html2canvas.min.js"></script>
+<script src="/static/js/vue.global.prod.js"></script>
+<script>
+
+
+    function drawToCanvas(imgData) {
+        var cvs = document.querySelector('#previewWithFrame');
+        cvs.width = 300;
+        cvs.height = 400;
+        var ctx = cvs.getContext('2d');
+        var img = new Image;
+        img.src = imgData;
+        img.onload = function () {//必须onload之后再画
+            ctx.drawImage(img, 0, 0, 300, 400);
+            strDataURI = cvs.toDataURL();//获取canvas base64数据
+        }
+    }
+</script>
+<script type="module">
+    import vueDragResize from "/static/components/dragmove/vue-drag-resize.js"
+
+    var previewWithFrame = document.getElementById('previewWithFrame');
+    const clientWidth = document.body.clientWidth
+    const clientHeight = document.body.clientHeight
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                {#原始图像， 被操作的图像#}
+                origin: {
+                    image: "",
+                    ratio: 1, //原始图像缩放比
+                    top: 0, // 原始图像左上角坐标
+                    left: 0 // 原始图像左上角坐标
+                },
+                textwater: {
+                    value: "",
+                    width: 100,
+                    height: 50,
+                    top: parseInt(clientHeight / 4), // 文本水印初始位置
+                    left: parseInt(clientWidth / 4) // 文本水印初始位置
+                },
+                imgwater: {
+                    src: "",
+                    width: 100,
+                    height: 50,
+                    top: 50,
+                    left: 50
+                },
+                imgWaterMark: [],
+                textWaterMark: [],
+
+                currentIndex: undefined,
+                currentElement: undefined
+            }
+        },
+
+        methods: {
+            resize(newRect) {
+                // 对于太多或太小的图片，使之适应屏幕，放大或缩小
+                if (!this.currentElement) return
+                this.currentElement.width = newRect.width;
+                this.currentElement.height = newRect.height;
+                this.currentElement.top = newRect.top;
+                this.currentElement.left = newRect.left;
+            },
+            handleFileChange(e) {
+
+            },
+            handleClick(item) {
+                {#console.log("resize", item)#}
+                this.currentElement = item
+
+            },
+            elementClick(event) {
+                {#console.log(event.target.$slots,event.target)#}
+                if (event.target.firstChild) {
+                    {#event.target.firstChild.focus();#}
+                } else {
+                    event.target.focus()
+                    {#event.target.click()#}
+                }
+            },
+            download(canvas) {
+                // 创建一个 a 标签，并设置 href 和 download 属性
+                const el = document.createElement('a');
+                // 设置 href 为图片经过 base64 编码后的字符串，默认为 png 格式
+                el.href = canvas.toDataURL();
+                el.download = 'ztf.net.cn.png';
+                // 创建一个点击事件并对 a 标签进行触发
+                const event = new MouseEvent('click');
+                el.dispatchEvent(event);
+            },
+            openAddFile(callback) {
+                var inputObj = document.createElement('input');
+                inputObj.addEventListener('change', () => {
+                    var file = event.target.files[0];//获取input输入的图片
+                    if (!/image\/\w+/.test(file.type)) {
+                        alert("请确保文件为图像类型");
+                        return false;
+                    }
+                    //判断是否图片，在移动端由于浏览器对调用file类型处理不同，虽然加了accept = 'image/*'，但是还要再次判断
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);//转化成base64数据类型
+                    reader.onload = function (e) {
+                        var img = new Image;
+                        img.src = this.result;
+                        img.onload = function () {//必须onload之后再画
+                            callback(img)
+                        }
+                    }
+                }, {once: true});
+                inputObj.type = 'file';
+                inputObj.accept = 'image/*';
+                {#inputObj.id = id;#}
+                inputObj.click();
+            },
+            addOriginImage(image) {
+                let ratio, width, height;
+                if ((image.width / clientWidth) > (image.height / clientHeight)) {
+                    ratio = clientWidth / image.width
+                    width = clientWidth
+                    height = parseInt((image.width / clientWidth) * clientHeight)
+                } else {
+                    ratio = clientHeight / image.height
+                    height = clientHeight
+                    width = parseInt((image.height / clientHeight) * clientWidth)
+                }
+
+                var canvas = document.getElementById("canvas")
+                canvas.style.backgroundImage = `url(${image.src})`;
+                this.origin = {
+                    image: image,
+                    ratio: ratio,
+                    top: parseInt((clientHeight - height) / 2), // 原始图像左上角坐标
+                    left: parseInt((clientWidth - width) / 2) // 原始图像左上角坐标
+                }
+                {#console.log(this.origin)#}
+            },
+            addTextWater(event) {
+                this.textWaterMark.push({
+                    value: "222",
+                    width: 219,
+                    height: 40,
+                    top: parseInt(clientHeight / 4),
+                    left: parseInt(clientWidth / 4)
+                })
+            },
+            addImgWater(img) {
+                {#let [image, width, height, ratio] = this.resizeImg(img)#}
+                this.imgWaterMark.push({
+                    image: img,
+                    ratio: 1,
+                    width: img.width,
+                    height: img.height,
+                    top: parseInt(clientHeight / 4),
+                    left: parseInt(clientWidth / 4)
+                })
+            },
+            resizeImg(image) {
+                let ratio;
+                if ((image.width / clientWidth) > (image.height / clientHeight)) {
+                    ratio = parseInt(image.width / clientWidth)
+                    image.width = clientWidth
+                    image.height = parseInt((image.width / clientWidth) * clientHeight)
+
+                } else {
+                    ratio = parseInt(image.height / clientHeight)
+                    image.height = clientHeight
+                    image.width = parseInt((image.height / clientHeight) * clientWidth)
+
+                }
+                return [image, image.width, image.height, ratio]
+            },
+            save() {
+                var canvas = document.createElement("canvas");
+                canvas.width = this.origin.image.width;
+                canvas.height = this.origin.image.height;
+                {#var myImage = new Image();#}
+                var context = canvas.getContext("2d");
+                context.drawImage(this.origin.image, 0, 0, this.origin.image.width, this.origin.image.height);
+
+
+                let ratio = this.origin.ratio;
+
+                context.save();
+
+                context.translate(
+                    -parseInt(this.origin.left * ratio),
+                    -parseInt(this.origin.top * ratio)
+                );
+                {#console.log(#}
+                {#    -parseInt(this.origin.left * ratio),#}
+                {#    -parseInt(this.origin.top * ratio)#}
+                {#)#}
+                context.fillStyle = "blue";
+                context.fillRect(0, 0, 100, 100);
+                for (var i = 0; i < this.imgWaterMark.length; i++) {
+                    {#console.log(this.imgWaterMark[i])#}
+
+                    context.fillStyle = "blue";
+                    context.fillRect(
+                        parseInt(this.imgWaterMark[i].left * ratio),
+                        parseInt(this.imgWaterMark[i].top * ratio),
+                        parseInt(this.imgWaterMark[i].width * ratio),
+                        parseInt(this.imgWaterMark[i].height * ratio)
+                    );
+
+                    {#context.drawImage(#}
+                    {#    this.imgWaterMark[i].image,#}
+                    {#    parseInt(this.imgWaterMark[i].left * ratio),#}
+                    {#    parseInt(this.imgWaterMark[i].top * ratio),#}
+                    {#    parseInt(this.imgWaterMark[i].width * ratio),#}
+                    {#    parseInt(this.imgWaterMark[i].height * ratio),#}
+                    {#);#}
+                }
+
+                {#console.log(this.textWaterMark)#}
+                {#for (var j = 0; j < this.textWaterMark.length; j++) {#}
+                {#    context.font = "14px sans-serif"#}
+                {#console.log(this.textWaterMark[j], parseInt(this.textWaterMark[j].left * ratio), parseInt(this.textWaterMark[j].top * ratio))#}
+                {#    context.fillText(#}
+                {#        this.textWaterMark[j].value,#}
+                {#        parseInt(this.textWaterMark[j].left * ratio),#}
+                {#        parseInt(this.textWaterMark[j].top * ratio)#}
+                {#    );#}
+                {# }#}
+
+                document.body.appendChild(canvas);
+
+
+            }
+        }
+    };
+    var app = Vue.createApp(HelloVueApp)
+    app.component('vue-drag-resize', vueDragResize);
+    app.mount("#app");
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线Markdown格式化工具</title>
+    <meta name="keywords" content="Markdown美化,Markdown格式化,Markdown格式化工具">
+    <meta name="description" content="在线Markdown格式化工具提供最好用的Markdown样式代码的格式化、美化,更多好用、实用的在线工具尽在ztf.net.cn">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>Markdown格式化工具</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow>
+                {% include "tools/format/tabIndex.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                  <textarea id="codeEditor" class="layui-textarea" onfocus="loadParser()"
+                                            placeholder="请输入要压缩或格式化的Javascript文本"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline layui-btn-group">
+                                    <button id="formatBTN" type="button" class="layui-btn">Markdown格式化</button>
+                                    {#                                    <button id="compressBTn" type="button" class="layui-btn">Markdown压缩</button>#}
+                                    <button id="clearBTN" type="button" class="layui-btn  layui-btn-primary"><i
+                                            class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12" id="errorShow" style="display: none;">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label-col" for="ErrorTip">Markdown格式校验</label>
+                                <textarea name="" id="ErrorTip" placeholder="转换结果" class="layui-textarea"
+                                          style="min-height: 100px"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线Markdown格式化工具</h2><br>
+                        <p>1. Markdown格式化功能能把经过压缩后的代码还原原有的美化格式，增强可读性。</p>
+                        <p>2. 本工具提供最好用的Markdown样式代码的格式化、美化，更多好用、实用的在线工具尽在ztf.net.cn</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/jquery-1.8.3.min.js"></script>
+<script src="/static/other/jquery.js"></script>
+<script language="javascript">
+    window.onload = function () {
+        url = window.location.pathname;
+        $(".layui-tab a[href='" + url + "']").parent().addClass('layui-this');
+        $(".layui-tab a[href='" + url + "']").parent().parent().parent().addClass('layui-nav-itemed');
+        $(".layui-nav a[href='" + url + "']").parent().parent().prev().addClass('layui-this');
+    }
+
+    const codeEditor = document.getElementById('codeEditor')
+    const ErrorTip = document.getElementById("ErrorTip")
+    var editor = undefined
+
+
+    function formatCode() {
+        try {
+            if (!editor.getValue()) return
+            let pretty = CoreTool.markdownPretty(editor.getValue())
+            editor.setValue(pretty)
+            document.getElementById("errorShow").style.display = "none"; //隐藏
+        }
+        catch (err) {
+            ErrorTip.innerHTML = err.message;
+            document.getElementById("errorShow").style.display = "block";
+            ErrorTip.focus()
+        }
+    }
+
+
+    function loadParser() {
+        if (editor) return
+        CoreTool.loadJS("markdown", () => {
+            editor = CodeMirror.fromTextArea(codeEditor, {
+                lineNumbers: true,
+                mode: 'markdown' // 设置mode 对应的也要这之前引入相应的js
+            });
+        })
+    }
+
+    document.getElementById('formatBTN').addEventListener('mousedown', e => {
+        loadParser()
+        formatCode()
+    })
+
+
+    document.getElementById('clearBTN').addEventListener('mousedown', e => {
+        document.getElementById("errorShow").style.display = "none"; //隐藏
+        editor.setValue("")
+        editor.focus()
+    })
+
+    $("#tabmore").on('click', function () {
+        if ($("#tabmore").parent().hasClass("layui-tab-more")) {
+            $("#tabmore").parent().removeClass("layui-tab-more")
+        } else {
+            $("#tabmore").parent().addClass("layui-tab-more")
+        }
+    });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线行文本去重工具</title>
+    <meta name="keywords" content="在线行文本去重工具，行文本唯一化工具">
+    <meta name="description" content="在线行文本去重工具，行文本唯一化工具">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>行文本去重</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow>
+                {% include "tools/text/textTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea id="codeEditor" class="layui-textarea" placeholder="请输入要去重的文本"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline layui-btn-group">
+                                    <button id="formatBTN" onclick="unique_txt()" type="button" class="layui-btn">行文本去重
+                                    </button>
+                                    <button id="clearBTN" onclick="document.getElementById('codeEditor').innerText = ''"
+                                            type="button" class="layui-btn  layui-btn-primary"><i class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线行文本去重工具</h2><br>
+                        <p>1. 对于重复的行文本进行去除。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/jquery-1.8.3.min.js"></script>
+{#<script src="/static/other/jquery.js"></script>#}
+<script language="javascript">
+    window.onload = function () {
+        url = window.location.pathname;
+        $(".layui-tab a[href='" + url + "']").parent().addClass('layui-this');
+        $(".layui-tab a[href='" + url + "']").parent().parent().parent().addClass('layui-nav-itemed');
+        $(".layui-nav a[href='" + url + "']").parent().parent().prev().addClass('layui-this');
+    }
+
+    const codeEditor = document.getElementById('codeEditor')
+
+    function unique_txt() {
+        let str_Arr = codeEditor.value.split(/[\n]/);
+        codeEditor.value = Array.from(new Set(str_Arr)).join("\n");
+    }
+
+
+    $("#tabmore").on('click', function () {
+        if ($("#tabmore").parent().hasClass("layui-tab-more")) {
+            $("#tabmore").parent().removeClass("layui-tab-more")
+        } else {
+            $("#tabmore").parent().addClass("layui-tab-more")
+        }
+    });
+</script>
+</body>
+</html>
+

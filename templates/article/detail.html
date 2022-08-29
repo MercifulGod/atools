@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ article.title }} - ZTF个人博客</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content="{{ article.desc }}"/>
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <style type="text/css">
+        {% include "article/style.css" %}
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% include "innerHeader.html" %}
+
+    <link rel="stylesheet" title="An Old Hope" href="/static/css/lake-content-v1.css">
+    <link rel="stylesheet" title="An Old Hope" href="/static/highlight/styles/qtcreator-dark.min.css">
+</head>
+<body>
+{% include "header.html" %}
+<div class="box center_padding">
+    <a href="https://s.qiniu.com/nQvQBj" target="_blank" referrerpolicy="no-referrer">
+        <img src="/static/img/qiniu/new1040x100.jpg"
+             alt="七牛云" class="img100" style="margin-bottom: 15px"
+        /></a>
+</div>
+<div class="weizhi center_padding">
+    您当前的位置：
+    <a href="/t/">首页</a>&nbsp;&gt;&nbsp;
+    <a href="/article">个人博客</a>
+</div>
+<div class="layout_left_right center_padding">
+    <div class="layout_left">
+        <div class="article">
+            <h1 style="text-align: center;">{{ article.title }}</h1>
+            <div class="info">
+                <span>时间：{{ article.update_time.strftime('%Y-%m-%d') }}</span>
+                <span>来源：ZTF个人博客</span>
+                <span>作者：ZTF</span>
+            </div>
+            {% if article.yuque_id %}
+                {{ article.content|safe }}
+            {% else %}
+                <div id="content" class="lake-content" typography="classic"> {{ article.content|safe }}</div>
+            {% endif %}
+            <div class="designer">
+                <img src="/static/img/ztf.webp" alt="ZTF"/>
+                <div>
+                    <p>ZTF</p>
+                    <span
+                    >如果缘分安排我们相遇，请不要让她擦肩而过。扫一扫二维码，加我为好友吧！</span>
+                </div>
+            </div>
+            <div class="info_next">
+                {% if prev_article %}
+                    <a href="/article/{{ prev_article.id }}.html">上一篇:{{ prev_article.title }}</a>
+                {% endif %}
+
+                {% if next_article %}
+                    <a href="/article/{{ next_article.id }}.html">下一篇:{{ next_article.title }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!--main_left end-->
+    <div class="layout_right">
+        <div class="bg_white text_card">
+            <div class="title">最新文章</div>
+            <ul class="pad_20">
+                {% for item in new_article %}
+                    <li>
+                        <a href="/article/{{ item.id }}.html" title="{{ item.title }}">{{ item.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="top_20 bg_white text_card">
+            <div class="title">热门点击</div>
+            <ul class="pad_20">
+                {% for item in hot_article %}
+                    <li>
+                        <a href="/article/{{ item.id }}.html" title="{{ item.title }}">{{ item.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {#        <div class="top_20 bg_white text_card">#}
+        {#            <div class="title">相关文章</div>#}
+        {#            <ul class="pad_20">#}
+        {#                {% for item in hot_article %}#}
+        {#                    <li>#}
+        {#                        <a href="/article/{{ item.id }}" title="{{ item.title }}">{{ item.title }}</a>#}
+        {#                    </li>#}
+        {#                {% endfor %}#}
+        {#            </ul>#}
+        {#        </div>#}
+
+        <div class="top_20 bg_white text_card">
+            <div class="title">标签云</div>
+            <p class="flex_row pad_20 tagsclous">
+                {% for item in tags %}
+                    <a href="/article?tag_id={{ item.id }}" target="_blank"
+                    >{{ item.name }}</a>
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+
+<script src="/static/highlight/highlight.min.js"></script>
+
+{# 兼容markdown 内容格式 #}
+{% if not article.yuque_id %}
+    <script src="/static/js/marked.min.js"></script>
+    <script>
+        let renderer = new marked.Renderer()
+        renderer.table = function (header, body) {
+            return '<table class="ne-table" style="max-width: 750px">' + header + body + '</table>'
+        }
+        marked.setOptions({
+            renderer: renderer,
+            highlight: function (code, lang) {
+                const language = 'plaintext';
+                return hljs.highlight(code, {language}).value;
+            },
+            langPrefix: 'hljs language-', // highlight.js css expects a top-level 'hljs' class.
+            pedantic: false,
+            gfm: true,
+            breaks: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false,
+            xhtml: false
+        });
+
+        document.getElementById('content').innerHTML = marked.parse(document.getElementById('content').innerHTML);
+    </script>
+{% endif %}
+<script>
+    {#hljs.debugMode();#}
+    {#hljs.highlightAll();#}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('pre').forEach((el) => {
+            hljs.highlightElement(el);
+        });
+    });
+</script>
+
+</body>
+</html>

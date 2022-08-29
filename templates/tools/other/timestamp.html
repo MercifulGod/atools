@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>时间戳(Unix timestamp)转换工具-在线工具</title>
+    <meta name="keywords"
+          content="时间戳转换工具为您提供时间戳,时间戳转换工具,java时间戳,php时间戳,mysql时间戳,js时间戳,ios时间戳,时间戳转换,timestamp,当前时间,时间戳转换器,时间戳转换成时间">
+    <meta name="description"
+          content="时间戳转换工具为您提供时间戳,时间戳转换工具,java时间戳,php时间戳,mysql时间戳,js时间戳,ios时间戳,时间戳转换,timestamp,当前时间,时间戳转换器,时间戳转换成时间">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+        div.checkbox .label {
+            background-color: #009688;
+            width: 84px;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label {
+            background-color: #009688;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label .circle {
+            left: 53px;
+        }
+
+        .layui-form-label {
+            width: 200px;
+            padding-left: 0;
+            text-align: left;
+        }
+
+        .layui-input-block {
+            margin-left: 0;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>时间戳(Unix timestamp)转换工具</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/other/indexTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">现在时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" v-model="currentdate" placeholder="现在时间" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">UNIX时间戳</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" v-model="currentstamp" placeholder="UNIX时间戳" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">时间戳 --> 北京标准时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" v-model="timestamp" required lay-verify="required" placeholder="请输入时间戳"
+                                       autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">北京标准时间 --> 时间戳</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" v-model="date" required lay-verify="required" placeholder="请输入时间，如:2022-02-02"
+                                       autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="checkbox layui-inline">
+                                    <input type="checkbox" v-model="format" id="ignoreLetter" title="不转换字母和数字"/>
+                                    <label class="label layui-unselect layui-form-checkbox" for="ignoreLetter" chkV="毫秒" nchkV="秒">
+                                        <span class="circle"></span>
+                                    </label>
+                                </div>
+                                <div class="layui-inline layui-btn-group">
+                                    <button id="formatBTN" type="button" @click="timestamp2date" class="layui-btn">时间戳转日期</button>
+                                    <button id="compressBTn" type="button" @click="date2timestamp" class="layui-btn">日期转时间戳</button>
+                                    <button id="clearBTN" type="button" class="layui-btn  layui-btn-primary"><i
+                                            class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 扩展知识
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="50">
+                                <col width="150">
+                                <col width="250">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>Java时间戳</td>
+                                <td>(int) (System.currentTimeMillis() / 1000)</td>
+                            </tr>
+                            <tr>
+                                <td>PHP时间戳</td>
+                                <td>time()</td>
+                            </tr>
+
+
+                            <tr>
+                                <td>JS时间戳</td>
+                                <td>Math.round(new Date().getTime()/1000)</td>
+                            </tr>
+
+                            <tr>
+                                <td>IOS时间戳</td>
+                                <td>[[NSDate date] timeIntervalSince1970]</td>
+                            </tr>
+
+
+                            <tr>
+                                <td>IOS时间戳</td>
+                                <td>[[NSDate date] timeIntervalSince1970]</td>
+                            </tr>
+
+
+                            <tr>
+                                <td>Python时间戳</td>
+                                <td>import time
+                                    time.time()
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>MySQL时间戳</td>
+                                <td>SELECT unix_timestamp(now())</td>
+                            </tr>
+
+                            <tr>
+                                <td>PostgreSQL时间戳</td>
+                                <td>SELECT extract(epoch FROM now())</td>
+                            </tr>
+
+                            <tr>
+                                <td>Ruby时间戳</td>
+                                <td>获取Unix时间戳：Time.now 或 Time.new ，显示Unix时间戳：Time.now.to_i</td>
+                            </tr>
+                            <tr>
+                                <td>SQL Server时间戳</td>
+                                <td>SELECT DATEDIFF(s, '1970-01-01 00:00:00GETUTCDATE())</td>
+                            </tr>
+                            <tr>
+                                <td>Unix时间戳/Linux时间戳</td>
+                                <td> date +%s</td>
+                            </tr>
+
+                            <tr>
+                                <td>Microsoft .NET/C#</td>
+                                <td>epoch = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000</td>
+                            </tr>
+                            <tr>
+                                <td>VBScript/ASP时间戳</td>
+                                <td>DateDiff("s", "01/01/1970 00:00:00", Now())</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线时间戳转换工具</h2>
+                        <br>
+                        <p>1. 提供时间戳和时间互相转换</p>
+                        <p>2. 附带提供各种语言的时间戳获取方法</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-tips"></i> 时间戳是什么
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="text-indent: 2em;">
+                        <p> 时间戳是指格林威治时间1970年01月01日00时00分00秒(北京时间1970年01月01日08时00分00秒)起至现在的总秒数。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script>
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                timer: undefined,
+                format: "s",
+                currentstamp: "",
+                currentdate: "",
+                timestamp: "",
+                date: "",
+            }
+
+        },
+        methods: {
+            updateTimestamp() {
+                var result = new Date().getTime().toString();
+                if (this.format === "s" || this.format === true) {
+                    result = result.slice(0, result.length - 3);
+                }
+                this.currentstamp = result;
+                this.currentdate = this.dateFormat(new Date())
+            },
+            timestamp2date() {
+                console.log(this.format)
+                var result = parseInt(this.timestamp);
+                if (this.format === "s" || this.format === true) {
+                    result = result * 1000;
+                }
+                var date_obj = new Date(result);
+                this.date = this.dateFormat(date_obj);
+            },
+
+            dateFormat(date_obj) {
+                let Y = date_obj.getFullYear() + "-";
+                let M =
+                    (date_obj.getMonth() + 1 < 10
+                        ? "0" + (date_obj.getMonth() + 1)
+                        : date_obj.getMonth() + 1) + "-";
+                let D = date_obj.getDate() + " ";
+                let h = date_obj.getHours() + ":";
+                let m = date_obj.getMinutes() + ":";
+                let s = date_obj.getSeconds();
+                return Y + M + D + h + m + s;
+            },
+
+            date2timestamp() {
+                var strtime = this.date;
+                var date = new Date(strtime.replace(/-/g, "/"));
+                var result = Date.parse(date).toString();
+                if (this.format === "s" || this.format === true) {
+                    result = result.slice(0, 10);
+                }
+                this.timestamp = result;
+            },
+        },
+        mounted: function () {
+
+            this.timer = setInterval(this.updateTimestamp, 1000);
+        }
+    }
+
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

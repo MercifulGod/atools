@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MD5在线加密工具-在线工具</title>
+    <meta name="keywords" content="md5加密,md5加密大写,md5加密小写,md5加密算法,md5加密工具">
+    <meta name="description" content="在线md5加密,md5加密算法,md5加密工具,免费MD5在线加密,MD5在线查询。">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span><a href="javascript:void(0);">加密&amp;解密</a><span
+                        lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>MD5加密</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/encrypt/tabEncrypt.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="value" placeholder="请输入要加密或解密的文本" class="layui-textarea"
+                                          style="min-height: 150px"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline layui-btn-group">
+                                    <button @click="encryptLower" type="button" class="layui-btn">加密(小写)</button>
+                                    <button @click="encryptUpper" type="button" class="layui-btn">加密(大写)</button>
+                                    <button @click="value='';result='';" type="button"
+                                            class="layui-btn  layui-btn-primary">
+                                        <i class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="result" placeholder="转换结果" class="layui-textarea"
+                                          style="min-height: 150px"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">MD5加密</h2><br>
+                        <p>
+                            MD5算法的原理可简要的叙述为：MD5码以512位分组来处理输入的信息，且每一分组又被划分为16个32位子分组，经过了一系列的处理后，算法的输出由四个32位分组组成，将这四个32位分组级联后将生成一个128位散列值。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/md5.js"></script>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                value: "",
+                result: "",
+                morebar: false, // tab more bar switch
+                tabIndex: 4  // tab 索引
+            };
+        },
+        methods: {
+            encryptLower() {
+                this.result = CryptoJS.MD5(this.value);
+            },
+            encryptUpper() {
+                this.result = CryptoJS.MD5(this.value).toUpperCase()
+            }
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

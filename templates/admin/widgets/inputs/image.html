@@ -1,0 +1,46 @@
+<div class="form-group mb-3">
+    <label class="form-label">{{ label }}</label>
+    <div class="my-2"><img id="preview_{{ name }}" src="{{ value }}"/></div>
+    <input {% if not null %}required{% endif %} type="{{ input_type }}" id="input_{{ name }}" class="form-control" name="{{ name }}"
+           placeholder="{{ placeholder }}" {% if disabled %}disabled{% endif %} value="{{ value }}">
+    {% if help_text %}
+        <small class="form-hint">
+            {{ help_text }}
+        </small>
+    {% endif %}
+</div>
+
+<script type="text/javascript" src='/static/admin/js/qiniu.3.4.min.js'></script>
+<script type="text/javascript" src='/static/admin/js/qiniu.js'></script>
+<script>
+    var input_image = document.getElementById('input_{{name}}');
+    var preview_img = document.getElementById('preview_{{name}}');
+    const observer = {
+        next(res) {
+            // let total = response.total;
+            // $(".speed").text("进度：" + total.percent + "% ");
+        },
+        error(err) {
+            // ...
+        },
+        complete(res) {
+            input_image.value = `http://cdn.ztf.net.cn/${res.key}`;
+            console.log("observer", res)
+        }
+    }
+    const qiniu_token = '{{ token }}';
+
+    input_image.addEventListener('paste', function (e) {
+        if (e.clipboardData) {
+            for (var i = 0; i < e.clipboardData.items.length; i++) {
+                var f = e.clipboardData.files[0];
+                qiniu_compress_upload(f, qiniu_token, observer);
+                var reader = new FileReader();
+                reader.readAsDataURL(f);
+                reader.onload = function (e) {
+                    preview_img.src = e.target.result;
+                }
+            }
+        }
+    });
+</script>

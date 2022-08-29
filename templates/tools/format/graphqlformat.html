@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线url网址编码、解码</title>
+    <meta name="keywords" content="URL编码解码,UrlEncode编码,UrlDecode解码,encodeURI编码,encodeURIComponent编码">
+    <meta name="description" content="在线URL编码解码工具：对网址Url进行UrlEncode编码转换,UrlEncode编码,UrlDecode解码,方便开发人员进行操作">
+
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>xml压缩格式化工具</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow>
+                {% include "tools/format/tabIndex.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="value" placeholder="请输入要压缩或格式化的XML文本"
+                                          class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline layui-btn-group">
+                                    <button @click="format" type="button" class="layui-btn">XML格式化</button>
+                                    <button @click="compressCss" type="button" class="layui-btn">XML压缩</button>
+                                    <button @click="value=''" type="button" class="layui-btn  layui-btn-primary"><i
+                                            class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线xml压缩格式化工具</h2><br>
+                        <p>1. xml压缩之后体积变小,访问网站的时候要加载css的时候,xml体积越小,传输速度越快。</p>
+                        <p>2. xml格式化功能能把经过压缩后的代码还原原有的美化格式，增强可读性。</p>
+                        <p>3. 本工具提供最好用的xml代码的格式化、美化以及压缩，更多好用、实用的在线工具尽在ztf.net.cn</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/standalone.js"></script>
+<script src="/static/js/parser-graphql.js"></script>
+
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                value: "type Query { hello: String }",
+                morebar: false, // tab more bar switch
+                tabIndex: 4  // tab 索引
+            };
+        },
+        methods: {
+            format() {
+                this.value = prettier.format(this.value, {
+                    parser: "css",
+                    plugins: prettierPlugins,
+                });
+            },
+            compressCss() {
+                //压缩代码
+                let s = this.value
+                s = s.replace(/\/\*(.|\n)*?\*\//g, ""); //删除注释
+                s = s.replace(/\s*([\{\}\:\;\,])\s*/g, "$1");
+                s = s.replace(/\,[\s\.\#\d]*\{/g, "{"); //容错处理
+                s = s.replace(/;\s*;/g, ";"); //清除连续分号
+                s = s.match(/^\s*(\S+(\s+\S+)*)\s*$/); //去掉首尾空白
+                this.value = s == null ? "" : s[1];
+            }
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

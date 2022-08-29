@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SEO 优化扫描器-在线生成工具</title>
+    <meta name="keywords" content="SEO 优化扫描器,SEO优化,提高网站自然排名"/>
+    <meta name="description" content="扫描网站中不利于SEO的地方，并给出用户提示，提高网站自然排名。"/>
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    {#    <link rel="stylesheet" href="/static/css/base.css" media="all">#}
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+        .layui-form input[type=radio] {
+            display: inline-block;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label {
+            background-color: #5FB878;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label .circle {
+            left: 64px;
+        }
+
+        div.checkbox .label {
+            width: 93px;
+            line-height: 30px;
+            margin: 4px 0;
+        }
+
+        .layui-input-block {
+            line-height: 38px;
+        }
+
+        div.layui-form-item {
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        div.layui-form-item .layui-form-label {
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0.375rem 0.75rem 0.375rem 0;
+            text-align: center;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        div.layui-form-item .layui-input-block {
+            padding-left: 0;
+            margin-left: 0;
+            flex: 1 1 auto;
+            width: auto;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+
+            .layui-btn + .layui-btn {
+                margin-left: 0px;
+            }
+
+            div.operation {
+                display: grid;
+            }
+        }
+
+        div.layui-tab-content {
+            overflow-x: scroll;
+        }
+
+        .layui-table td, .layui-table th {
+            min-width: 20%;
+            max-width: 300px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+
+
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>SEO 优化扫描器</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/site/tab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">扫描范围</label>
+                            <div class="layui-input-block">
+                                {#                                <input type="radio" name="align" v-model="type" value="site_url" title="L">网站#}
+                                {#                                <input type="radio" name="align" v-model="type" value="sitemap" title="M">网站地图#}
+                                <input type="radio" name="scope" v-model="type" value="url_list" title="url_list" checked>URL列表
+                                <input type="radio" name="scope" v-model="type" value="sitemap" title="sitemap">sitemap
+                            </div>
+                        </div>
+                        {#                                                <div class="layui-form-item layui-form-text" v-show="type === 'site_url'">#}
+                        {#                                                    <input type="text" v-model="params.site_url" required placeholder="请输入网站域名" autocomplete="off" class="layui-input">#}
+                        {#                                                </div>#}
+                        <div class="layui-form-item layui-form-text" v-show="type === 'sitemap'">
+                            <input type="text" v-model="params.sitemap" required placeholder="请输入sitemap网址" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+
+                        <div class="layui-form-item layui-form-text" v-show="type === 'url_list'">
+                            <textarea id="codeEditor" v-model="params.url_list" class="layui-textarea"
+                                      placeholder="格式: 各个 URL 应使用 Enter/回车 (↵) 键进行分隔"></textarea>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">扫描限制</label>
+                            <div class="layui-input-block">
+                                <input type="number" v-model="params.length" placeholder="剩余配额: 200 个页面。" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item operation">
+                            <button class="layui-btn" type="button" @click="run">立即扫描</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                <div class="layui-tab-content">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>url地址</th>
+                            <th>URL深度</th>
+                            <th>错误级别</th>
+                            <th>问题描述</th>
+                            <th>提示信息</th>
+                            <th>如何修复</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr v-for="(o, t_index) in value" :key="t_index" :value="o">
+                            <td>{[ o.url ]}</td>
+                            <td>{[ o.deep ]}</td>
+                            <td>{[ o.type ]}</td>
+                            <td :title="o.desc">{[ o.desc ]}</td>
+                            <td :title="o.tip">{[ o.tip ]}</td>
+                            <td :title="o.fix">{[ o.fix ]}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">SEO 优化扫描器</h2>
+                        <br>
+                        <p>1. 扫描网站中的死链、外链，title、keywords和description是否符合规范。</p>
+                        <p>2. 尝试以搜索引擎的方式思考，提示站长如何优化自己的网站。</p>
+                        <p>3. 扫描网站中不利于SEO的地方，并给出用户提示，提高网站自然排名。 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 扩展知识
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">SEO</h2>
+                        <br>
+                        <p>
+                            搜索引擎优化，又称为SEO，即Search Engine
+                            Optimization，它是一种通过分析搜索引擎的排名规律，了解各种搜索引擎怎样进行搜索、怎样抓取互联网页面、怎样确定特定关键词的搜索结果排名的技术。搜索引擎采用易于被搜索引用的手段，对网站进行有针对性的优化，提高网站在搜索引擎中的自然排名，吸引更多的用户访问网站，提高网站的访问量，提高网站的销售能力和宣传能力，从而提升网站的品牌效应。</p>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">SEO的优化方法</h2>
+                        <br>
+                        <p>
+                            搜索引擎优化的白帽法遵循搜索引擎的接受原则。他们的建议一般是为用户创造内容、让这些内容易于被搜索引擎机器人索引、并且不会对搜寻引擎系统耍花招。一些网站的员工在设计或构建他们的网站时出现失误以致该网站排名靠后时，白帽法可以发现并纠正错误，譬如机器无法读取的选单、无效链接、临时改变导向、效率低下的索引结构等。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/other/jquery.js"></script>
+<script>
+
+    function Fetch(url, data) {
+        // Default options are marked with *
+        return fetch(url, {
+            body: JSON.stringify(data), // must match 'Content-Type' header
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json'
+            },
+            method: 'POST'
+        })
+    }
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                value: [],
+                site: "https://ztf.net.cn/tools/qrcode.html",
+                id: "", //任务ID
+                type: "url_list",
+                params: {
+                    url_list: "",
+                    site_url: "",
+                    sitemap: "",
+                    length: "",
+                },
+                timer: undefined, //定时器
+                options: {
+                    year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    hour12: false, timeZoneName: 'short'
+                },
+                start_time: "" // 开始执行时间
+            };
+        },
+        methods: {
+            run() {
+                Fetch("/api/siteScan", this.params).then(async res => {
+                    const {data, success} = await res.json()
+                    if (data.id) {
+                        {#console.time()#}
+                        this.start_time = window.performance.now();
+                        this.id = data.id
+                        this.timer = setInterval(this.getStatus, 3000);
+                    }
+                })
+            },
+            getStatus() {
+                fetch("/api/siteScan?id=" + this.id).then(async res => {
+                    const {data, success} = await res.json()
+                    console.log(data, success)
+                    if (!data) return
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i] === "end") {
+                            clearInterval(this.timer)
+                            return
+                        }
+                        this.value.push(JSON.parse(data[i]))
+                        console.log(JSON.parse(data[i]));
+                    }
+                })
+            }
+        },
+        mounted: function () {
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

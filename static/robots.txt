@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /templates/
+Disallow: /games/
+Disallow: /api/
+Disallow: /fonts/

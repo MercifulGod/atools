@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link REL="SHORTCUT ICON" href="/favicon.ico"/>
+    <style type="text/css">
+        {% include "tools/snippet/style.css" %}
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .w_8_c {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .icon {
+            width: 30px;
+            height: 100%;
+        }
+
+        .container {
+            margin-top: 60px;
+        }
+
+        .container img {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        dl, dt, dd {
+            line-height: 40px;
+        }
+
+        dl.pad_dl dt {
+            padding: 1vh 0;
+        }
+
+        dl.pad_dl dd {
+            padding: 1vh 3vh;
+        }
+
+        dl.left_pad dd {
+            padding: 0 0 0 3vh;
+        }
+
+        .one_column {
+            display: grid;
+            grid-template-columns: 100%;
+        }
+
+        .two_column {
+            display: grid;
+            grid-template-columns: repeat(2, 50%);
+        }
+
+        .three_column {
+            display: grid;
+            grid-template-columns: repeat(3, 33.33%);
+        }
+
+        .four_column {
+            display: grid;
+            grid-template-columns: repeat(4, 25%);
+        }
+
+        div.btn {
+            border-radius: 15px;
+            color: #fff;
+            background-color: #ee0e2d;
+            padding: 0 10px;
+        }
+
+        #preview {
+            width: 350px;
+            box-shadow: 5px 5px 10px black;
+        }
+
+        {# swiper css start #}
+        html,
+        body {
+            position: relative;
+            height: 100%;
+        }
+
+        body {
+            background: #eee;
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .swiper {
+            width: 100%;
+            height: 200px;
+        {#height: 100%;#}
+        }
+
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        {# swiper css end #}
+        .left_pad input {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px;
+            width: 60px;
+        }
+
+
+    </style>
+    <link href="/static/css/swiper-bundle.min.css" rel="stylesheet"/>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+<div class="tool_bar w_8_c">
+
+    <dl class="console flex_row pad_dl">
+        <dt>控&ensp;制&ensp;台</dt>
+        <dd>
+            <div onclick="document.getElementById('upload').click()" class="upload_dtn btn">
+                上传文件
+                <input type="file" id="upload" style="display: none" multiple onchange="handleImg()"/>
+            </div>
+        </dd>
+        <dd onclick="download()">
+            <div class="btn">下载图片</div>
+        </dd>
+    </dl>
+
+
+    <dl class="left_pad flex_row">
+        <dt>选择布局</dt>
+        <dd onclick="changelayout('one_column')">
+            <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 p-id="20876" width="200" height="200">
+                <path d="M874.666667 117.333333H149.333333C108.8 117.333333 74.666667 151.466667 74.666667 192v640c0 40.533333 34.133333 74.666667 74.666666 74.666667h725.333334c40.533333 0 74.666667-34.133333 74.666666-74.666667V192c0-40.533333-34.133333-74.666667-74.666666-74.666667z m-725.333334 64h725.333334c6.4 0 10.666667 4.266667 10.666666 10.666667v288h-746.666666V192c0-6.4 4.266667-10.666667 10.666666-10.666667z m725.333334 661.333334H149.333333c-6.4 0-10.666667-4.266667-10.666666-10.666667V544h746.666666V832c0 6.4-4.266667 10.666667-10.666666 10.666667z"
+                      p-id="20877"></path>
+            </svg>
+        </dd>
+        <dd onclick="changelayout('two_column')">
+            <svg t="1650781022613" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 p-id="21010" width="200" height="200">
+                <path d="M874.666667 117.333333H149.333333C108.8 117.333333 74.666667 151.466667 74.666667 192v640c0 40.533333 34.133333 74.666667 74.666666 74.666667h725.333334c40.533333 0 74.666667-34.133333 74.666666-74.666667V192c0-40.533333-34.133333-74.666667-74.666666-74.666667zM138.666667 832V192c0-6.4 4.266667-10.666667 10.666666-10.666667h330.666667v661.333334H149.333333c-6.4 0-10.666667-4.266667-10.666666-10.666667z m746.666666 0c0 6.4-4.266667 10.666667-10.666666 10.666667H544v-661.333334H874.666667c6.4 0 10.666667 4.266667 10.666666 10.666667v640z"
+                      p-id="21011"></path>
+            </svg>
+        </dd>
+
+        <dd onclick="changelayout('three_column')">
+            <svg t="1650781040847" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 p-id="21144" width="200" height="200">
+                <path d="M874.666667 117.333333H149.333333C108.8 117.333333 74.666667 151.466667 74.666667 192v640c0 40.533333 34.133333 74.666667 74.666666 74.666667h725.333334c40.533333 0 74.666667-34.133333 74.666666-74.666667V192c0-40.533333-34.133333-74.666667-74.666666-74.666667z m-245.333334 64v661.333334h-234.666666v-661.333334h234.666666zM138.666667 832V192c0-6.4 4.266667-10.666667 10.666666-10.666667h181.333334v661.333334H149.333333c-6.4 0-10.666667-4.266667-10.666666-10.666667z m746.666666 0c0 6.4-4.266667 10.666667-10.666666 10.666667h-181.333334v-661.333334H874.666667c6.4 0 10.666667 4.266667 10.666666 10.666667v640z"
+                      p-id="21145"></path>
+            </svg>
+        </dd>
+
+        <dd onclick="changelayout('four_column')">
+            <svg t="1650781121663" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 p-id="21956" width="200" height="200">
+                <path d="M874.666667 117.333333H149.333333C108.8 117.333333 74.666667 151.466667 74.666667 192v640c0 40.533333 34.133333 74.666667 74.666666 74.666667h725.333334c40.533333 0 74.666667-34.133333 74.666666-74.666667V192c0-40.533333-34.133333-74.666667-74.666666-74.666667z m-330.666667 64h128v661.333334h-128v-661.333334z m-64 661.333334h-128v-661.333334h128v661.333334z m-341.333333-10.666667V192c0-6.4 4.266667-10.666667 10.666666-10.666667h138.666667v661.333334H149.333333c-6.4 0-10.666667-4.266667-10.666666-10.666667z m746.666666 0c0 6.4-4.266667 10.666667-10.666666 10.666667h-138.666667v-661.333334H874.666667c6.4 0 10.666667 4.266667 10.666666 10.666667v640z"
+                      p-id="21957"></path>
+            </svg>
+        </dd>
+    </dl>
+
+    <dl class="left_pad flex_row">
+        <dt>拼图定位</dt>
+        <dd>left： <input type="number" id="position_left" value="20" onchange="changePosition('left',this.value)"></dd>
+        <dd>top：<input type="number" id="position_top" value="20" onchange="changePosition('top',this.value)"></dd>
+        <dd>width： <input type="number" id="position_width" onchange="changePosition('width',this.value)"></dd>
+        <dd>height：<input type="number" id="position_height" onchange="changePosition('height',this.value)"></dd>
+    </dl>
+
+
+    <dl class="photoFrame flex_row pad_dl ">
+        <dt>选择相框</dt>
+    </dl>
+
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <img src="/static/img/photo/009.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/001.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/002.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/003.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/004.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/005.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/006.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/007.jpeg" onclick="handleBox(this)" class="swiper-slide">
+            <img src="/static/img/photo/008.jpeg" onclick="handleBox(this)" class="swiper-slide">
+
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+<div class="container w_8_c">
+    <div id="preview" class="four_column"></div>
+
+    <div id="previewWithFrame"></div>
+</div>
+
+<script src="/static/js/html2canvas.min.js"></script>
+<script src="/static/js/swiper-bundle.min.js"></script>
+
+
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+
+    var avatar = document.getElementById('upload');
+    var preview = document.getElementById('preview');
+    var previewWithFrame = document.getElementById('previewWithFrame');
+    var phone_left = document.getElementById('position_left');
+    var phone_top = document.getElementById('position_top');
+    var phone_height = document.getElementById('position_height');
+    var phone_width = document.getElementById('position_width');
+
+    // 当前拼图
+    var currentImg = undefined;
+
+    // 当前相册
+    var currentFrame = undefined;
+
+
+    // 添加相册时，拼图的相对位置
+    var phonePosition = {
+        "left": 20,
+        "top": 20,
+        "width": undefined,
+        "height": undefined,
+    };
+
+    function handleImg() {
+        preview.innerText = "";
+        for (var i = 0; i < avatar.files.length; i++) {
+            // .files 拿到的是用户选中的图片的一个数组
+            const file = avatar.files[i];
+            // 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+            const reader = new FileReader();
+            let node = document.createElement("img");
+            // 将选中的文件转换为base64 --- 异步操作
+            reader.readAsDataURL(file);
+            // 转换完成执行 this.result 就表示 转换成的结果
+            reader.onload = function () {
+                node.src = this.result
+            };
+
+            preview.appendChild(node);
+        }
+    }
+
+
+    function changePosition(position, value) {
+        {# 动态修改拼图的位置 #}
+        phonePosition[position] = value;
+        {#console.log("pintuPosition...", phonePosition);#}
+        // 没有相册不用改变位置
+        if (!currentFrame) return;
+        handleBox(currentFrame)
+    }
+
+
+    function changelayout(class_name) {
+        {# 动态修改布局 #}
+        preview.setAttribute("className", class_name);//IE下使用className
+        preview.setAttribute("class", class_name);//FF下的方式 所以要注意
+    }
+
+    function handleBox(frame) {
+        {#console.log("handleBox...");#}
+        {# 拼图增加相框，更换相册 #}
+        if (!!currentFrame) {
+            // 再次添加相册
+            var canvas = document.createElement("canvas");
+            canvas.width = currentImg.width + 40;
+            canvas.height = currentImg.height + 40;
+            var context = canvas.getContext("2d");
+
+            context.drawImage(currentImg, phonePosition["left"], phonePosition["top"],
+                phonePosition["width"], phonePosition["height"]
+            );
+            context.drawImage(frame, 0, 0, canvas.width, canvas.height);
+            previewWithFrame.innerText = "";
+            previewWithFrame.appendChild(canvas);
+            return
+        }
+
+
+        // 第一次添加相册
+        var opts = {
+            backgroundColor: null //dom 原始高度
+        };
+        html2canvas(preview, opts).then(function (capture) {
+            {#console.log(capture.width, capture.height);#}
+            var canvas = document.createElement("canvas");
+            canvas.width = capture.width;
+            canvas.height = capture.height;
+            var myImage = new Image();
+            var context = canvas.getContext("2d");
+            myImage.src = capture.toDataURL("image/png"); //"image/png" 这里注意一下
+            myImage.crossOrigin = 'Anonymous';
+            myImage.onload = function () {
+                context.drawImage(myImage, 5, 5, capture.width, capture.height);
+                context.drawImage(frame, 0, 0, capture.width + 10, capture.height + 10);
+                preview.innerText = "";
+                previewWithFrame.innerText = "";
+                previewWithFrame.appendChild(canvas);
+            };
+
+            // 当前拼图、当前相册，功能：更换相册
+            currentImg = myImage;
+            currentFrame = frame;
+
+
+            phone_height.value = capture.height;
+            phone_width.value = capture.width;
+            phonePosition["width"] = capture.width;
+            phonePosition["height"] = capture.height;
+        });
+    }
+
+    function download() {
+        console.log("download");
+        var canvas = previewWithFrame.getElementsByTagName('canvas');
+        if (!canvas) return;
+
+        console.log("download");
+        // 创建一个 a 标签，并设置 href 和 download 属性
+        const el = document.createElement('a');
+        // 设置 href 为图片经过 base64 编码后的字符串，默认为 png 格式
+        el.href = canvas[0].toDataURL();
+        el.download = 'ztf.net.cn.png';
+        // 创建一个点击事件并对 a 标签进行触发
+        const event = new MouseEvent('click');
+        el.dispatchEvent(event);
+    }
+
+
+</script>
+
+</body>
+</html>

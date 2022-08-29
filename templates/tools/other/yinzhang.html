@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线生成印章工具、印章在线生成器-ZTF工具箱</title>
+    <meta name="keywords" content="在线生成印章，在线印章生成器，个性印章在线生成，电子印章生成器">
+    <meta name="description" content="印章在线制作的好软件，输入你的名字后就可生成得到一枚属于你自己的个性印章，支持输出背景透明PNG图片">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>css压缩格式化工具</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow>
+                {% include "tools/format/tabIndex.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <input type="text" v-model="value" required lay-verify="required" placeholder="请输入印章文字"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="text" v-model="company_name" required lay-verify="required" placeholder="请输入公司名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline layui-btn-group">
+                                    <button id="formatBTN" type="button" @click="start_seal" class="layui-btn">制作印章</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <canvas id="canvas"></canvas>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688"> 本印章制作生成器能在线生成个性古风印章</h2><br>
+                        <p>1. 再输入2到4个汉字（名字），点击“制作印章”后即可得到你设计的个性印章。</p>
+                        <p>2. 长按或右击另存为，即可保存</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+{#<script src="/static/js/jquery-1.8.3.min.js"></script>#}
+{#<script src="/static/other/jquery.js"></script>#}
+<script src="/static/js/vue.global.prod.js"></script>
+<script language="javascript">
+
+
+    /*
+    JavaScript和html5 canvas生成圆形印章
+    https://blog.51cto.com/iteyer/3232993
+     */
+    function createSeal(id, company, name) {
+
+        var canvas = document.getElementById(id);
+        var context = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight / 2;
+
+        // 绘制印章边框
+        var width = canvas.width / 2;
+        var height = canvas.height / 2;
+        context.lineWidth = 7;
+        context.strokeStyle = "#f00";
+        context.beginPath();
+        context.arc(width, height, 110, 0, Math.PI * 2);
+        context.stroke();
+        //画五角星
+        create5star(context, width, height, 30, "#f00", 0);
+        // 绘制印章名称
+        context.font = '22px Helvetica';
+        context.textBaseline = 'middle';//设置文本的垂直对齐方式
+        context.textAlign = 'center'; //设置文本的水平对对齐方式
+        context.lineWidth = 1;
+        context.fillStyle = '#f00';
+        context.fillText(name, width, height + 65);
+        // 绘制印章单位
+        context.translate(width, height);// 平移到此位置,
+        context.font = '30px Helvetica'
+        var count = company.length;// 字数
+        var angle = 4 * Math.PI / (3 * (count - 1));// 字间角度
+        var chars = company.split("");
+        var c;
+        for (var i = 0; i < count; i++) {
+            c = chars[i];// 需要绘制的字符
+            if (i == 0)
+                context.rotate(5 * Math.PI / 6);
+            else
+                context.rotate(angle);
+            context.save();
+            context.translate(90, 0);// 平移到此位置,此时字和x轴垂直
+            context.rotate(Math.PI / 2);// 旋转90度,让字平行于x轴
+            context.fillText(c, 0, 5);// 此点为字的中心点
+            context.restore();
+        }
+
+        //绘制五角星
+        /**
+         * 创建一个五角星形状. 该五角星的中心坐标为(sx,sy),中心到顶点的距离为radius,rotate=0时一个顶点在对称轴上
+         * rotate:绕对称轴旋转rotate弧度
+         */
+        function create5star(context, sx, sy, radius, color, rotato) {
+            context.save();
+            context.fillStyle = color;
+            context.translate(sx, sy);//移动坐标原点
+            context.rotate(Math.PI + rotato);//旋转
+            context.beginPath();//创建路径
+            var x = Math.sin(0);
+            var y = Math.cos(0);
+            var dig = Math.PI / 5 * 4;
+            for (var i = 0; i < 5; i++) {//画五角星的五条边
+                x = Math.sin(i * dig);
+                y = Math.cos(i * dig);
+                context.lineTo(x * radius, y * radius);
+            }
+            context.closePath();
+            context.stroke();
+            context.fill();
+            context.restore();
+        }
+    }
+
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                value: "休息休休息",
+                company_name: "休闲鞋",
+            }
+
+        },
+        methods: {
+            start_seal() {
+                createSeal("canvas", this.value, this.company_name);
+            },
+        },
+        mounted: function () {
+            this.timer = setInterval(this.updateTimestamp, 1000);
+        }
+    }
+
+    Vue.createApp(HelloVueApp).mount("#app");
+
+</script>
+
+</body>
+</html>

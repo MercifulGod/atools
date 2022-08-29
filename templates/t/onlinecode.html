@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>引用 - 菜鸟工具</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/codemirror/codemirror.min.js"></script>
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <script src="/static/codemirror/htmlmixed.js"></script>
+    <script src="/static/codemirror/css.js"></script>
+    <script src="/static/codemirror/javascript.js"></script>
+    <script src="/static/codemirror/xml.js"></script>
+    <script src="/static/codemirror/format.js"></script>
+    <style type="text/css">
+        .CodeMirror {
+            border: 1px solid #fff;
+            height: auto;
+        }
+
+        #iframeResult {
+            display: block;
+            overflow: hidden;
+            border: 0 !important;
+            min-width: 100px;
+            width: 100%;
+            height: 100%;
+            background-color: #fff
+        }
+    </style>
+
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% include "innerHeader.html" %}
+</head>
+<body style="">
+{% include "header.html" %}
+
+
+<div>
+
+
+    <ul id="myTab" class="nav nav-tabs">
+        <li><a href="#html" data-toggle="tab">HTML</a></li>
+        <li><a href="#css" data-toggle="tab">CSS</a></li>
+        <li><a href="#js" data-toggle="tab">JS</a></li>
+        <li><a href="#result" data-toggle="tab">结果：</a></li>
+    </ul>
+
+    <!-- 内容区 -->
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" id="html">
+			<textarea placeholder="输入 HTML 代码……" id="code-html" class="form-control" name="code" rows="10"
+                      style="display: none;"></textarea>
+        </div>
+        <div class="tab-pane fade" id="css">
+			<textarea placeholder="输入 CSS 代码……" id="code-css" class="form-control" rows="10"
+                      style="display: none;"></textarea>
+        </div>
+        <div class="tab-pane fade" id="js">
+			<textarea placeholder="输入 JavaScript 代码……" id="code-js" class="form-control" name="code" rows="10"
+                      style="display: none;"></textarea>
+        </div>
+        <div class="tab-pane fade" id="result" style="padding:15px;height: calc(100vh - 50px);">
+            {#        <iframe frameborder="0" id="iframeResult" src="./statics/saved_resource.html"></iframe>#}
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jquery-2.0.3.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+    window.onload = function () {
+        var height = $(window).height();
+
+
+        var html_editor, css_editor, js_editor;
+        // CM OPTIONS
+        var cm_opt = {
+            mode: 'text/html',
+            gutter: true,
+            lineNumbers: true,
+            lineWrapping: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true
+        };
+
+        var prepareSource = function () {
+            var html = html_editor.getValue(),
+                css = css_editor.getValue(),
+                js = js_editor.getValue(),
+                src = html;
+            if (html) {
+                var patternHtmlTag = /<html([^>]*)>/im;
+                var array_matches_html_tag = patternHtmlTag.exec(src);
+                if (array_matches_html_tag) {
+                    src = src.replace('<html>', '<html ' + array_matches_html_tag[1] + '>');
+                }
+                var patternHead = /<head[^>]*>((.|[\n\r])*)<\/head>/im
+                var array_matches_head = patternHead.exec(src);
+
+                var patternBodyTag = /<body([^>]*)>/im;
+                var array_matches_body_tag = patternBodyTag.exec(src);
+                if (array_matches_body_tag) {
+                    src = src.replace('<body>', '<body ' + array_matches_body_tag[1] + '>');
+                }
+            }
+            //console.log(css);
+            if (css.indexOf('<style>') !== -1) {
+                $(".alert-danger span").text('CSS 编辑框不需要 <style> 标签');
+                $(".alert-danger").show().delay(5000).fadeOut();
+                return;
+            } else if (js.indexOf('<script>') !== -1) {
+                $(".alert-danger span").text('JavaScript 编辑框不需要 <script> 标签');
+                $(".alert-danger").show().delay(5000).fadeOut();
+                return;
+            } else {
+                $(".alert-danger").hide();
+            }
+
+            // CSS
+            if (css) {
+                css = '<style>' + css + '</style>';
+                if (array_matches_head) {
+                    src = src.replace('</head>', css + '</head>');
+                } else if (array_matches_body_tag) {
+                    src = src.replace('</body>', css + '</body>');
+                } else {
+                    src += css;
+                }
+            }
+
+            // Javascript
+            if (js) {
+                js = '<script>' + js + '<\/script>';
+                if (array_matches_body_tag) {
+                    src = src.replace('</body>', js + '</body>');
+                } else {
+                    src += js;
+                }
+            }
+
+            return src;
+        };
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            console.log("shown.bs.tab")
+            if (html_editor instanceof CodeMirror) {
+                html_editor.refresh();
+            } else {
+                var html_box = document.querySelector('#code-html');
+                html_editor = CodeMirror.fromTextArea(html_box, cm_opt);
+                htmlstr = `{{ obj.html_str | safe }}`;
+                html_editor.setValue(htmlstr);
+            }
+
+            // CSS EDITOR
+            if (css_editor instanceof CodeMirror) {
+                css_editor.refresh();
+            } else {
+                cm_opt.mode = 'css';
+                var css_box = document.querySelector('#code-css');
+                css_editor = CodeMirror.fromTextArea(css_box, cm_opt);
+                cssstr = `{{ obj.css_str |safe }}`;
+                css_editor.setValue(cssstr);
+            }
+
+            // JAVASCRIPT EDITOR
+            if (js_editor instanceof CodeMirror) {
+                js_editor.refresh();
+            } else {
+                cm_opt.mode = 'javascript';
+                var js_box = document.querySelector('#code-js');
+                js_editor = CodeMirror.fromTextArea(js_box, cm_opt);
+                jsstr = `{{ obj.js_str |safe }}`;
+                js_editor.setValue(jsstr);
+            }
+            send_data = prepareSource();
+            submitTryit(send_data);
+
+
+        });
+        $('#myTab li:eq(0) a').tab('show');
+
+
+        html_editor.on('change', function (inst, changes) {
+            send_data = prepareSource();
+            submitTryit(send_data);
+
+        });
+        css_editor.on('change', function (inst, changes) {
+            send_data = prepareSource();
+            submitTryit(send_data);
+
+        });
+        js_editor.on('change', function (inst, changes) {
+            send_data = prepareSource();
+            submitTryit(send_data);
+
+        });
+        height = height * 0.93
+        html_editor.setSize('100%', height);
+        js_editor.setSize('100%', height);
+        css_editor.setSize('100%', height);
+    }
+
+
+    function submitTryit(text) {
+        var ifr = document.createElement("iframe");
+        ifr.setAttribute("frameborder", "0");
+        ifr.setAttribute("id", "iframeResult");
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("result").appendChild(ifr);
+
+
+        var ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
+        var ifrwd = ifrw.document;
+        ifrwd.open();
+        ifrwd.write(text);
+        ifrwd.close();
+    }
+
+
+</script>
+
+
+</body>
+</html>

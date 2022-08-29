@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线xml压缩格式化工具</title>
+    <meta name="keywords" content="xml压缩,在线xml压缩,xml解压缩,xml美化,xml格式化,xml压缩格式化工具">
+    <meta name="description" content="在线xml压缩格式化工具提供最好用的xml代码的格式化、美化以及压缩,更多好用、实用的在线工具尽在ztf.net.cn">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>xml压缩格式化工具</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow>
+                {% include "tools/format/tabIndex.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                  <textarea id="codeEditor" class="layui-textarea" onfocus="loadParser()"
+                                            placeholder="请输入要压缩或格式化的XML文本"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="checkbox layui-inline">
+                                    <input type="checkbox" id="ignoreLetter" title="不转换字母和数字"/>
+                                    <label class="label layui-unselect layui-form-checkbox" for="ignoreLetter"
+                                           chkV="保留注释" nchkV="不保留注释">
+                                        <span class="circle"></span>
+                                    </label>
+                                </div>
+                                <div class="layui-inline layui-btn-group">
+                                    <button id="formatBTN" type="button" class="layui-btn">XML格式化</button>
+                                    <button id="compressBTn" type="button" class="layui-btn">XML压缩</button>
+                                    <button id="clearBTN" type="button" class="layui-btn  layui-btn-primary"><i
+                                            class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12" id="errorShow" style="display: none;">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label-col" for="ErrorTip">XML格式校验</label>
+                                <textarea name="" id="ErrorTip" placeholder="转换结果" class="layui-textarea"
+                                          style="min-height: 100px"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线xml压缩格式化工具</h2><br>
+                        <p>1. xml压缩之后体积变小,访问网站的时候要加载css的时候,xml体积越小,传输速度越快。</p>
+                        <p>2. xml格式化功能能把经过压缩后的代码还原原有的美化格式，增强可读性。</p>
+                        <p>3. 本工具提供最好用的xml代码的格式化、美化以及压缩，更多好用、实用的在线工具尽在ztf.net.cn</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/jquery-1.8.3.min.js"></script>
+<script src="/static/other/jquery.js"></script>
+<script language="javascript">
+    const codeEditor = document.getElementById('codeEditor')
+    const ErrorTip = document.getElementById("ErrorTip")
+    var editor = undefined
+
+    window.onload = function () {
+        {# 选中导航#}
+        url = window.location.pathname;
+        $(".layui-tab a[href='" + url + "']").parent().addClass('layui-this');
+        $(".layui-tab a[href='" + url + "']").parent().parent().parent().addClass('layui-nav-itemed');
+        $(".layui-nav a[href='" + url + "']").parent().parent().prev().addClass('layui-this');
+
+        $("#tabmore").on('click', function () {
+            if ($("#tabmore").parent().hasClass("layui-tab-more")) {
+                $("#tabmore").parent().removeClass("layui-tab-more")
+            } else {
+                $("#tabmore").parent().addClass("layui-tab-more")
+            }
+        });
+    }
+
+
+    function formatCode() {
+        try {
+            if (!editor.getValue()) return
+            const pretty = CoreTool.xmlPretty(editor.getValue())
+            editor.setValue(pretty)
+            document.getElementById("errorShow").style.display = "none"; //隐藏
+        }
+        catch (err) {
+            ErrorTip.innerHTML = err.message;
+            document.getElementById("errorShow").style.display = "block";
+            ErrorTip.focus()
+        }
+    }
+
+
+    function loadParser() {
+        if (editor) return
+        CoreTool.loadJS("xml", () => {
+            editor = CodeMirror.fromTextArea(codeEditor, {
+                lineNumbers: true,
+                mode: 'xml' // 设置mode 对应的也要这之前引入相应的js
+            });
+        })
+    }
+
+    document.getElementById('formatBTN').addEventListener('mousedown', e => {
+        loadParser()
+        formatCode()
+    })
+
+
+    $("#compressBTn").on('click', function () {
+        loadParser()
+        if (!editor.getValue()) return
+        let ignore = $("#ignoreLetter").prop('checked')
+        editor.setValue(CoreTool.minXML(editor.getValue(), ignore))
+    });
+
+
+    document.getElementById('clearBTN').addEventListener('mousedown', e => {
+        document.getElementById("errorShow").style.display = "none"; //隐藏
+        editor.setValue("")
+        editor.focus()
+    })
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>周易算卦</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/png" href="http://7x00f7.com1.z0.glb.clouddn.com/8gua.png">
+    {#    <link href="index-38202c9fdb17e11a3b2ab888b359b2bd.css" rel="stylesheet">#}
+    <link href="/static/fs/game.style.css" rel="stylesheet">
+</head>
+<body>
+<!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+<div id="root">
+    <div data-reactroot="" id="main" style="display: flex; flex-direction: column; min-height: 100%;">
+        <div class="divination">
+            <div class="coins">
+                <div class="coin" :style="`transform: rotateY(${angles[0]}deg);`">
+                    <div class="head"></div>
+                    <div class="tail"></div>
+                </div>
+                <div class="coin" :style="`transform: rotateY(${angles[1]}deg);`">
+                    <div class="head"></div>
+                    <div class="tail"></div>
+                </div>
+                <div class="coin" :style="`transform: rotateY(${angles[1]}deg);`">
+                    <div class="head"></div>
+                    <div class="tail"></div>
+                </div>
+            </div>
+            <div class="gua-diagram"><!-- react-text: 15 -->卦象<!-- /react-text -->
+                <div class="gua-diagram-body">
+                    <div class="gua-line" v-for="(o, index) in guas" :key="index">
+                        <div :class="isYang(index)?'gua-bar-yang':'gua-bar-yin'">
+                            <div :class="isYang(index) && isChange(index)  ?'gua-space-yang':'gua-space-yin'"></div>
+                        </div>
+                        <div class="isYang(index) && isChange(index)  ?'gua-change-yang':'gua-change-yin'">
+                            {[ isYang(index) && isChange(index) ?'○':'×' ]}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="button" value="摇卦" @click="yaogua">
+            <div class="gua-result" v-show="guaIndex">
+                结果: 第 {[ guaIndex ]} 卦 {[ name ]}卦({[ name2 ]}), {[ changeGuas.length>0?`变爻:${changeGuas}`:'无变爻']}<br><br>
+                <a :href="`https://www.baidu.com/s?wd=title:(周易第${guaIndex}卦_${name}卦_${name2}_${desc}_${desc2})`"
+                   target="_blank" rel="noopener noreferrer">点此查找解释</a></div>
+
+            <div class="guide">
+                说明：<br>
+                一、点击摇卦按钮六次，得出结果。从下往上编号。<br>
+                二、结果分两部分，主卦和变爻。<br>
+                三、关于断卦、取爻方法的说明：<br>
+                0、变卦就是将卦中所有变爻阴阳反转所得之卦。<br>
+                1、六爻都不变，为静卦,根据得卦卦辞进行断解。<br>
+                2、一爻变：即卦中只有一个爻变，以变爻的爻辞断解。<br>
+                3、两爻变：卦中出现两个变爻，以上面那个变爻的爻辞进行断解。<br>
+                4、三爻变：卦中出现三个变爻，应用本卦的卦辞和变卦的卦辞，两两相合，进行综合断解。<br>
+                5、四爻变：卦中出现四个变爻，应以两个不变爻之中的下爻爻辞断解。<br>
+                6、五爻变：卦中出现五个变爻，以不变爻的爻辞断解。<br>
+                7、六爻变：卦中六爻全变，如果是乾卦，以卦中的“用九”爻辞断解；如果是坤卦，就以坤卦中“用六”的爻辞断解。若不是乾、坤两卦，则应以变卦的卦辞断解。
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/vue.global.prod.js"></script>
+<script type="module">
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        components: {},
+        data() {
+            return {
+                angles: [0, 0, 0],
+                guas: [],
+                guaIndex: undefined,
+                name: "",
+                name2: "",
+                desc: "",
+                desc2: "",
+                changeGuas: "",
+                guaMap: [
+                    [2, 24, 7, 19, 15, 36, 46, 11],
+                    [16, 51, 40, 54, 62, 55, 32, 34],
+                    [8, 3, 29, 60, 39, 63, 48, 5],
+                    [45, 17, 47, 58, 31, 49, 28, 43],
+                    [23, 27, 4, 41, 52, 22, 18, 26],
+                    [35, 21, 64, 38, 56, 30, 50, 14],
+                    [20, 42, 59, 61, 53, 37, 57, 9],
+                    [12, 25, 6, 10, 33, 13, 44, 1]
+                ],
+                guaDict: ['坤', '震', '坎', '兑', '艮', '离', '巽', '乾'],
+                guaDict2: ['地', '雷', '水', '泽', '山', '火', '风', '天'],
+                guaList: [
+                    "乾", "坤", "屯", "蒙", "需", "讼", "师", "比", "小畜", "履", "泰",
+                    "否", "同人", "大有", "谦", "豫", "随", "蛊", "临", "观", "噬嗑",
+                    "贲", "剥", "复", "无妄", "大畜", "颐", "大过", "坎", "离", "咸", "恒",
+                    "遁", "大壮", "晋", "明夷", "家人", "睽", "蹇", "解", "损", "益",
+                    "夬", "姤", "萃", "升", "困", "井", "革", "鼎", "震", "艮", "渐", "归妹", "丰", "旅", "巽", "兑",
+                    "涣", "节", "中孚", "小过", "既济", "未济"
+                ]
+
+            };
+        },
+        methods: {
+            isYang(index) {
+                {#console.log("isYang", this.guas[index])#}
+                return this.guas[index] > 1
+
+            },
+            isChange(index) {
+                return this.guas[index] === 0 || this.guas[index] === 3
+            },
+            getResult() {
+                const changeGuas = [];
+                if (this.guas.length < 6) {
+                    return null;
+                }
+
+                for (var i = 0; i < this.guas.length; i++) {
+                    if (this.guas[i] === 0 || this.guas[i] === 3) {
+                        changeGuas.push(i + 1);
+                    }
+                }
+
+                console.log('change guas: ' + changeGuas);
+
+                // 卦的结果： 第X卦 X卦 XX卦 上X下X X上X下
+                // 计算卦的索引，111对应乾卦。000对应坤卦，索引转为10进制。
+                const upGuaIndex = (this.guas[5] > 1 ? 4 : 0) + (this.guas[4] > 1 ? 2 : 0) + (this.guas[3] > 1 ? 1 : 0);
+                const downGuaIndex = (this.guas[2] > 1 ? 4 : 0) + (this.guas[1] > 1 ? 2 : 0) + (this.guas[0] > 1 ? 1 : 0);
+
+                const guaIndex = this.guaMap[upGuaIndex][downGuaIndex];
+                const guaName = this.guaList[guaIndex - 1];
+
+                let guaName2 = null;
+                if (upGuaIndex === downGuaIndex) {
+                    // 上下卦相同，格式为X为X
+                    guaName2 = this.guaDict[upGuaIndex] + '为' + this.guaDict2[upGuaIndex];
+                } else {
+                    guaName2 = this.guaDict2[upGuaIndex] + this.guaDict2[downGuaIndex] + guaName;
+                }
+                console.log('upGuaIndex: ' + upGuaIndex + ', downGuaIndex: ' + downGuaIndex);
+                const guaDiscription = this.guaDict[upGuaIndex] + '上' + this.guaDict[downGuaIndex] + '下';
+                const guaDiscription2 = '上' + this.guaDict[upGuaIndex] + '下' + this.guaDict[downGuaIndex];
+                console.log(guaDiscription + ' 变卦: ' + changeGuas);
+                // https://www.baidu.com/s?wd=X上X下 site:baike.fututa.com
+
+                this.guaIndex = guaIndex
+                this.name = guaName
+                this.name2 = guaName2
+                this.desc = guaDiscription
+                this.desc2 = guaDiscription2
+                this.changeGuas = changeGuas
+            },
+            getGua() {
+                let yangNum = 0;
+                for (var i = 0; i < 3; i++) {
+                    yangNum += (this.angles[i] % 360) > 0 ? 0 : 1;
+                }
+                this.guas.push(yangNum);
+                if (this.guas.length === 6) {
+                    this.getResult()
+
+                }
+                if (this.guas.length > 6) {
+                    this.guas = [];
+                    this.guaIndex = undefined
+
+                }
+            },
+            yaogua() {
+                for (var i = 0; i < 3; i++) {
+                    let rnd = Math.random();
+                    this.angles[i] = this.angles[i] + 4320 + (rnd > 0.5 ? 180 : 0);
+                }
+                this.getGua()
+            }
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#root");
+
+</script>
+</body>
+</html>

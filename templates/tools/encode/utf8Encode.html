@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线UTF-8编码转换工具-在线工具</title>
+    <meta name="keywords" content="UTF-8编码,在线UTF8编码转换,UTF-8转中文,UTF8转中文,中文转UTF8，中文在线转UTF-8">
+    <meta name="description" content="UTF-8编码在线转换工具可以快捷把中文转换成UTF-8编码，同时也支持把UTF-8编码过的还原成中文。">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>在线UTF-8编码转换</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/encode/encodeTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="value" placeholder="请输入要转换的内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12 layui-btn-group">
+                            <div class="layui-form-item layui-form-text">
+                                <button @click="utf8ToZH" type="button" class="layui-btn">UTF-8转中文</button>
+                                <button @click="zh2utf8" type="button" class="layui-btn">中文转UTF-8</button>
+                                <button @click="value=''" type="button" class="layui-btn  layui-btn-primary">
+                                    <i class="layui-icon layui-icon-delete  "></i>清除
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">UTF-8编码在线转换工具</h2><br>
+                        <p>可以快捷把中文转换成UTF-8编码，同时也支持把UTF-8编码过的还原成中文。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/other/jquery.js"></script>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                value: "",
+                morebar: false,
+                tabIndex: 3 // tab 索引
+            };
+        },
+        methods: {
+            zh2utf8() {
+                this.value = CoreTool.zh2utf8(this.value)
+            },
+            utf8ToZH() {
+                this.value = CoreTool.utf8ToZH(this.value)
+            },
+            clear() {
+                this.value = ""
+            }
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

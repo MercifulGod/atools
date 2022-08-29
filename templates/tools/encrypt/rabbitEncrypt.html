@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rabbit加解密-在线工具</title>
+    <meta name="keywords" content="加密,解密,加密&amp;解密,Rabbit,Rabbit加密,Rabbit解密,Rabbit在线加密,在线Rabbit加密解密">
+    <meta name="description" content="在线Rabbit加密,Rabbit解密,可以输入密钥后进行加密和解密,支持可逆加密解密。">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span><a href="javascript:void(0);">加密&amp;解密</a><span
+                        lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>Rabbit对称加解密</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/encrypt/tabEncrypt.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="value" placeholder="请输入要加密或解密的文本" class="layui-textarea"
+                                          style="min-height: 150px"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">加密秘钥：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" v-model="password" class="layui-input" placeholder="请输入加密秘钥">
+                                    </div>
+                                </div>
+                                <div class="layui-inline layui-btn-group">
+                                    <button @click="encrypt" type="button" class="layui-btn">加密</button>
+                                    <button @click="decrypt" type="button" class="layui-btn">解密</button>
+                                    <button @click="[value,result] = [result,value];" type="button" class="layui-btn">
+                                        输入输出互换
+                                    </button>
+                                    <button @click="value='';password='';result=''"
+                                            class="layui-btn  layui-btn-primary">
+                                        <i class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="result" placeholder="转换结果" class="layui-textarea"
+                                          style="min-height: 150px"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线Rabbit加密解密</h2><br>
+                        <p>可以输入密钥后进行加密和解密,支持可逆加密解密</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/aes.js"></script>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                value: "",
+                password: "",
+                result: "",
+                morebar: false, // tab more bar switch
+                tabIndex: 4  // tab 索引
+            };
+        },
+        methods: {
+            encrypt() {
+                this.result = CryptoJS.Rabbit.encrypt(this.value, this.password)
+            },
+            decrypt() {
+                this.result = CryptoJS.Rabbit.decrypt(this.value, this.password).toString(CryptoJS.enc.Utf8)
+            },
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

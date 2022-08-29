@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线Unicode编码转换工具-在线工具</title>
+    <meta name="keywords"
+          content="在线Unicode编码转换,Unicode,ASCII,Unicode编码转换,Unicode转ASCII,ASCII转Unicode,中文转Unicode,Unicode转中文">
+    <meta name="description"
+          content="Unicode编码转换工具:提供ASCII与Unicode互转,Unicode与中文互转,Unicode转ASCII,ASCII转Unicode,中文转Unicode,Unicode转中文">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>unicode编码转换</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/encode/encodeTab.html" %}
+
+
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea v-model="value" placeholder="请输入要转换的内容" class="layui-textarea"
+                                          style="min-height: 100px"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12 layui-btn-group">
+                            <div class="layui-form-item layui-form-text">
+                                <button @click="unicodeToZH" type="button" class="layui-btn">Unicode转中文</button>
+                                <button @click="zhToUnicode" type="button" class="layui-btn">中文转Unicode</button>
+                                <button @click="zhToEnSymbol" type="button" class="layui-btn layui-btn-primary">中文转英文符号
+                                </button>
+                                <button @click="asciiToUnicode" type="button" class="layui-btn layui-btn-primary">
+                                    ASCII码转Unicode
+                                </button>
+                                <button @click="unicodeToAscii" type="button" class="layui-btn layui-btn-primary">
+                                    Unicode转ASCII码
+                                </button>
+                                <button @click="value='';result1=''" type="button" class="layui-btn  layui-btn-primary">
+                                    <i class="layui-icon layui-icon-delete  "></i>清除
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <textarea id="result1" v-model="result1" placeholder="转换结果" class="layui-textarea"
+                                          style="min-height: 100px"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线Unicode编码转换工具</h2>
+                        <br>
+                        <p>1. 提供Unicode和中文互相转换</p>
+                        <p>2. 附带提供中文符号转成英文符号</p>
+                        <p>3. 附带提供ASCII码和Unicode互转的功能 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-tips"></i> Unicode编码简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="text-indent: 2em;">
+                        <p> unicode编码可兼容所有语言的操作系统。
+                            在计算机科学领域中，Unicode（统一码、万国码、单一码、标准万国码）是业界的一种标准，它可以使电脑得以呈现世界上数十种文字的系统。Unicode是基于通用字符集（Universal
+                            Character
+                            Set）的标准来发展,Unicode包含了超过十万个字符（在2005年，Unicode的第十万个字符被采纳且认可成为标准之一）、一组可用以作为视觉参考的代码图表、一套编码方法与一组标准字符编码、一套包含了上标字、下标字等字符特性的列举等。</p>
+                        <p> Unicode组织（The Unicode
+                            Consortium）是由一个非营利性的机构所运作，并主导Unicode的后续发展，其目标在于：将既有的字符编码方案，以Unicode编码方案来加以取代，特别是既有的方案在多语环境下，皆仅有有限的空间以及不相容的问题。
+                            Unicode在字符集认可的成功，使其得以在电脑软件的国际化与本地化领域中，广泛且具优势的被采用。这标准已在近年来的多种新科技当中被加以采用，包含了可扩展置标语言（XML）、Java编程语言、以及最新的操作系统中。</p>
+                        <p> unicode编码的编码规则
+                            比如要把“杨”编码，我们可以新建一个记事本，输入“杨”保存时选择存为unicode编码，然后查看文件二进制内容，前面的FF FE两个字节是unicode编码文件头标志，接着的68
+                            67两个字节就是“杨”的unicode编码，用计算器换算为十进制就是26472，现在可以在一个html文件里面写入“杨”，IE打开就显示一个“杨”字。
+                            当然，对于一般ASCII码，unicode编码与ASCII编码一致，所以A可以显示一个大写字母“A”.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/other/jquery.js"></script>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                value: "",
+                result1: "",
+                morebar: false,
+                tabIndex: 2  // tab 索引
+            };
+        },
+        methods: {
+            unicodeToZH() {
+                this.result1 = CoreTool.unicodeToZH(this.value);
+                document.getElementById('result1').focus()
+            },
+
+            zhToUnicode() {
+                this.result1 = CoreTool.zhToUnicode(this.value);
+                document.getElementById('result1').focus()
+            },
+            zhToEnSymbol() {
+                this.result1 = CoreTool.zhToEnSymbol(this.value);
+                document.getElementById('result1').focus()
+            },
+            asciiToUnicode() {
+                this.result1 = CoreTool.asciiToUnicode(this.value);
+                document.getElementById('result1').focus()
+            },
+            unicodeToAscii() {
+                this.result1 = CoreTool.unicodeToAscii(this.value);
+                document.getElementById('result1').focus()
+            },
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>

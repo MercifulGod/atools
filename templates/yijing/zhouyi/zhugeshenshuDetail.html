@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)https://m.zhouyi.cc/zhouyi/zhugeshenshu/1.html -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title> {{ data.name|safe }}</title>
+    <meta name="keywords" content=" {{ data.name|safe }}">
+    <meta name="description" content="{{ data.qianwen|safe }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="robots” content=" nofollow”/>
+    <style type="text/css">
+        {% include "yijing/zhouyi/style.css" %}
+        {% include "yijing/common.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "yijing/header.html" %}
+<section>
+    <div class="main quanle">
+        <div class="clear"></div>
+        <div class="center">
+            <div class="sx_address f16">
+                <a href="https://m.zhouyi.cc/zhouyi/">周易</a> &gt; <a
+                    href="https://m.zhouyi.cc/zhouyi/zhugeshenshu/">诸葛神数</a> &gt;
+            </div>
+            <div class="zhugeboxzi">
+                <div class="zhugettbg cff fb t_center">
+                    {{ data.name|safe }}
+                </div>
+                <div class="zhugett2 cff t_center">{{ data.qianwen|safe }}</div>
+                <div class="tip_text">
+                    <div class="zhugett3"></div>
+                </div>
+                <div class="tip_text">
+                    <div class="zhugett3">解签</div>
+                    <div class="tip_text"> {{ data.explain|safe }}
+                    </div>
+                </div>
+                <div class="zhugettxj">本签详细解签</div>
+                <div class="zhugezixjs">
+                    <div class="tip_text">
+                        {{ data.detail_explain|safe }}
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% include "yijing/footer.html" %}
+</body>
+</html>

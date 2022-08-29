@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=0">
+    <title>免费在线录屏--ZTF在线工具箱</title>
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "tools/other/screenrecord.css" %}
+    </style>
+    <style type="text/css">
+        .btn_area {
+            display: inline-flex;
+            justify-content: space-around;
+            width: 91%;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="margin-bottom: 120px;">
+    <div class="head">
+        <div class="head-area">
+
+            <div class="logo-navigation">
+                <!--logo-->
+                <a class="logo" href="javascript:void(0);">
+                    <img src="/static//logo.png" alt="logo">
+                    <span>在线录屏</span>
+                </a>
+
+                <!--导航-->
+                <ul class="navigation">
+                    <li><a href="javascript:void(0);" data-bind="click:pay,visible:userInfo.role()>0" style="display:none;">购买</a> <span></span></li>
+                </ul>
+            </div>
+
+            <!-- 登录注册 -->
+            <div class="login-area">
+                <a class="login" href="/tools/urlEncode.html">首页</a>
+            </div>
+
+        </div>
+    </div>
+    <div class="container-area">
+        <p>在线录屏</p>
+
+        <!--操作区域-->
+        <div class="operating-area">
+
+            <selection>
+                <video autoplay id="player"></video>
+                <video id="recordPlayer"></video>
+            </selection>
+
+            <div style="" class="start" data-bind="visible:!recording()&amp;&amp;!hasRecord()">
+                <!--开始录制-->
+                <div class="btn_area">
+                    <a class="start-btn" data-bind="click:toggleOnOff" onclick="screen_record()"> <i class="iconfont icon-video"></i>
+                        <span>开启录屏</span> </a>
+                    <a class="start-btn" data-bind="click:toggleOnOff" onclick="camera_record()"> <i class="iconfont icon-video"></i>
+                        <span>开启摄像头</span> </a>
+                    <a class="start-btn" data-bind="click:toggleOnOff" onclick="stop_record()"> <i class="iconfont icon-video"></i> <span>结束</span>
+                    </a>
+                    <a class="start-btn" data-bind="click:toggleOnOff" onclick="play_history()"> <i class="iconfont icon-video"></i> <span>回放</span>
+                    </a>
+                    <a class="start-btn" data-bind="click:toggleOnOff" onclick="download()"> <i class="iconfont icon-video"></i> <span>下载</span> </a>
+                </div>
+                <!--设置音频-->
+                <div class="setup_audio">
+                    <div class="title"><span></span>设置音频<b></b></div>
+
+                    <ul class="audio-list">
+                        <!--icon-mute_microphone  todo: 开启麦克风 -->
+                        {#                      #}
+                        <li>
+                            <a class="active-select" href="javascript:void(0);"> <i class="iconfont icon-microphone"></i> </a>
+                            <span data-bind="visible:enableMic()">麦克风是否授权</span>
+                            {#   <span data-bind="visible:enableMic()">麦克风已开启</span>#}
+                            <span data-bind="visible:!enableMic()" style="display: none;">麦克风已禁用</span>
+                        </li>
+
+                        <!--icon-mute  todo: 开启系统声音-->
+                        <li>
+                            <a class="active-select" href="javascript:void(0);"> <i class="iconfont icon-audio"></i> </a>
+                            <span data-bind="visible:enableSound()">系统声音是否授权</span>
+                            {#   <span data-bind="visible:enableSound()">系统声音已开启</span>#}
+                            <span data-bind="visible:!enableSound()" style="display: none;">系统声音已禁用</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!--特点-->
+        <div class="features-area">
+            <a class="features-one">
+                <div class="features-title">快速便捷</div>
+                <div class="fast"><i class="iconfont icon-fast"></i></div>
+                <span>无须下载软件或插件打开网站即可录制</span>
+            </a>
+
+            <a class="features-two">
+                <div class="features-title">即时下载</div>
+                <div class="fast"><i class="iconfont icon-download"></i></div>
+                <span>录制完成后便可点击下载按钮下载录制完成的视频</span>
+            </a>
+
+            <a class="features-three">
+                <div class="features-title">安全无毒</div>
+                <div class="fast"><i class="iconfont icon-safety"></i></div>
+                <span>视频在本地进行处理，不会发送到我们的服务器</span>
+            </a>
+
+            <a class="features-four">
+                <div class="features-title">画面流畅</div>
+                <div class="fast"><i class="iconfont icon-hd"></i></div>
+                <span>精心优化的性能，让录制的视频无比流畅</span>
+            </a>
+        </div>
+
+        <!--步骤-->
+        <div class="step-area">
+            <div class="step-title">
+                <strong>操作步骤</strong>
+                <span> <b></b></span>
+            </div>
+
+            <div class="step-introduction_area">
+                <div class="img-area">
+                    <div class="img-area_one" style="position:relative;">
+                        <img style="position:absolute;width: 100%;" for="one" src="/static/img/tools/screen_start2.png">
+                        <img style="position:absolute;width: 100%;display:none;" for="three" src="/static/img/tools/screen_share2.png">
+                        <img style="position:absolute;width: 100%;display:none;" for="two" src="/static/img/tools/screen_end.png">
+                        <img style="position:absolute;width: 100%;display:none;" for="four" src="/static/img/tools/screen_download.png">
+                    </div>
+                </div>
+
+                <div class="step-introduction_list">
+                    <ul>
+                        <li class="active" id="one">1、设置音频，并点击开始录制按钮</li>
+                        <li id="two">2、选择要录制的屏幕，并点击“分享”按钮</li>
+                        <li id="three">3、点击“结束录制”或“停止分享”按钮，停止录制</li>
+                        <li id="four">4、下载你录制的视频。</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!--介绍-->
+        <div class="step-area introduction-area">
+            <div class="step-title">
+                <strong>功能介绍</strong>
+                <span> <b></b></span>
+            </div>
+
+            <div class="introduction">
+                <a class="introduction-one">
+                    <img src="/static/img/tools/music2.jpeg" alt="声画一致">
+                    <div class="introduction-one_mask">
+                        <span>声音与画面保持一致</span>
+                        <b>能够同步录制画面与声音，故您可以使用它录制电脑屏幕活动的同时，加入系统或麦克风中的声音。</b>
+                    </div>
+                </a>
+
+                <a class="introduction-one">
+                    <img src="/static/img/tools/img-2.png" alt="跨平台">
+                    <div class="introduction-one_mask">
+                        <span>适合跨平台使用</span>
+                        <b>打开浏览器即可录制无须考虑平台问题，不用安装软件且简单方便。</b>
+                    </div>
+                </a>
+
+                <a class="introduction-one">
+                    <img src="/static/img/tools/boy_office.jpeg" alt="操作简单">
+                    <div class="introduction-one_mask">
+                        <span>操作简单，方便快捷</span>
+                        <b>录屏网在线录屏界面简洁直观，即便是新手也可以在1分钟学会使用。</b>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+{% include "footer.html" %}
+<script src="/static/js/jquery-2.0.3.min.js"></script>
+<script>
+    const player = document.querySelector('#player');
+    const recordPlayer = document.querySelector('#recordPlayer');
+    let blobs = [], mediaRecorder;
+
+    async function record(recordType) {
+
+        try {
+            const getMediaMethod = recordType === 'screen' ? 'getDisplayMedia' : 'getUserMedia';
+            const stream = await navigator.mediaDevices[getMediaMethod]({
+                video: {
+                    width: 500,
+                    height: 300,
+                    frameRate: 20
+                }
+            });
+            player.srcObject = stream;
+
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm'
+            });
+            mediaRecorder.ondataavailable = (e) => {
+                blobs.push(e.data);
+            };
+            mediaRecorder.start(100);
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+    function screen_record() {
+        record('screen');
+    }
+
+
+    function camera_record() {
+        record('camera');
+    }
+
+
+    function stop_record() {
+        mediaRecorder && mediaRecorder.stop();
+    }
+
+
+    function play_history() {
+        const blob = new Blob(blobs, {type: 'video/webm'});
+        recordPlayer.src = window.URL.createObjectURL(blob);
+        recordPlayer.play();
+    }
+
+    function download() {
+        var blob = new Blob(blobs, {type: 'video/webm'});
+        var url = window.URL.createObjectURL(blob);
+
+        var a = document.createElement('a');
+        a.href = url;
+        a.style.display = 'none';
+        a.download = 'record.webm';
+        a.click();
+    }
+
+    $("div.step-introduction_list ul li").click(function () {
+        // 链式编程操作
+        $(this).addClass("active").siblings().removeClass("active");
+        // 2.点击的同时，得到当前li 的索引号
+        var index = $(this).index();
+        // 3.让下部里面相应索引号的item显示，其余的item隐藏
+        $("div.img-area_one img").eq(index).show().siblings().hide();
+    });
+
+
+</script>
+
+</body>
+</html>

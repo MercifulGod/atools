@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {#    https://www.npmjs.com/package/vue-drag-resize#}
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/static/components/dragmove/vue-drag-resize.css" media="all">
+</head>
+<body>
+<div class="es-content" id="app">
+    <vue-drag-resize :isActive="true" :w="200" :h="100" v-on:resizing="resize" v-on:dragging="resize">
+        <h3>Hello World!</h3>
+    </vue-drag-resize>
+</div>
+<script src="/static/js/vue.global.prod.js"></script>
+<script type="module">
+    import vueDragResize from "/static/components/dragmove/vue-drag-resize.js"
+
+    const HelloVueApp = {
+        data() {
+            return {
+                width: 0,
+                height: 0,
+                top: 0,
+                left: 0
+            }
+        },
+
+        methods: {
+            resize(newRect) {
+                this.width = newRect.width;
+                this.height = newRect.height;
+                this.top = newRect.top;
+                this.left = newRect.left;
+            }
+        }
+    };
+    var app = Vue.createApp(HelloVueApp)
+    app.component('vue-drag-resize', vueDragResize);
+    app.mount("#app");
+</script>
+</body>
+</html>

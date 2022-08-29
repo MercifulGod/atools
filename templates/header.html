@@ -1,0 +1,107 @@
+<style>
+    .menu_container {
+        display: none;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 9px;
+    }
+
+    .bar1, .bar2, .bar3 {
+        width: 35px;
+        height: 5px;
+        background-color: aliceblue;
+        margin: 6px 0;
+        transition: 0.4s;
+    }
+
+    .change .bar1 {
+        -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+        transform: rotate(-45deg) translate(-9px, 6px);
+    }
+
+    .change .bar2 {
+        opacity: 0;
+    }
+
+    .change .bar3 {
+        -webkit-transform: rotate(45deg) translate(-8px, -8px);
+        transform: rotate(45deg) translate(-8px, -8px);
+    }
+
+    .es-header .site {
+        color: aliceblue;
+        text-align: center;
+        display: none;
+    }
+
+    @media all and (max-width: 750px) {
+
+        .es-header .site {
+            display: block;
+        }
+
+        .es-header {
+            line-height: 60px;
+            height: 60px;
+        }
+
+        .es-header .layui-container {
+            display: none;
+        }
+
+        .es-header-change {
+            height: auto;
+        }
+
+        .es-header .layui-container-change {
+            display: block;
+        }
+
+        .es-header .layui-container .layui-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu_container {
+            display: inline-block;
+            z-index: 100;
+        }
+    }
+
+</style>
+
+<div class="menu_container" onclick="myFunction(this)">
+    <div class="bar1"></div>
+    <div class="bar2"></div>
+    <div class="bar3"></div>
+</div>
+<header class="es-header">
+    <div class="site">ztf.net.cn</div>
+    <div class="layui-container">
+        <ul class="layui-nav">
+            <li>
+                <a href="/">首页</a>
+            </li>
+            <li>
+                <a href="/article">文章</a>
+            </li>
+            <li>
+                <a href="/t/">网站模版</a>
+            </li>
+            <li>
+                <a href="/game/">游戏源码</a>
+            </li>
+            <li>
+                <a href="/tools/urlEncode.html">工具箱</a>
+            </li>
+        </ul>
+    </div>
+</header>
+<script>
+    function myFunction(x) {
+        x.classList.toggle("change");
+        document.getElementsByClassName("layui-container")[0].classList.toggle("layui-container-change");
+        document.getElementsByClassName("es-header")[0].classList.toggle("es-header-change");
+    }
+</script>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZTF网站</title>
+    <meta name="keywords" content="个人博客,个人网站">
+    <meta name="description" content='人生苦短，生命渺若尘埃.
+我们在拥有了物质的同时，
+也就拥有了心灵的歌声.
+而吾所建之小博，非为其他，乃为品文、赏乐及交友所用.
+盖以博伊人颦笑，
+所作稍逊阳刚.
+望公等休怪.
+吾素来甚少品赏俗乐
+亦不愿心附当红之优伶.
+虽知此违世风所行.
+然执着之气终未有改.
+呜呼，今之靡音皆流于世，
+古之风雅多遗于土.
+庸风淫乐视太祖之季有加,
+而身怀才德者不得行其道，
+此久为予所睹，恨也.
+吾深知普雅之事难有其为，
+故有仿效陶朱之意，
+隐匿山水之心，
+只惜居无西施同伴，
+行乏子期相交.
+终日茕茕孑立，形影相吊，
+惟以小博赏心悦目，趣矣。
+故曰:"宠辱不惊，看庭前花开花落;
+去留无意，望天空云卷云舒."
+吾虽有铁血主博微美于小博，
+然其所载密文甚多
+亦不能表于诸君，甚惜之.
+公等若有雅言可尽著于文簿之上，
+或以信函相告.必察而复焉：
+<emailxxx@xxxxxxx>
+望诸公于此园尽兴，
+予再拜，进尽甘言.
+共和二八五零年 霖月
+欲将心事付瑶琴.知音少,
+弦断有谁听？'>
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: none;
+        }
+
+        a {
+            color: #34495e;
+            text-decoration: none;
+            -webkit-transition: all .3s ease;
+            -moz-transition: all .3s ease;
+            -o-transition: all .3s ease;
+            transition: all .3s ease;
+            background-color: transparent;
+
+            border-bottom: 0 solid currentColor;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .row-grid {
+            /* 声明一个容器 */
+            display: grid;
+            /*  声明列的宽度  */
+            grid-template-columns: repeat(4, 1fr);
+            /*  声明行间距和列间距  */
+            grid-gap: 20px;
+            /*  声明行的高度  */
+            grid-template-rows: repeat(2, 320px);
+        }
+
+        .entry-header .entry-title {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            font-size: 10px;
+            color: rgba(0, 0, 0, .8);
+            white-space: normal;
+            text-overflow: unset;
+        }
+
+        .entry-header .entry-meta {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+
+        .entry-media a img {
+            width: 100%;
+        {#height: auto;#} height: 220px;
+        }
+
+        .entry-header .entry-meta a:nth-child(n) {
+            align-items: center;
+            color: #fff;
+            background-color: #fd721f;
+            border-radius: 5%;
+            /* height: 11px; */
+            font-size: 8px;
+        }
+
+        .entry-header .entry-meta a:nth-child(2n) {
+            background-color: #4caf50;
+        }
+
+        .entry-header .entry-meta a:nth-child(n + 2) {
+            margin-left: 10px;
+        }
+
+        .entry-footer .post-meta-box {
+            display: flex;
+            padding: 5px 15px;
+            font-size: 12px;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #ebeef5;
+            color: #b4b4b4;
+            margin-top: 10px;
+            list-style: none;
+        }
+
+        .h_center {
+            margin: 0 auto;
+            max-width: 1000px;
+
+        }
+
+        .padding_verticle {
+            padding: 10px 0px;
+
+        }
+
+        @media all and (max-width: 750px) {
+            .row-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 320px);
+            }
+
+            .center_padding {
+                padding: 0%;
+            }
+        }
+
+        div.model_title h2 {
+            font-size: 30px;
+            color: transparent;
+            border: none;
+            margin-left: 5px;
+            display: flex;
+            justify-content: center;
+            background: -webkit-linear-gradient(45deg, #ffc107, #ff7365, #ff82ea, #ffc107);
+            -webkit-background-clip: text;
+            animation: ran 10s linear infinite;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        div.model_title h2:before {
+            top: 16px;
+            left: -20px;
+            margin-left: -10px;
+        }
+
+        div.model_title h2:after {
+            top: 16px;
+            right: -20px;
+            margin-right: -10px;
+        }
+
+        div.model_title h2:before, div.model_title h2:after {
+            content: "";
+            width: 30%;
+            height: 1px;
+            background: linear-gradient(90deg, #ffc107, #ff7365, #ff82ea, #ffc107);
+            display: block;
+            position: relative;
+        }
+
+
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+
+{% include "header.html" %}
+
+
+<div class="box h_center">
+    <a href="https://s.qiniu.com/nQvQBj" target="_blank" referrerpolicy="no-referrer">
+        <img src="/static/img/qiniu/new1040x100.jpg"
+             alt="七牛云" class="img100" style="margin-bottom: 15px"
+        /></a>
+</div>
+
+<div class="model_title h_center padding_verticle">
+    <h2>最新源码</h2>
+</div>
+
+<div class="row-grid h_center">
+    {% for item in news_list %}
+        <div>
+            <div class="entry-media">
+                <a target="_blank" href="/t/{{ item.id }}">
+                    <img class="lozad" referrerpolicy="no-referrer" data-src="{{ item.cover_url }}" alt="{{ item.name }}">
+                </a>
+            </div>
+            <div class="entry-wrapper">
+                <header class="entry-header">
+                    <div class="entry-meta">
+                        {% for tag in item.tags %}
+                            <a target="_blank" href="/t?tag={{ tag.id }}" rel="category">{{ tag.name }} </a>
+                        {% endfor %}
+                    </div>
+                    <h2 class="entry-title">
+                        <a target="_blank" href="/t/{{ item.id }}" title="{{ item.name }}" rel="bookmark">{{ item.name }}</a>
+                    </h2>
+                </header>
+                <div class="entry-footer">
+                    <ul class="post-meta-box">
+                        <li class="meta-date">
+                            <time datetime="{{ item.create_time }}">{{ item.create_time }}</time>
+                        </li>
+                        <li class="meta-price"><span>免费</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+
+<div class="model_title h_center padding_verticle">
+    <h2>热门源码</h2>
+</div>
+<div class="row-grid h_center">
+    {% for item in views_list %}
+        <div>
+            <div class="entry-media">
+                <a target="_blank" href="/t/{{ item.id }}">
+                    <img class="lozad" referrerpolicy="no-referrer" data-src="{{ item.cover_url }}" alt="{{ item.name }}">
+                </a>
+            </div>
+            <div class="entry-wrapper">
+                <header class="entry-header">
+                    <div class="entry-meta">
+                        {% for tag in item.tags %}
+                            <a target="_blank" href="/t?tag={{ tag.id }}" rel="category">{{ tag.name }} </a>
+                        {% endfor %}
+                    </div>
+                    <h2 class="entry-title">
+                        <a target="_blank" href="/t/{{ item.id }}" title="{{ item.name }}" rel="bookmark">{{ item.name }}</a>
+                    </h2>
+                </header>
+                <div class="entry-footer">
+                    <ul class="post-meta-box">
+                        <li class="meta-date">
+                            <time datetime="{{ item.create_time }}">{{ item.create_time }}</time>
+                        </li>
+                        <li class="meta-price"><span>免费</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+
+<div class="model_title h_center padding_verticle">
+    <h2>常用工具</h2>
+</div>
+<div class="row-grid h_center">
+    <style>
+        .gdd-tool-unit__desc {
+            width: 90%;
+            font-size: 12px;
+            line-height: 18px;
+            color: #636c78;
+            white-space: nowrap;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .gdd-tool-unit__title {
+            font-size: 16px;
+            line-height: 20px;
+            color: #000;
+            transition: all .3s;
+        }
+
+        .tool_item a img {
+            width: 100%;
+            height: 194px;
+        }
+
+    </style>
+    <div class="tool_item">
+        <a href="/tools/water/video.html" target="_blank" class="gdd-tool-unit">
+            <img class="lozad" data-src="/static/img/index_water_video.gif" alt="视频去水印">
+        </a>
+        <div class="gdd-tool-unit__content">
+            <h5 class="gdd-tool-unit__title">视频去水印</h5>
+            <p class="gdd-tool-unit__desc">视频去[logo]水印，免费无安装</p>
+        </div>
+    </div>
+
+    <div class="tool_item">
+        <a href="/tools/imgWaterRemove.html" target="_blank" class="gdd-tool-unit">
+            <img class="lozad" data-src="/static/img/index_remove_water.webp" alt="图片去水印">
+
+        </a>
+        <div class="gdd-tool-unit__content">
+            <h5 class="gdd-tool-unit__title">图片去水印</h5>
+            <p class="gdd-tool-unit__desc">图片去[logo]水印，免费无安装</p>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+{#<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>#}
+<script type="text/javascript" src="/static/js/lozad.min.js"></script>
+<script>
+    const observer = lozad('.lozad', {
+        rootMargin: '10px 0px',
+        threshold: 0.1
+    });
+    observer.observe();
+</script>
+</body>
+</html>

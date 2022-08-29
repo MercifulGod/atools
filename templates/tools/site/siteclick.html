@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta name="robots” content=" nofollow”/>
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    {#    <link rel="stylesheet" href="/static/css/base.css" media="all">#}
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+        .layui-form input[type=radio] {
+            display: inline-block;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label {
+            background-color: #5FB878;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label .circle {
+            left: 64px;
+        }
+
+        div.checkbox .label {
+            width: 93px;
+            line-height: 30px;
+            margin: 4px 0;
+        }
+
+        .layui-input-block {
+            line-height: 38px;
+        }
+
+        div.layui-form-item {
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        div.layui-form-item .layui-form-label {
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0.375rem 0.75rem 0.375rem 0;
+            text-align: center;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        div.layui-form-item .layui-input-block {
+            padding-left: 0;
+            margin-left: 0;
+            flex: 1 1 auto;
+            width: auto;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+
+            .layui-btn + .layui-btn {
+                margin-left: 0px;
+            }
+
+            div.operation {
+                display: grid;
+            }
+        }
+
+        div.layui-tab-content {
+            overflow-x: scroll;
+        }
+
+        .layui-table td, .layui-table th {
+            min-width: 20%;
+            max-width: 300px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+
+
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>SEO 优化扫描器</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/site/tab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">扫描范围</label>
+                            <div class="layui-input-block">
+                                {#                                <input type="radio" name="align" v-model="type" value="site_url" title="L">网站#}
+                                {#                                <input type="radio" name="align" v-model="type" value="sitemap" title="M">网站地图#}
+                                <input type="radio" name="scope" v-model="type" value="url_list" title="url_list" checked>URL列表
+                            </div>
+                        </div>
+                        {#                        <div class="layui-form-item layui-form-text" v-show="type === 'site_url'">#}
+                        {#                            <input type="text" v-model="params.site_url" required placeholder="请输入网站域名" autocomplete="off" class="layui-input">#}
+                        {#                        </div>#}
+                        {#                        <div class="layui-form-item layui-form-text" v-show="type === 'sitemap'">#}
+                        {#                            <input type="text" v-model="params.sitemap" required placeholder="请输入网站域名" autocomplete="off" class="layui-input">#}
+                        {#                        </div>#}
+
+                        <div class="layui-form-item layui-form-text" v-show="type === 'url_list'">
+                            <textarea id="codeEditor" v-model="params.url_list" class="layui-textarea"
+                                      placeholder="格式: 各个 URL 应使用 Enter/回车 (↵) 键进行分隔"></textarea>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">扫描限制</label>
+                            <div class="layui-input-block">
+                                <input type="number" v-model="params.length" placeholder="剩余配额: 200 个页面。" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item operation">
+                            <button class="layui-btn" type="button" @click="run">立即扫描</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                <div class="layui-tab-content">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col width="150">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ProxyIP</th>
+                            <th>用时</th>
+                            <th>状态</th>
+                            <th>url地址</th>
+                            <th>user_agent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(o, t_index) in value" :key="t_index" :value="o">
+                            <td>{[ o.id ]}</td>
+                            <td>{[ o.proxy_ip ]}</td>
+                            <td>{[ o.time_cost ]}</td>
+                            <td>{[ o.status ]}</td>
+                            <td>{[ o.url ]}</td>
+                            <td :title="o.user_agent">{[ o.user_agent ]}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/other/jquery.js"></script>
+<script>
+
+    function Fetch(url, data) {
+        // Default options are marked with *
+        return fetch(url, {
+            body: JSON.stringify(data), // must match 'Content-Type' header
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json'
+            },
+            method: 'POST'
+        })
+    }
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                value: [],
+                site: "https://ztf.net.cn/tools/qrcode.html",
+                id: "", //任务ID
+                type: "url_list",
+                params: {
+                    url_list: "",
+                    site_url: "",
+                    sitemap: "",
+                    length: "",
+                },
+                timer: undefined, //定时器
+                options: {
+                    year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    hour12: false, timeZoneName: 'short'
+                },
+                start_time: "" // 开始执行时间
+            };
+        },
+        methods: {
+            run() {
+                Fetch("/api/siteClick", this.params).then(async res => {
+                    const {data, success} = await res.json()
+                    if (data.id) {
+                        this.start_time = window.performance.now();
+                        this.id = data.id
+                        this.timer = setInterval(this.getStatus, 15000);
+                    }
+                })
+            },
+            getStatus() {
+                fetch("/api/siteClick?id=" + this.id).then(async res => {
+                    const {data, success} = await res.json()
+                    console.log(data, success)
+                    if (!data) return
+                    if (data === 'end') {
+                        clearInterval(this.timer)
+                        return
+                    }
+                    this.value = JSON.parse(data)
+                })
+            }
+        },
+        mounted: function () {
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

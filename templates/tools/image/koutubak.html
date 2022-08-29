@@ -1,0 +1,224 @@
+<style>
+    /* 盒子样式- 限制了缩放大小 */
+    .popup {
+        z-index: 9;
+        background-color: #f1f1f1;
+        border: 1px solid #d3d3d3;
+        text-align: center;
+        min-height: 150px;
+        min-width: 300px;
+        max-height: 300px;
+        max-width: 600px;
+    }
+
+    /* 绝对定位  */
+    .popup {
+        position: absolute;
+        /*resize: both; !*enable this to css resize*! */
+        overflow: auto;
+        z-index: 10;
+    }
+
+    /* 拖动头元素 */
+    .popup-header {
+        padding: 10px;
+        cursor: move;
+
+        background-color: #2196f3;
+        color: #fff;
+    }
+
+    /*缩放元素样式*/
+
+    .popup .resizer-right {
+        width: 5px;
+        height: 100%;
+        background: transparent;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        cursor: e-resize;
+    }
+
+    .popup .resizer-bottom {
+        width: 100%;
+        height: 5px;
+        background: transparent;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        cursor: n-resize;
+    }
+
+    .popup .resizer-both {
+        width: 5px;
+        height: 5px;
+        background: transparent;
+        z-index: 10;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        cursor: nw-resize;
+    }
+
+    /*取消鼠标选择*/
+
+    .popup * {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+    }
+</style>
+
+
+<body>
+
+<div class='input' contenteditable placeholder='请输入文字'></div>
+<div class="popup">
+    <div class="popup-header">点击移动</div>
+    <p>Move</p>
+    <p>this</p>
+    <p>DIV</p>
+</div>
+
+<div class="popup">
+    <div class="popup-header noselect">点击移动</div>
+    <p>Move</p>
+    <p>this</p>
+    <p>DIV</p>
+</div>
+
+</body>
+
+<script>
+    window.onload = function () {
+        //页面载入，初始化拖拽 、 缩放函数
+        initDragResize(document.getElementsByClassName("popup"));
+    };
+
+    function initDragResize(popups) {
+        {# 记录鼠标首次按下坐标 pos3,pos4 #}
+        var pos1 = 0,
+            pos2 = 0,
+            pos3 = 0,
+            pos4 = 0;
+
+        // 元素起始位置
+        var startX, startY, startWidth, startHeight;
+
+        var currentZIndex = 100; //盒子的默认层级
+
+        for (var i = 0; i < popups.length; i++) {
+            var popup = popups[i];
+            popup.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            /* 点击时，提升盒子层级 */
+            this.style.zIndex = "" + ++currentZIndex;
+
+
+            {# 缩放阈值 #}
+            var resizeThreshold = 5;
+
+            var offsetX = e.clientX - this.offsetLeft;
+            var offsetY = e.clientY - this.offsetTop;
+
+
+            if (offsetX > resizeThreshold && offsetX < (this.clientWidth - resizeThreshold) &&
+                offsetY > resizeThreshold && offsetY < (this.clientHeight - resizeThreshold)
+            ) {
+                startDrag(this, e)
+                return
+            }
+
+            startResize(this, e)
+
+
+        }
+
+        function startDrag(self, e) {
+            e = e || window.event;
+            // 记录鼠标首次按下，鼠标相对于浏览器有效区域的X、Y距离
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            self.onmouseup = stopDrag;
+            self.onmouseleave = stopDrag;
+            self.onmousemove = drag;
+        }
+
+        function drag(e) {
+            e = e || window.event;
+            // 计算新的鼠标位置
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // 设置元素的新位置，元素的相对父元素的偏移位置 - 鼠标事件的点击位置 = 元素的顶部
+            this.style.top = this.offsetTop - pos2 + "px";
+            this.style.left = this.offsetLeft - pos1 + "px";
+        }
+
+        function stopDrag() {
+            {#console.log('鼠标松开了');#}
+            // 鼠标松开，清空鼠标事件
+            this.onmouseup = null;
+            this.onmousemove = null;
+            this.onmouseleave = null;
+        }
+
+
+        function startResize(self, e) {
+            // 鼠标元素在屏幕内位置
+            startX = e.clientX;
+            startY = e.clientY;
+            //  getComputedStyle()读取元素最终样式,只读---属性
+            // element.style获取元素的内联样式,支持读写
+            startWidth = parseInt(
+                document.defaultView.getComputedStyle(e.target).width,
+                10
+            );
+            startHeight = parseInt(
+                document.defaultView.getComputedStyle(e.target).height,
+                10
+            );
+            // 监听移动事件,改变尺寸
+            self.addEventListener("mousemove", resize, false);
+            // 监听鼠标松开事件,移除鼠标事件
+            self.addEventListener("mouseup", stopResize, false);
+            self.addEventListener("mouseleave", stopResize, false);
+
+        }
+
+        function resize(e) {
+            {#console.log(this)#}
+            //  改变盒子宽高   盒子当前的宽 + 鼠标事件位置 - 鼠标事件初始位置
+            this.style.width = startWidth + e.clientX - startX + "px";
+            this.style.height = startHeight + e.clientY - startY + "px";
+
+
+            var offsetX = e.clientX - this.offsetLeft;
+            var offsetY = e.clientY - this.offsetTop;
+            if (offsetX > resizeThreshold && offsetX < (this.clientWidth - resizeThreshold) &&
+                offsetY > resizeThreshold && offsetY < (this.clientHeight - resizeThreshold)
+            ) {
+            }
+        }
+
+        function stopResize(e) {
+            //  移除事件
+            this.removeEventListener("mousemove", resize, false);
+            this.removeEventListener("mouseup", stopResize, false);
+            this.removeEventListener("mouseleave", stopResize, false);
+        }
+    }
+
+</script>

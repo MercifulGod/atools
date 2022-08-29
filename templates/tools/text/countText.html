@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>单词统计工具 </title>
+    <meta name="description" content="单词计数器提供单词出现次数统计信息的报告，统计不同单词的出现次数，用于分析对手的listing和评价内容。">
+    <meta name="keywords" content="字符统计, 单词统计, 单词出现次数统计, 高频词统计, 词频统计, word count, word counter">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>单词计数</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow>
+                {% include "tools/text/textTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                  <textarea id="codeEditor" v-model="value" class="layui-textarea"
+                                            placeholder="请输入要压缩或格式化的Javascript文本"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-inline layui-btn-group">
+                                    <button @click="wordcount" type="button" class="layui-btn">单词计数</button>
+                                    <button @click="clear" type="button" class="layui-btn  layui-btn-primary"><i
+                                            class="layui-icon layui-icon-delete  "></i>清除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12" id="result" style="display: none;">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="50">
+                                    <col width="100">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>单词</th>
+                                    <th>数量</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr v-for="(o, t_index) in result" :key="t_index" :value="o">
+                                    <td>{[ o.word ]}</td>
+                                    <td>{[ o.count ]}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线单词统计工具</h2><br>
+                        <p>1. 在线单词统计工具。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/jquery-1.8.3.min.js"></script>
+<script>
+    window.onload = function () {
+        url = window.location.pathname;
+        $(".layui-tab a[href='" + url + "']").parent().addClass('layui-this');
+        $(".layui-tab a[href='" + url + "']").parent().parent().parent().addClass('layui-nav-itemed');
+        $(".layui-nav a[href='" + url + "']").parent().parent().prev().addClass('layui-this');
+    }
+
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                value: "",
+                password: "",
+                result: [],
+                morebar: false, // tab more bar switch
+                tabIndex: 4  // tab 索引
+            };
+        },
+        methods: {
+            wordcount() {
+                let words = this.value.split(/[\n,,,，, ]/);
+                let word_map = new Map();
+                for (let word of words) {
+                    word_map.set(word, word_map.has(word) ? word_map.get(word) + 1 : 1);
+                }
+                this.result = [];
+                for (var [k, v] of word_map) {
+                    this.result.push({word: k, count: v});
+                }
+                document.getElementById("result").style.display = "block";
+            },
+            clear() {
+                this.value = ""
+                document.getElementById("result").style.display = "none";
+            }
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

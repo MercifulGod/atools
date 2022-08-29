@@ -1,0 +1,292 @@
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%
+    }
+
+    div.es-content {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    {#@media all and (max-width: 600px) {#}
+    {#    div.es-content {#}
+    {#        width: 100%;#}
+    {#    }#}
+    {# }#}
+
+    .top {
+        width: 100%;
+        font-size: 0.3rem;
+        line-height: 45px;
+        padding: 0 6%;
+        color: red;
+        text-align: center;
+        align-items: center;
+        z-index: 999;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 16%);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .middle {
+        flex: 1;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        max-width: 600px;
+    }
+
+    .middle video {
+        width: 100%;
+        height: -webkit-fill-available;
+    }
+
+    .bottom {
+        line-height: 50px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: 0.3rem;
+        padding: 0 6%;
+        color: black;
+        text-align: center;
+        align-items: center;
+        z-index: 999;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 16%);
+    }
+
+    div.bottom button {
+        padding: 0 10px;
+    }
+
+    div.bottom button:nth-child(1) {
+        margin-right: 10px;
+    }
+
+    div.bottom button:nth-child(2) {
+        margin-right: 10px;
+    }
+
+    div.bottom .workbtn {
+        cursor: pointer;
+        padding: 0 30px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+        line-height: 46px;
+        height: 46px;
+        background: #55f;
+        border-radius: 30px;
+    }
+
+</style>
+<div class="es-content" id="app">
+    <div id="message" class="top">{[ message ]}</div>
+    <div class="middle">
+        <canvas id="canvas" width="200" height="100" style="border:1px solid #c3c3c3;">
+            您的浏览器不支持 HTML5 canvas 标签。
+        </canvas>
+    </div>
+    <div class="toolbar bottom">
+        <button onclick="openAddFile((event)=>canvas.change(event))" class="workbtn">添加图片</button>
+        <button onclick="removeWater()" class="workbtn">去除水印</button>
+        <button onclick="download()" class="workbtn">保存</button>
+        {# <button @click="remove_water">替换水印</button>#}
+    </div>
+</div>
+<script src="/static/js/convas_tools.js"></script>
+<script src='/static/js/ffmpeg.min.js' type="text/javascript"></script>
+<script type="text/javascript">
+
+    const clientWidth = document.body.clientWidth
+    const clientHeight = document.body.clientHeight - 95
+
+    const {createFFmpeg, fetchFile} = FFmpeg
+    const ffmpeg = createFFmpeg({log: true});
+
+
+    class Canvas {
+        // constructor
+        constructor(ID) {
+            this.ID = ID;
+            this.file = undefined;
+            this.processed = false;//是否被处理过
+            this.canvas = document.getElementById(ID);
+            this.context = this.canvas.getContext("2d");
+            this.image = 1;  //收缩比
+            this.ratio = 1;  //收缩比
+
+            this.water_x = 0;
+            this.water_y = 0;
+            this.water_w = 0;
+            this.water_h = 0;
+
+
+            let that = this
+            MagicWand.init({
+                id: ID,
+                eraserShape: 'circle',
+                eraserSize: '25',
+                recordFN: ({ImgBase64}) => {
+                }
+            })
+            MagicWand.setModeSelect((x, y, width, height) => {
+                {#console.log(x, y, width, height, this.ratio)#}
+                that.water_x = parseInt(x / this.ratio)
+                that.water_y = parseInt(y / this.ratio)
+                that.water_w = parseInt(width / this.ratio)
+                that.water_h = parseInt(height / this.ratio)
+                this.context.drawImage(that.image, 0, 0, that.canvas.width, that.canvas.height);
+            })
+        }
+
+        resize(image) {
+            {#适应屏幕大小#}
+            let ratio = 1;
+            if ((image.width / clientWidth) > (image.height / clientHeight)) {
+                ratio = clientWidth / image.width
+                image.height = parseInt(ratio * image.height)
+                image.width = clientWidth
+            } else {
+                ratio = clientHeight / image.height
+                image.width = parseInt(ratio * image.width)
+                image.height = clientHeight
+            }
+            return [ratio, image]
+        }
+
+        change(event) {
+            var reader = new FileReader();
+            this.file = event.target.files[0]
+            let that = this
+
+            reader.readAsDataURL(event.target.files[0])
+            reader.onload = function (e) {
+                var image = new Image();
+                image.src = e.target.result;
+                image.onload = function () {
+                    let [ratio, img] = that.resize(image);
+                    that.canvas.width = img.width;
+                    that.canvas.height = img.height;
+                    that.image = image;
+                    that.ratio = ratio;
+                    that.context.drawImage(image, 0, 0, img.width, img.height);
+                }
+            }
+        }
+
+        opencvRemoveWater(self, img) {
+            let image = cv.imread(self.image);
+            let mask = cv.imread(img);
+            let dst = cv.inpaint(image, mask, 3, cv.INPAINT_NS)
+            cv.imshow(self.ID, dst);
+            mat.delete();
+            mask.delete();
+            dst.delete();
+
+        }
+
+        async ffmpegRemoveWater(self, img) {
+            const {name} = self.file
+            if (!self.processed) {
+                ffmpeg.FS('writeFile', name, await fetchFile(self.file));
+            }
+            message("正在处理水印")
+            let delogo = `delogo=x=${self.water_x}:y=${self.water_y}:w=${self.water_w}:h=${self.water_h}:show=0`
+            await ffmpeg.run('-i', name, '-strict', '-2', '-vf', delogo, 'out.png');
+            message("处理完成")
+            const data = ffmpeg.FS('readFile', 'out.png');
+            let image = new Image()
+            image.src = URL.createObjectURL(new Blob([data.buffer], {type: 'image/png'}));
+            image.onload = function () {//必须onload之后再画
+                self.context.drawImage(image, 0, 0, self.canvas.width, self.canvas.height);
+                self.image = image
+                ffmpeg.FS('writeFile', name, data);
+                self.processed = true
+            }
+        }
+
+        remove_water() {
+            var canvas = document.createElement('canvas');
+            canvas.width = this.canvas.width;
+            canvas.height = this.canvas.height;
+            let context = canvas.getContext("2d");
+
+            context.fillStyle = "rgba(0,0,0,1)";
+            context.fillRect(0, 0, 300, 150);
+
+            context.fillStyle = "rgba(255,255,255,1)";
+            context.fillRect(20, 20, 100, 50);
+            let that = this
+            var img = new Image()
+            img.src = canvas.toDataURL();
+            img.onload = function () {
+                that.ffmpegRemoveWater(that, img)
+            }
+        }
+    }
+
+    const canvas = new Canvas("canvas");
+
+
+    const removeWater = async () => {
+        await canvas.remove_water(event)
+    }
+
+    function openAddFile(callback) {
+        var inputObj = document.createElement('input');
+        inputObj.addEventListener('change', () => {
+            callback(event)
+        }, {once: true});
+        inputObj.type = 'file';
+        {#inputObj.accept = 'image/*';#}
+        {#inputObj.id = id;#}
+        inputObj.click();
+    }
+
+    function message(value) {
+        document.getElementById('message').innerHTML = value;
+    }
+
+    function download() {
+        // 创建一个 a 标签，并设置 href 和 download 属性
+        const el = document.createElement('a');
+        // 设置 href 为图片经过 base64 编码后的字符串，默认为 png 格式
+        el.href = canvas.image.src
+        el.download = canvas.file.name;
+        // 创建一个点击事件并对 a 标签进行触发
+        const event = new MouseEvent('click');
+        el.dispatchEvent(event);
+    }
+
+
+    window.onload = async () => {
+        message("正在加载处理模块...")
+        await ffmpeg.load();
+        message("请添加图片")
+    }
+
+    var Module = {
+        // https://emscripten.org/docs/api_reference/module.html#Module.onRuntimeInitialized
+        async onRuntimeInitialized() {
+
+
+        }
+    };
+</script>
+
+{#<script async src="/static/opencv/opencv.js" type="text/javascript"></script>#}
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>免费在线二维码生成器</title>
+    <meta name="keywords"
+          content="二维码,二维码生成器, 在线二维码生成器, 免费二维码生成器, 在线二维码, 二维码创建器, 二维码在线服务网站, 二维码解决方案, 搞定二维码, 二维码,二维码营销,二维码图片,二维码制作,二维码名片,QR code,二维码是什么,二维码生成,二维码论坛,二维条码,微信二维码, 条形码, 条形码生成器, 在线条形码生成器, 免费条形码生成器, 免费在线条形码生成器">
+    <meta name="description" content="在线二维码生成器条形码生成器是全国最好二维码条形码在线生成器网站。在线二维码条形码生成器是一个免费, 在线, 实时生成二维码条形码。它是功能强大的免费二维码和条形码解决方案,现在开始创建你的二维码条形码吧!">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"/> <!-- 'nano' theme -->
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+        .layui-form input[type=radio] {
+            display: inline-block;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label {
+            background-color: #5FB878;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label .circle {
+            left: 64px;
+        }
+
+        div.checkbox .label {
+            width: 93px;
+            line-height: 30px;
+            margin: 4px 0;
+        }
+
+        .layui-input-block {
+            line-height: 38px;
+        }
+
+        .pickr .pcr-button {
+            border: 1px solid black;
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+
+<div class="es-content" id="app">
+
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>二维码生成器</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/code/codeTab.html" %}
+                <div class="layui-tab-content">
+
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">原始数据</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" v-model="text" required lay-verify="required" placeholder="二维码数据" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">容错率</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="align" v-model="correctLevel" value="1" title="L">7%
+                                <input type="radio" name="align" v-model="correctLevel" value="0" title="M">15%
+                                <input type="radio" name="align" v-model="correctLevel" value="3" title="Q">25%
+                                <input type="radio" name="align" v-model="correctLevel" value="2" title="H" checked>30%
+                            </div>
+
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">前景色</label>
+                            <div class="layui-input-block">
+                                <div class="foregroundColor" id="foregroundColor"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">背景色</label>
+                            <div class="layui-input-block">
+                                <div class="backgroudColor" id="backgroudColor"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">宽度</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="title" v-model="width" placeholder="宽度" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">高度</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="title" v-model="height" placeholder="高度" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">结果</label>
+                            <div class="layui-input-block">
+                                <div id="qrcode" class="qrcode top_20"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" type="button" @click="run">立即生成</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线二维码工具</h2>
+                        <br>
+                        <p>1. QR码是一种条形码，设计用于智能手机和其他包含相机的设备。什么是QR码！？
+                            QR或快速响应代码是可以使用智能手机和专用QR读取设备读取的二维条形码，可以直接链接到文本，电子邮件，网站，电话号码等等！您甚至可能通过扫描QR码进入了该网站！</p>
+                        <p>2. QR代码在日本和整个东部地区非常庞大，并且正在缓慢地开始在西方变得司空见惯。很快，您将在产品包装，商店展示，印刷和广告牌广告以及电子邮件和网站上看到QR码。</p>
+                        <p>3. QR码的使用范围确实很大，尤其是在产品，品牌，服务以及您可能想到的其他产品的营销和广告上。 </p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 扩展知识
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">可以将什么编码为QR码？</h2>
+                        <br>
+                        <p>
+                            从最简单的意义上讲，QR代码是可以脱机使用的基于图像的超文本链接–可以将任何URL编码为QR代码，因此，基本上，由于扫描条形码，可以自动打开任何网页。如果要鼓励某人喜欢您的Facebook页面–将您的Facebook个人资料页面作为URL。希望您的视频流行起来-在您的QR码中编码URL。选项是无止境的。</p>
+                        <p>除了网站URL，QR码还可以包含电话号码-因此，在扫描时，它会提示用户拨打特定号码。同样，您可以编码SMS文本消息，V卡数据或仅纯字母数字文本。智能手机或2D条形码读取设备将自动知道要使用哪个应用程序打开QR码中嵌入的内容。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/qrcode.min.js"></script>
+{#<script src="/static/other/jquery.js"></script>#}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                text: "Hello world",
+                width: 100,
+                height: 100,
+                foregroundColor: "#FFFFFF",//foregroundColor
+                backgroudColor: "#000000",//backgroudColor
+                // useSVG: true
+                correctLevel: 2,
+
+                fg_picker: undefined,
+                bg_picker: undefined,
+                swatches: [
+                    'rgba(244, 67, 54, 1)',
+                    'rgba(233, 30, 99, 0.95)',
+                    'rgba(156, 39, 176, 0.9)',
+                    'rgba(103, 58, 183, 0.85)',
+                    'rgba(63, 81, 181, 0.8)',
+                    'rgba(33, 150, 243, 0.75)',
+                    'rgba(3, 169, 244, 0.7)',
+                    'rgba(0, 188, 212, 0.7)',
+                    'rgba(0, 150, 136, 0.75)',
+                    'rgba(76, 175, 80, 0.8)',
+                    'rgba(139, 195, 74, 0.85)',
+                    'rgba(205, 220, 57, 0.9)',
+                    'rgba(255, 235, 59, 0.95)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                components: {
+                    preview: true,
+                    hue: true,
+                    interaction: {
+                        input: true,
+                        clear: true,
+                        save: true
+                    }
+                }
+            };
+        },
+        methods: {
+            run() {
+                {#console.log(this.backgroudColor, this.foregroundColor)#}
+                document.getElementById("qrcode").innerHTML = "";
+                let qrcode = new QRCode(document.getElementById("qrcode"), {
+                    width: this.width,
+                    height: this.height,
+                    colorDark: this.backgroudColor,
+                    colorLight: this.foregroundColor,
+                    correctLevel: parseInt(this.correctLevel)
+                });
+                qrcode.makeCode(this.text);
+            },
+
+        },
+        mounted: function () {
+            this.fg_picker = Pickr.create({
+                el: "#foregroundColor",
+                default: this.foregroundColor,
+                theme: 'nano', // or 'monolith', or 'nano'
+                lockOpacity: true,
+                swatches: this.swatches,
+                components: this.components
+            });
+            this.fg_picker.on('save', (color, instance) => {
+                this.foregroundColor = color.toHEXA().toString()
+            })
+
+
+            this.bg_picker = Pickr.create({
+                el: "#backgroudColor",
+                default: this.backgroudColor,
+                theme: 'nano', // or 'monolith', or 'nano'
+                lockOpacity: true,
+                swatches: this.swatches,
+                components: this.components
+            });
+            this.bg_picker.on('save', (color, instance) => {
+                this.backgroudColor = color.toHEXA().toString()
+            })
+
+            this.run()
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

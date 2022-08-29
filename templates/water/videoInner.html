@@ -1,0 +1,256 @@
+<script src='/static/js/ffmpeg.min.js'></script>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%
+    }
+
+    div.es-content {
+    {#width: 80%;#}{#display: flex;#} display: none;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    {#@media all and (max-width: 600px) {#}
+    {#    div.es-content {#}
+    {#        width: 100%;#}
+    {#    }#}
+    {# }#}
+
+    .top {
+        width: 100%;
+        font-size: 0.3rem;
+        line-height: 45px;
+        padding: 0 6%;
+        color: red;
+        text-align: center;
+        align-items: center;
+        z-index: 999;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 16%);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .middle {
+        flex: 1;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        max-width: 600px;
+    }
+
+    .middle video {
+        width: 100%;
+    {#height: fit-content;#} height: -webkit-fill-available;
+    }
+
+    .bottom {
+        line-height: 50px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: 0.3rem;
+        padding: 0 6%;
+        color: black;
+        text-align: center;
+        align-items: center;
+        z-index: 999;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 16%);
+    }
+
+    div.bottom button {
+        padding: 0 10px;
+    }
+
+    div.bottom button:nth-child(1) {
+        margin-right: 10px;
+    }
+
+    div.bottom button:nth-child(2) {
+        margin-left: 10px;
+    }
+
+    div.bottom .workbtn {
+        cursor: pointer;
+        padding: 0 30px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+        line-height: 46px;
+        height: 46px;
+        background: #55f;
+        border-radius: 30px;
+    }
+
+
+</style>
+<div class="es-content" id="app">
+    <div id="message" class="top">{[ message ]}</div>
+    <div class="middle">
+        <canvas id="canvas" width="200" height="100" style="border:1px solid #c3c3c3;" v-if="mode == 'select' ">
+            您的浏览器不支持 HTML5 canvas 标签。
+        </canvas>
+        <video id="output-video" :poster="image.src" controls v-if="mode == 'remove' "></video>
+    </div>
+    <div class="toolbar bottom">
+        <button @click="openAddFile(file_change)" class="workbtn">添加视频</button>
+        <button @click="remove_water" class="workbtn">去除水印</button>
+        {# <button @click="remove_water">替换水印</button>#}
+    </div>
+</div>
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/js/convas_tools.js"></script>
+<script src="/static/js/core-tools.js"></script>
+<script type="module">
+    const {createFFmpeg, fetchFile} = FFmpeg;
+    const ffmpeg = createFFmpeg({log: true});
+    const clientWidth = document.body.clientWidth
+    const clientHeight = document.body.clientHeight - 95
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                mode: "select", //头部提示信息 select: 框选，remove: 除水印
+                message: "欢迎使用", //头部提示信息
+                canvas: undefined,
+                context: undefined,
+                image: undefined, // 视频截图
+                width: undefined, // 视频截图缩放后的宽度
+                ratio: undefined, // 视频截图缩放比例
+                height: undefined, // 视频截图缩放后的高度
+                name: undefined, // ffmpeg使用
+                {#水印选区#}
+                water: {
+                    x: 0, //水印X坐标
+                    y: 0, //水印Y坐标
+                    width: 0, //水印宽度
+                    height: 0 //水印高度
+                }
+            }
+        },
+        mounted: function () {
+            {#let that = this#}
+            this.canvas = document.getElementById("canvas");
+            this.context = this.canvas.getContext("2d");
+
+            {#  水印位置 #}
+            MagicWand.init({
+                id: 'canvas',
+                eraserShape: 'circle',
+                eraserSize: '25',
+                recordFN: ({ImgBase64}) => {
+                    {#that.setElement({ImgBase64: ImgBase64})#}
+
+                }
+            })
+            let that = this
+            MagicWand.setModeSelect((x, y, width, height) => {
+                {#console.log(x, y, width, height, this.ratio)#}
+                this.water.x = parseInt(x / this.ratio)
+                this.water.y = parseInt(y / this.ratio)
+                this.water.width = parseInt(width / this.ratio)
+                this.water.height = parseInt(height / this.ratio)
+                this.context.drawImage(that.image, 0, 0, that.image.width, that.image.height);
+            })
+            this.start_animation()
+        },
+
+        methods: {
+            start_animation() {
+                {#   开机动画 #}
+                {#this.canvas.width = image.width;#}
+                {#this.canvas.height = image.height;#}
+                {#this.ratio = ratio;#}
+                {#this.context.drawImage(image, 0, 0, image.width, image.height);#}
+            },
+            async file_change({target: {files}}) {
+                const {name} = files[0];
+                this.name = name
+                this.message = '正在加载';
+                await ffmpeg.load();
+                this.message = '视频抽帧';
+                ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
+                await ffmpeg.run('-i', name, '-y', '-f', 'image2', '-ss', '2', '-vframes', '1', 'out.png');
+                this.message = '请框选水印位置';
+                const data = ffmpeg.FS('readFile', 'out.png');
+                let img = new Image()
+                this.image = img
+                let that = this
+                img.src = URL.createObjectURL(new Blob([data.buffer], {type: 'image/png'}));
+                img.onload = function () {//必须onload之后再画
+                    that.resizeImg(img)
+                }
+            },
+            resizeImg(image) {
+                /***
+                 screen_w = 410 screen_y = 614
+                 origin_w = 720   origin_h = 720
+                 target_w = 410   target_h = ?
+                 screen_w / origin_w  = target_h / origin_h
+                 */
+                let ratio = 1;
+                if ((image.width / clientWidth) > (image.height / clientHeight)) {
+                    ratio = clientWidth / image.width
+                    image.height = parseInt(ratio * image.height)
+                    image.width = clientWidth
+                } else {
+                    ratio = clientHeight / image.height
+                    image.width = parseInt(ratio * image.width)
+                    image.height = clientHeight
+                }
+                this.canvas.width = image.width;
+                this.canvas.height = image.height;
+                this.ratio = ratio;
+                this.context.drawImage(image, 0, 0, image.width, image.height);
+            },
+
+            async remove_water() {
+                if (this.water.x === 0 && this.water.y === 0) {
+                    this.message = '请框选水印位置';
+                    return
+                }
+                this.mode = "remove"
+                this.message = '正在移除水印，请稍等';
+
+                let that = this
+                CoreTool.proxyConsoleLog((value) => {
+                    that.message = value
+                })
+                let delogo = `delogo=x=${this.water.x}:y=${this.water.y}:w=${this.water.width}:h=${this.water.height}:show=0`
+                await ffmpeg.run('-i', this.name, '-vf', delogo, '-c:a', 'copy', 'output.mp4');
+
+                CoreTool.restoreConsoleLog()
+                this.message = '完成,下载请点击视频右下角三个点按钮';
+                const data = ffmpeg.FS('readFile', 'output.mp4');
+                const video = document.getElementById('output-video');
+                video.style.width = this.water.width
+                video.style.height = this.water.height
+                video.src = URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}));
+            },
+            async openAddFile(callback) {
+                var inputObj = document.createElement('input');
+                inputObj.addEventListener('change', async (e) => {
+                    await callback(e)
+                }, {once: true});
+                inputObj.type = 'file';
+                {#inputObj.accept = 'image/*';#}
+                {#inputObj.id = id;#}
+                inputObj.click();
+            },
+
+        }
+    };
+    var app = Vue.createApp(HelloVueApp)
+    app.mount("#app");
+</script>

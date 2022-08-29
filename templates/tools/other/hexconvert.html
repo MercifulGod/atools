@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线进制转换器</title>
+    <meta name="keywords" content="在线进制转换器">
+    <meta name="description"
+          content="在线进制转换器提供了二进制，八进制，十进制，十六进制等相互转换功能。如：二进制转换十进制 二进制转八进制 二进制转十六进制 八进制转十进制 八进制转换成十六进制 八进制转二进制 十进制转二进制 十进制转八进制 十进制转十六进制 十六进制转二进制 十六进制转八进制 十六进制转十进制 ……..">
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+
+    </style>
+  {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+
+
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>在线进制转换器</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/other/indexTab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-col-md12">
+                            <div class="radio-wrapper layui-form-item layui-form-text">
+                                <div><input type="radio" name="input" id="input_2" value="2" v-model="input_format"
+                                            checked>
+                                    <label for="input_2" class="option option-1">
+                                        <span>二进制</span>
+                                    </label></div>
+                                <div><input type="radio" name="input" id="input_8" value="8" v-model="input_format">
+                                    <label for="input_8" class="option option-2">
+                                        <span>八进制</span>
+                                    </label></div>
+                                <div><input type="radio" name="input" id="input_10" value="10" v-model="input_format">
+                                    <label for="input_10" class="option option-1">
+                                        <span>十进制</span>
+                                    </label></div>
+                                <div><input type="radio" name="input" id="input_16" value="16" v-model="input_format">
+                                    <label for="input_16" class="option option-2">
+                                        <span>十六进制</span>
+                                    </label></div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <input type="text" name="title" v-model="input" required lay-verify="required"
+                                       placeholder="请输入待转化数值" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="radio-wrapper layui-form-item layui-form-text">
+                                <div>
+                                    <input type="radio" name="output" id="output_2" value="2" v-model="out_format"
+                                           @onchange="run">
+                                    <label for="output_2" class="option option-1">
+                                        <span>二进制</span>
+                                    </label></div>
+                                <div>
+                                    <input type="radio" name="output" id="output_8" value="8" v-model="out_format"
+                                           @onchange="run">
+                                    <label for="output_8" class="option option-2">
+                                        <span>八进制</span>
+                                    </label></div>
+                                <div>
+                                    <input type="radio" name="output" id="output_10" value="10" v-model="out_format"
+                                           @onchange="run" checked>
+                                    <label for="output_10" class="option option-1">
+                                        <span>十进制</span>
+                                    </label></div>
+                                <div>
+                                    <input type="radio" name="output" id="output_16" value="16" v-model="out_format"
+                                           @onchange="run">
+                                    <label for="output_16" class="option option-2">
+                                        <span>十六进制</span>
+                                    </label></div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <input type="text" placeholder="转化结果" v-model="output" class="layui-input">
+                            </div>
+                        </div>
+
+
+                        <div class="layui-col-md12 layui-btn-group">
+                            <div class="layui-form-item layui-form-text">
+                                <button @click="run" type="button" class="layui-btn">转化</button>
+                                <button @click="input: ''; output: ''" type="button"
+                                        class="layui-btn  layui-btn-primary">
+                                    <i class="layui-icon layui-icon-delete  "></i>清除
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">在线进制转换工具</h2>
+                        <br>
+                        <p>1. 进制也就是进制位，对于接触过电脑的人来说应该都不陌生。</p>
+                        <p>2. 我们常用的进制包括：二进制、八进制、十进制与十六进制，它们之间区别在于数运算时是逢几进一位。</p>
+                        <p>3. 比如二进制是逢2进一位，十进制也就是我们常用的0-9是逢10进一位。 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 扩展知识
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">十进制与二进制之间的转换</h2>
+                        <br>
+                        <p>方法：除2取余法，即每次将整数部分除以2，余数为该位权上的数，而商继续除以2，余数又为上一个位权上的数，这个步骤一直持续下去，直到商为0为止，最后读数时候，从最后一个余数读起，一直到最前面的一个余数。下面举例：</p>
+                        <p>例：将十进制的168转换为二进制，得出结果 将十进制的168转换为二进制，（10101000）</p>
+                        <p>分析:</p>
+                        <p>第一步，将168除以2,商84,余数为0。</p>
+                        <p>第二步，将商84除以2，商42余数为0。</p>
+                        <p>第三步，将商42除以2，商21余数为0。</p>
+                        <p>第四步，将商21除以2，商10余数为1。</p>
+                        <p>第五步，将商10除以2，商5余数为0。</p>
+                        <p>第六步，将商5除以2，商2余数为1。</p>
+                        <p>第七步，将商2除以2，商1余数为0。</p>
+                        <p>第八步，将商1除以2，商0余数为1。</p>
+                        <p>第九步，读数，因为最后一位是经过多次除以2才得到的，因此它是最高位，读数字从最后的余数向前读，即10101000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+{#<script src="/static/other/jquery.js"></script>#}
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+{#<script src="/static/other/jquery.js"></script>#}
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                input_format: "10",
+                out_format: "10",
+                input: "",
+                output: "",
+            };
+        },
+        methods: {
+            run() {
+                this.input_change(this.input);
+            },
+            input_change(value) {
+                if (!value) return;
+                let code = value;
+                if (this.input_format === "2") {
+                    code = parseInt(this.input, 2).toString();
+                } else if (this.input_format === "8") {
+                    code = parseInt(this.input, 8).toString();
+                } else if (this.input_format === "16") {
+                    code = parseInt(this.input, 16).toString();
+                }
+
+                if (this.out_format === "2") {
+                    this.output = parseInt(code, 10).toString(2);
+                } else if (this.out_format === "8") {
+                    this.output = parseInt(code, 10).toString(8);
+                } else if (this.out_format === "16") {
+                    this.output = parseInt(code, 10).toString(16);
+                } else {
+                    this.output = code;
+                }
+            },
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

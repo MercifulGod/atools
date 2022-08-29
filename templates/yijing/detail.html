@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title> {{ data.items[0].title }}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="applicable-device" content="mobile">
+    <meta name="robots” content=" nofollow”/>
+    <meta content="always" name="referrer">
+    <style type="text/css">
+        {% include "yijing/style.min.css" %}
+        {% include "yijing/common.css" %}
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "yijing/header.html" %}
+<div class="bgff mt10">
+    <div class="m_details_article">
+        <h1 class="m_da_title">推背图第二十一象　甲申　兑下艮上　损</h1>
+        <p class="m_da_time"><span>2016-04-11 14:17:29</span><span>作者：网络</span></p>
+        <div class="m_da_content" id="detailCon">
+            {#            <p><br><img alt="推背图" src="/static/img/fs/1.jpeg"></p>#}
+            {{ data.items[0].detail|safe }}
+        </div>
+    </div>
+</div>
+<div class="m_pages_mod mt10 bgf9">
+    <a href="/fs/tuibeitu/{{ data.previous }}.html" class="m_pm_prev">上一篇</a>
+    <div class="m_pm_con"><span>第 {{ data.page }}/{{ data.total_pages }} 篇</span></div>
+    <a href="/fs/tuibeitu/{{ data.next }}.html" class="m_pm_next">下一篇</a>
+</div>
+
+{% include "yijing/footer.html" %}
+</body>
+</html>

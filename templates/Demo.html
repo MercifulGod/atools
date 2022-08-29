@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>录屏并下载</title>
+    <style type="text/css">
+        selection {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+<selection>
+    <button id="startScreen">开启录屏</button>
+    <button id="startCamera">开启摄像头</button>
+    <button id="stop">结束</button>
+    <button id="reply">回放</button>
+    <button id="download">下载</button>
+</selection>
+
+<script>
+    const player = document.querySelector('#player');
+    const recordPlayer = document.querySelector('#recordPlayer');
+    let blobs = [], mediaRecorder;
+
+    async function record(recordType) {
+
+        try {
+            const getMediaMethod = recordType === 'screen' ? 'getDisplayMedia' : 'getUserMedia';
+            const stream = await navigator.mediaDevices[getMediaMethod]({
+                video: {
+                    width: 500,
+                    height: 300,
+                    frameRate: 20
+                }
+            });
+            player.srcObject = stream;
+
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm'
+            });
+            mediaRecorder.ondataavailable = (e) => {
+                blobs.push(e.data);
+            };
+            mediaRecorder.start(100);
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+    const downloadBtn = document.querySelector('#download');
+    const startScreenBtn = document.querySelector('#startScreen');
+    const startCameraBtn = document.querySelector('#startCamera');
+    const stopBtn = document.querySelector('#stop');
+    const replyBtn = document.querySelector('#reply');
+
+    startScreenBtn.addEventListener('click', () => {
+        record('screen');
+    });
+    startCameraBtn.addEventListener('click', () => {
+        record('camera');
+    });
+
+    stopBtn.addEventListener('click', () => {
+        mediaRecorder && mediaRecorder.stop();
+    });
+
+    replyBtn.addEventListener('click', () => {
+        const blob = new Blob(blobs, {type: 'video/webm'});
+        recordPlayer.src = window.URL.createObjectURL(blob);
+        recordPlayer.play();
+    });
+
+    download.addEventListener('click', () => {
+        var blob = new Blob(blobs, {type: 'video/webm'});
+        var url = window.URL.createObjectURL(blob);
+
+        var a = document.createElement('a');
+        a.href = url;
+        a.style.display = 'none';
+        a.download = 'record.webm';
+        a.click();
+    });
+</script>
+</body>
+</html>

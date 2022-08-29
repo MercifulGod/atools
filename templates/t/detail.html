@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ obj.name }} - ZTF模版源码</title>
+    <meta name="keywords" content="{{ obj.name }},网站模版，网页模版，源码下载">
+    <meta name="description" content="{{ obj.name }},{{ obj.desc }},网站模版，网页模版，源码下载">
+    {#    <link rel="stylesheet" href="/static/layui/layui.css" media="all">#}
+    {#    <link rel="stylesheet" href="/static/layui/common.css" media="all">#}
+    <link href="/static/css/base.css" rel="stylesheet"/>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: "Microsoft Yahei", "Lucida Grande", "Lucida Sans Unicode",
+            Helvetica, Arial, Verdana, sans-serif;
+            box-sizing: border-box;
+        }
+
+        .outer_ontainer {
+            background-color: #f9f9f9;
+            width: 100%;
+        }
+
+        .i-icon {
+            font-size: 1.2rem;
+        }
+
+        .inner_content {
+            margin: 0 auto;
+            display: flex;
+            width: 90%;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-top: 6vh;
+        }
+
+        .left_layout {
+            width: 70%;
+            box-sizing: border-box;
+            border-radius: 4px;
+            box-shadow: 0 0 4px 2px #00000003;
+        }
+
+        .left_layout .title {
+            background: #fff;
+            position: relative;
+            color: rgba(0, 0, 0, 0.85);
+            border-bottom: 1px solid #f5f5f5;
+            padding: 25px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .left_layout .title em {
+            position: absolute;
+            font-style: normal;
+            top: 15px;
+            right: 21px;
+            display: inline-block;
+            width: 100px;
+            height: 36px;
+            border: 1px solid #e5e5e5;
+            border-radius: 40px;
+            background: #fafafa;
+            color: #a1a1a1;
+            text-align: center;
+            font-size: 13px;
+            line-height: 36px;
+            cursor: pointer;
+        }
+
+        .left_layout .title em i {
+            margin-right: 5px;
+        }
+
+        .left_layout .detail {
+            background: #fff;
+            width: 100%;
+            padding: 25px;
+            line-height: 25px;
+            color: rgba(0, 0, 0, 0.85);
+            font-size: 14px;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .left_layout .detail .tags {
+            margin-top: 30px;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .left_layout .detail .tags a {
+            float: left;
+            display: block;
+            overflow: hidden;
+            margin-right: 10px;
+            margin-bottom: 9px;
+            padding: 0 10px;
+            height: 30px;
+            border-radius: 4px;
+            background: #f3f4f9;
+            color: #999;
+            text-align: center;
+            font-size: 14px;
+            line-height: 30px;
+        }
+
+        .left_layout .detail img {
+            width: 100%;
+            height: auto;
+        }
+
+        .right {
+            width: 350px;
+            margin-left: 80px;
+        }
+
+        .right .view-down {
+            padding: 24px 24px 10px 24px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 0 4px 2px #00000003;
+            margin-bottom: 20px;
+        }
+
+        .right .view-down .data {
+            color: #838383;
+            text-align: center;
+            font-size: 15px;
+            height: 50px;
+        }
+
+        .right .view-down a {
+            background-color: gray;
+            margin-bottom: 18px;
+        }
+
+        .right .view-down a.active {
+            background-color: #3db060;
+        }
+
+        .right .view-down a.active:nth-child(1) {
+            background-color: #17a1ff;
+        }
+
+        .right .view-down a {
+            display: block;
+            position: relative;
+            width: 100%;
+            height: 44px;
+            border-radius: 4px;
+            margin-right: 12px;
+            font-size: 18px;
+            line-height: 44px;
+            font-weight: normal;
+            color: #fff;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+
+        .right .view-down .data span {
+            display: inline-block;
+            width: 31.33%;
+            line-height: 50px;
+        }
+
+        .right .view-down .data span i {
+            margin-right: 10px;
+        }
+
+        .use-tip {
+            margin: 50px 0 0 0;
+        }
+
+        .main-detail {
+            padding: 0 30px;
+        }
+
+        .like-work {
+            margin-bottom: 20px;
+            padding: 20px 20px 10px 20px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 0 4px 2px #00000003;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .like-work .title {
+            width: 100%;
+            height: 30px;
+            color: #333;
+            text-align: left;
+            font-size: 16px;
+            line-height: 30px;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+
+        .like-work ul {
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .like-work ul li {
+            width: 40.33%;
+            padding: 10px 5px 10px 5px;
+        }
+
+        .like-work ul li .pic {
+            display: block;
+            height: 80px;
+            overflow: hidden;
+            border: solid 1px #efefef;
+        }
+
+        .like-work ul li h2 {
+            font-size: 12px;
+            line-height: 24px;
+            height: 60px;
+            overflow: hidden;
+            padding: 5px 0 0 0;
+            font-weight: normal;
+        }
+
+        .like-work ul li h2 a {
+            color: #999;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+
+    </style>
+
+    {% include "innerHeader.html" %}
+
+</head>
+<body>
+{% include "header.html" %}
+<div class="outer_ontainer clear">
+    <div class="inner_content clear">
+        <!--左侧开始-->
+        <div class="left_layout">
+            <div class="title clear">
+                <h1>{{ obj.name }}</h1>
+                {#                <em class="button pins-fav-add" @click="handleCollect">#}
+                {#                    <svg class="icon" aria-hidden="true">#}
+                {#                        <use xlink:href="#icon-star2"></use>#}
+                {#                    </svg>#}
+                {#                    收藏#}
+                {#                </em>#}
+            </div>
+
+            <!--详情-->
+            <div class="detail">
+                <img referrerpolicy="no-referrer" src="{{ obj.cover_url }}" alt="{{ obj.name }}"/>
+                <!--介绍-->
+                <div class="desc">
+                    {{ obj.desc|safe }}
+                    {{ obj.content|safe }}
+                </div>
+                <!--标签-->
+                <div class="tags">
+                    <h3>相关标签</h3>
+                    <div class="tag-list clear">
+                        {% for o  in obj.tags %}
+                            <a href="/t?tag={{ o.id }}">{{ o.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!--详情描述-->
+                <!-- <div class="main-detail"></div> -->
+
+                <div class="use-tip">
+                    <h3>使用声明</h3>
+                    <p>
+                        1. 本文部分内容转载自其它媒体，但并不代表本站赞同其观点和对其真实性负责。<br/>
+                        2. 所有资源均来自互联网，本站不保证其可用性、完整性。<br/>
+                        3. 本站所有素材（未指定商用），仅限学习交流请勿用于商业用途。<br/>
+                        4. 若您需要商业运营或用于其他商业活动，请您购买正版授权并合法使用。<br/>
+                        5. 如果素材损害你的权益请联系客服QQ：1942671783给予处理。
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!--右侧开始-->
+        <div class="right">
+            <!--演示下载-->
+            <div class="view-down">
+                {% if  obj.works_url %}
+                    <a rel="nofllow" target="_blank" class="view button active" href="{{ obj.works_url }}">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-yanjing"></use>
+                        </svg>
+                        查看演示
+                    </a>
+                {% else %}
+                    <a rel="nofllow" target="_blank" class="view button" href="#">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-yanjing"></use>
+                        </svg>
+                        查看演示
+                    </a>
+                {% endif %}
+
+
+                {% if  obj.download_url %}
+                    <a rel="nofllow" class="down button active" target="_blank" href="{{ obj.download_url }}">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-yunduanxiazai"></use>
+                        </svg>
+                        下载资源
+                    </a>
+                    <a rel="nofllow" class="down button active" target="_blank" href="{{ obj.download_url }}">
+                        提取码({{ obj.download_password }})
+                    </a>
+                {% else %}
+                    <a rel="nofllow" class="down button" target="_blank" href="#">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-yunduanxiazai"></use>
+                        </svg>
+                        下载资源
+                    </a>
+                {% endif %}
+
+                <div class="data clear">
+                    <span>
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-yunduanxiazai"></use>
+                        </svg>
+                        {{ obj.download_num }}
+                    </span>
+                    <span>
+                        <svg class="icon" aria-hidden="true"> <use xlink:href="#icon-yanjing"></use> </svg>
+                        {{ obj.views }}
+                    </span>
+                    <span>
+                        <svg class="icon" aria-hidden="true"><use xlink:href="#icon-star2"></use></svg>
+                        {{ obj.collect }}
+                    </span>
+                </div>
+            </div>
+
+            <!--作者其他素材-->
+            {#  <CardImgcard :value="related?.data"/>#}
+            <!-- 相关作品 -->
+            <div class="like-work">
+                <div class="title">推荐下载</div>
+                <ul>
+                    {% for o in view_more %}
+                        <li>
+                            <a rel="nofllow" class="pic" href="/t/{{ o.id }}">
+                                <img referrerpolicy="no-referrer" src="{{ o.cover_url }}" alt="{{ o.name }}"/>
+                            </a>
+                            <h2 class="text">
+                                <a rel="nofllow" href="/t/{{ o.id }}" title="{{ o.name }}">{{ o.name }}</a>
+                            </h2>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<script src="/static/font/iconfont.js"></script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://www.qtool.net/imgmatting -->
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link REL="SHORTCUT ICON" href="/favicon.ico"/>
+    <meta name="csrf-token" content="jaskdfjsakjdflksajdlfkaskdlfsds"/>
+    <title>在线抠图工具-批量在线去背景-抠图-在线ps抠图-免费自动抠图软件-在线工具</title>
+    <meta
+            name="keywords"
+            content="抠图,在线抠图工具,人像抠图,批量抠图,在线抠图,ps抠图,背景变为透明,证件抠图,抠像处理"
+    />
+    <meta
+            name="description"
+            content="本工具可以在线对多张图片进行智能抠像处理,可批量自动抠图,背景变为png透明,提供免费在线抠图工具和在线ps抠图软件，无需下载 Photoshop软件即可实现在线抠图及图片处理，支持智能抠图、钢笔抠图、矩阵抠图、拖选抠图、橡皮擦图、图案抠图、图片压缩、图片格式转换、证件照换底色、图片换背景，操作简单，轻松实现PS效果，3步完成批量抠图、商品抠图、人像抠图高清图片处理等功能。"
+    />
+    {#    <link rel="stylesheet" href="/static/css/base.css"/>#}
+    <style>
+        {% include "tools/snippet/app.css" %}
+        {% include "components/common.css" %}
+
+        .bg_45 {
+            background: #45c4e7;
+            padding: 150px 0;
+        }
+
+        .h_42 {
+            font-size: 2.33em;
+            font-weight: 400;
+            color: #3d4351;
+        }
+
+        .no_down_reg {
+            font-size: 1.05em;
+            color: #000;
+            opacity: .4;
+            text-align: center;
+            margin-top: 1.3em;
+        }
+
+        .btm_enter_app {
+            display: block;
+            text-align: center;
+            border-radius: 0.444em;
+            border: 1px solid #fff;
+            text-decoration: none;
+            font-size: 1em;
+            width: 13.66em;
+            height: 3em;
+            line-height: 3em;
+            color: #fff;
+            margin: 2.17em auto 0;
+            transition: all .3s;
+            -moz-transition: all .3s;
+            -webkit-transition: all .3s;
+            -o-transition: all .3s;
+        }
+
+        .info_card:hover > button {
+            --tw-bg-opacity: 1;
+            --tw-text-opacity: 1;
+            background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+            width: 6.25rem;
+            color: rgba(255, 255, 255, var(--tw-text-opacity));
+
+        }
+
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body class="font-sans antialiased text-sm text-gray-500 min-w-1000">
+<div id="app">
+    <header class="flex h-16 fixed top-0 left-0 right-0 z-50 border-b bg-opacity-10 text-white border-opacity-0">
+        <div class="ml-6 mr-18">
+            <a href="/">
+
+            </a>
+        </div>
+        <div class="flex items-center flex-1">
+                <span class="inline-block mr-12">
+                    <a href="https://ztf.net.cn/koutu.html" aria-current="page">首页</a>
+                </span>
+            <span class="inline-block mr-12">
+                    <span class="flex items-center opacity-90 cursor-pointer hover:opacity-100 hover:font-bold">
+                         <a href="https://ztf.net.cn/editor/" aria-current="page">设计模板</a>
+                    </span>
+                </span>
+            <span class="inline-block mr-12">
+                    <span class="flex items-center opacity-90 cursor-pointer hover:opacity-100 hover:font-bold">
+                         <a href="https://ztf.net.cn/editor/" aria-current="page">抠图换背景</a>
+
+                    </span>
+                </span>
+            <span class="inline-block mr-12">
+                    <span class="flex items-center opacity-90 cursor-pointer hover:opacity-100 hover:font-bold">
+                          <a href="https://ztf.net.cn/editor/" aria-current="page">美化图片</a>
+{#                        <svg width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"#}
+{#                             class="transform duration-300 rotate-90"#}
+{#                             :class="open ? &#39;-rotate-90&#39; : &#39;rotate-90&#39;">#}
+{#                            <use xlink:href="/images/icon.svg#chevron-right-outline"></use>#}
+{#                        </svg>#}
+                    </span>
+                </span>
+        </div>
+        <div class="flex items-center justify-end">
+                <span class="w-5 h-5 mr-8 inline-block opacity-90 cursor-pointer hover:opacity-100">
+{#                    <svg width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false">#}
+{#                        <use xlink:href="/images/icon.svg#image-tools"></use>#}
+{#                    </svg>#}
+                </span>
+            <div class="mr-6">
+                <div class="user">
+                    <span class="hidden"></span>
+                    <div class="opacity-90 cursor-pointer hover:opacity-100 hover:font-bold">
+                        <a href=" https://ztf.net.cn/" aria-current="page">登录/注册</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="banner text-white bg-gray-100">
+        <div class="banner-main relative">
+            <div class="image-container h-145"
+                 style="background-color: #1a53eb;background-image: url(/static/img/tools/001.jpeg);background-size: auto;background-repeat: no-repeat">
+                {#  clip-path:polygon(0 0,100% 0,100% 100%,10% 100%,0 50% );  #}
+                {#                  <img src="/static/img/tools/001.jpeg" alt="在线照片编辑，手机P图"  class="w-full h-full object-cover">#}
+            </div>
+            <div class="banner-upload absolute top-36 desktop:top-48" style="left: calc(50% + 92px)">
+                <h2 class="mb-5 desktop:mb-7 text-5xl desktop:text-6xl font-bold">在线删除图片背景</h2>
+                <h3 class="mb-20 desktop:mb-25 text-xl desktop:text-2xl">更简单，更准确。</h3>
+                <div class="banner-upload-btns flex mb-6 ">
+                    <label for="file-picker">
+                        <div class="upload-btn flex justify-center items-center w-52 desktop:w-64 h-14 desktop:h-16 bg-white rounded cursor-pointer text-blue-600 hover:-translate-y-1px duration-200">
+                            {#                            <svg width="18" height="18" fill="currentColor" aria-hidden="true" focusable="false"#}
+                            {#                                 class="mr-3.5">#}
+                            {#                                <use xlink:href="/images/icon.svg#image-upload"></use>#}
+                            {#                            </svg>#}
+                            <span class="font-semibold text-base">
+                                 <a href="https://ztf.net.cn/editor/" aria-current="page">立即开始</a>
+                               </span>
+                        </div>
+                        <input type="file" hidden="hidden" accept="image/jpg, image/jpeg, image/png" multiple="multiple"
+                               class="file-picker" id="file-picker">
+                    </label>
+                    <button class="w-50 h-14 desktop:h-16 ml-4 opacity-90 border border-white rounded border-opacity-30 hover:opacity-100 hover:border-opacity-100 hover:-translate-y-1px duration-200">
+                        <span class="font-bold">
+                            <a href="https://ztf.net.cn/editor/" aria-current="page">试试样片</a>
+                        </span>
+                    </button>
+                </div>
+                <p class="leading-6">支持多张图片同时上传, 支持拖拽或粘贴图片
+                    <span class="inline-block w-10 leading-6 mx-1.5 text-xs text-center rounded-sm bg-black bg-opacity-10 transform scale-83">ctrl</span>
+                    +
+                    <span class="inline-block w-10 leading-6 mx-1.5 text-xs text-center rounded-sm bg-black bg-opacity-10 transform scale-83">V</span>
+                </p>
+            </div>
+            <div class="banner-perduct flex justify-around py-4">
+                <a href="https://ztf.net.cn/editor/" target="_blank"
+                   style="background: #fff url(/static/img/tools/wine.jpeg) no-repeat right;background-size: contain;"
+                   class="info_card relative box-border flex-1 h-72 pt-6 pl-6 ml-4 leading-none bg-white rounded cursor-pointer hover:-translate-y-1 hover:shadow-xl duration-200">
+                    <h4 class="mb-3 text-3xl font-bold text-gray-700">商品</h4>
+                    <h5 class="text-base text-gray-500 mb-10">电商抠图神器</h5>
+                    <button class="relative h-9 overflow-hidden flex justify-center items-center text-xs whitespace-nowrap rounded-full cursor-pointer z-10 duration-300 w-9 bg-gray-100 text-gray-400">
+                        <p class="flex items-center">
+                            <span class="once-use inline-block">立即使用</span>
+                        </p>
+                    </button>
+                </a>
+                <a href="https://ztf.net.cn/editor/" target="_blank"
+                   style="background: #fff url(/static/img/tools/ren01.webp) no-repeat right;background-size: contain;"
+                   class="info_card relative box-border flex-1 h-72 pt-6 pl-6 ml-4 leading-none bg-white rounded cursor-pointer hover:-translate-y-1 hover:shadow-xl duration-200"
+                   x-data="{hover: false}" @mouseover="hover = true " @mouseout="hover = false">
+                    <h4 class="mb-3 text-3xl font-bold text-gray-700">人像</h4>
+                    <h5 class="text-base text-gray-500 mb-10">十倍速提升你的效率</h5>
+                    <button class="relative h-9 overflow-hidden flex justify-center items-center text-xs whitespace-nowrap rounded-full cursor-pointer z-10 duration-300 w-9 bg-gray-100 text-gray-400"
+                            :class="hover ? &#39;w-25 bg-blue-500 text-white&#39; : &#39;w-9 bg-gray-100 text-gray-400&#39;">
+                        <p class="flex items-center">
+                            <span class="once-use">
+{#                               立即使用
+                            </span>
+                        </p>
+                    </button>
+                    {# <img src="/static/img/tools/ren01.jpeg" alt="批量扣人像" class="lazy absolute right-0 bottom-0 w-3/5">#}
+                </a>
+                <a href="https://ztf.net.cn/editor/" target="_blank"
+                   style="background: #fff url(/static/img/tools/IDPhoto.jpeg) no-repeat right;background-size: contain;"
+                   class="info_card relative box-border flex-1 h-72 pt-6 pl-6 ml-4 leading-none bg-white rounded cursor-pointer hover:-translate-y-1 hover:shadow-xl duration-200">
+                    <h4 class="mb-3 text-3xl font-bold text-gray-700">证件照换底色</h4>
+                    <h5 class="text-base text-gray-500 mb-10">在线照相馆，专业快捷</h5>
+                    <button class="relative h-9 overflow-hidden flex justify-center items-center text-xs whitespace-nowrap rounded-full cursor-pointer z-10 duration-300 w-9 bg-gray-100 text-gray-400">
+                        <p class="flex items-center">
+                            <span class="once-use">
+                                立即使用
+                            </span>
+                        </p>
+                    </button>
+                    {#  <img src="/static/img/tools/huandi001.jpeg" alt="证件照换底色" style="width: 50%;" class="lazy absolute right-0 bottom-0 w-2/3">#}
+                </a>
+            </div>
+        </div>
+    </section>
+    <div class="whyFormMe py-4">
+        <h3>在线消除背景工具，为什么选择我们？</h3>
+        <div class="theme_f_box ">
+            <img src="/static/img/tools/resource.svg" style="margin: 0 auto;">
+            <h4>丰富的资源</h4>
+            <p>众多剪贴画，形状，字体，背景等资源，让你尽情挥洒创意，创作出满意的作品。</p>
+        </div>
+        <div class="theme_f_box"><img src="/static/img/tools/easy.svg" style="margin: 0 auto;">
+            <h4>上手简单</h4>
+            <p>即使你没有任何经验，只需简单点击，就可以创作出漂亮的拼图作品。</p>
+        </div>
+        <div class="theme_f_box"><img src="/static/img/tools/register.svg" style="margin: 0 auto;">
+            <h4>无需注册</h4>
+            <p>免费试用，无需下载，无需注册，省时省力！</p>
+        </div>
+        <div class="theme_f_box"><img src="/static/img/tools/register.svg" style="margin: 0 auto;">
+            <h4>用户隐私</h4>
+            <p>不需要经过服务器，完全本地化完成</p>
+        </div>
+    </div>
+    <div class="bg_45 text-center ">
+        <h2 class="h_42 color_fff">现在开始在线消除图片背景吧</h2>
+        <p class="no_down_reg">免费试用，无需下载，无需注册！</p>
+        <a href="https://ztf.net.cn/" class="btm_enter_app">立即开始</a>
+    </div>
+</div>
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<script>
+    const HelloVueApp = {
+        data() {
+            return {
+                message: "Hello Vue!!"
+            };
+        },
+    };
+
+    Vue.createApp(HelloVueApp).mount("#app");
+    //   监听滑动条变化;
+    window.onscroll = function () {
+        let t = document.documentElement.scrollTop || document.body.scrollTop;
+        let header = document.querySelector("header");
+        if (t > 10) {
+            header.classList.remove(
+                "bg-opacity-10",
+                "text-white",
+                "border-opacity-0"
+            );
+            header.classList.add("bg-white", "text-gray-700");
+        } else {
+            header.classList.remove("bg-white", "text-gray-700");
+            header.classList.add(
+                "bg-opacity-10",
+                "text-white",
+                "border-opacity-0"
+            );
+        }
+    };
+
+
+    // 添加图片后保存到localStorage
+    // document.getElementById("file-picker").addEventListener("change", inputchange);
+    {#function inputchange(e) {#}
+    {#    let input = [];#}
+    {#    let array = e.target.files;#}
+    {#    array = Array.from(array);#}
+    {#    array.forEach((element) => {#}
+    {#        let reader = new FileReader();#}
+    {#        reader.readAsDataURL(element);#}
+    {#        reader.onload = function () {#}
+    {#            input.push({#}
+    {#                name: element.name,#}
+    {#                size: element.size,#}
+    {#                type: element.type,#}
+    {#                base64: this.result,#}
+    {#            });#}
+    {#        };#}
+    {#    });#}
+    {#    setTimeout(() => {#}
+    {#        localStorage.setItem("input", JSON.stringify(input));#}
+    {#        window.location.href = "/imgmatting/in-batch-goods";#}
+    {#    }, 500);#}
+    {# }#}
+</script>
+</body>
+</html>

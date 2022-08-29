@@ -1,0 +1,18 @@
+<ul class="layui-tab-title" :class="[morebar?'layui-tab-more':null ]">
+    <li :class="[tabIndex == 1?'layui-this':null]"><a href="/tools/urlEncode.html">URL编码/解码</a></li>
+    <li :class="{'layui-this':tabIndex == 2}"><a href="/tools/unicodeEncode.html">unicode编码</a></li>
+    <li :class="{'layui-this':tabIndex == 3}"><a href="/tools/utf8Encode.html">UTF-8编码</a></li>
+    <li :class="{'layui-this':tabIndex == 4}"><a href="/tools/asciiEncode.html">Ascii/Native编码互转</a></li>
+    <li :class="{'layui-this':tabIndex == 5}"><a href="/tools/enCaseEncode.html">英文字母大小写转换</a></li>
+    <span class="layui-unselect layui-tab-bar" lay-stope="tabmore" @click="morebar=!morebar" title="">
+        <i lay-stope="tabmore" class="layui-icon">
+            <svg t="1651560915987" class="icon"
+                 viewBox="0 0 1024 1024" version="1.1"
+                 xmlns="http://www.w3.org/2000/svg"
+                 p-id="4869" width="16" height="16"><path
+                    d="M513.728968 801.548285L13.63942599 301.254151c-18.242732-18.242732-18.106338-47.73799 0.30688701-65.844327a47.226511 47.226511 0 0 1 66.389904 0.272788l433.154061 433.358652L943.643665 235.784908A47.192413 47.192413 0 0 1 1010.033569 235.307528 46.30585 46.30585 0 0 1 1010.545048 301.151856l-496.81608 500.396429z"
+                    fill="" p-id="4870"></path>
+            </svg>
+        </i>
+    </span>
+</ul>

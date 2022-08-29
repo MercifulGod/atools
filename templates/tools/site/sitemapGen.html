@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>在线条形码生成器-条形码在线生成工具</title>
+    <meta name="keywords" content="条形码生成器,在线条形码生成器,查询条形码,条形码在线生成工具"/>
+    <meta name="description" content="在线条形码生成工具:可在线生成条形码扫描查询条形码,条形码生成器支持条形码生成,条形码用于一般商品扫描使用"/>
+    <link rel="stylesheet" href="/static/layui/layui.css" media="all">
+    <link rel="stylesheet" href="/static/layui/common.css" media="all">
+    {#    <link rel="stylesheet" href="/static/css/base.css" media="all">#}
+    <style type="text/css">
+        {% include "components/common.css" %}
+        {% include "components/code.css" %}
+
+        .layui-nav li.layui-nav-item > dl {
+            display: none;
+        }
+
+        .layui-nav li.layui-nav-item:hover::after {
+            content: '';
+            top: auto;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            background-color: #5FB878;
+            -webkit-transition: all .2s;
+        }
+
+        .layui-nav li.layui-nav-item:hover > dl {
+            display: block;
+        }
+
+        .layui-nav-child {
+            top: 60px;
+        }
+
+        .layui-form input[type=radio] {
+            display: inline-block;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label {
+            background-color: #5FB878;
+        }
+
+        div.checkbox input[type="checkbox"]:checked + .label .circle {
+            left: 64px;
+        }
+
+        div.checkbox .label {
+            width: 93px;
+            line-height: 30px;
+            margin: 4px 0;
+        }
+
+        .layui-input-block {
+            line-height: 38px;
+        }
+
+        div.layui-form-item {
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        div.layui-form-item .layui-form-label {
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0.375rem 0.75rem 0.375rem 0;
+            text-align: center;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        div.layui-form-item .layui-input-block {
+            padding-left: 0;
+            margin-left: 0;
+            flex: 1 1 auto;
+            width: auto;
+        }
+
+        @media all and (max-width: 500px) {
+            .layui-nav {
+                padding: 0;
+            }
+
+            .layui-btn + .layui-btn {
+                margin-left: 0px;
+            }
+
+            div.operation {
+                display: grid;
+            }
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+{% include "tools/snippet/header.html" %}
+
+
+<div class="es-content" id="app">
+    <div class="layui-container layui-anim ">
+        <div class="layui-row ">
+            <div class="layui-hide-xs layui-col-md12 cur-site">
+                <span class="layui-breadcrumb " lay-separator=">" style="visibility: visible;">
+                  <a href="/">首页</a><span lay-separator="">&gt;</span>
+                  <a href="javascript:void(0);"><cite>sitemap生成器</cite></a>
+                </span>
+                <hr class="layui-h layui-bg-black">
+            </div>
+        </div>
+        <div class="layui-row biz-json">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" overflow="">
+                {% include "tools/site/tab.html" %}
+                <div class="layui-tab-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站域名</label>
+                            <div class="layui-input-block">
+                                <input type="text" v-model="site" required lay-verify="required" placeholder="请输入网站域名"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" v-show="id">
+                            <label class="layui-form-label">正在爬取</label>
+                            <div class="layui-input-block">
+                                <input type="text" v-model="progress.url" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" v-show="id">
+                            <label class="layui-form-label">发现网址</label>
+                            <div class="layui-input-block">
+                                <input type="text" v-model="progress.find_num" placeholder="0" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" v-show="id">
+                            <label class="layui-form-label">生成日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" v-model="progress.datetime" placeholder="0" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" v-show="id">
+                            <label class="layui-form-label">耗时统计</label>
+                            <div class="layui-input-block">
+                                <input type="text" v-model="progress.time" placeholder="0" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text" v-show="show_sitemap || show_error">
+                            <textarea id="codeEditor" v-model="result" class="layui-textarea" placeholder=""></textarea>
+                        </div>
+                        <div class="layui-form-item operation">
+                            <button class="layui-btn" type="button" @click="run">立即生成</button>
+                            <button type="button" class="layui-btn layui-btn-primary" v-show="id" @click="downloadXML">下载sitemap.xml</button>
+                            <button type="button" class="layui-btn layui-btn-primary" v-show="id"
+                                    @click="result=progress.sitemap;show_sitemap=!show_sitemap">{[ show_sitemap?"隐藏":"查看" ]}sitemap.xml
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-primary" v-show="id"
+                                    @click="result=progress.error;show_error=!show_error">
+                                {[ show_error?"隐藏":"查看" ]}有错误网址
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 工具简介
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">网站地图在线生成器介绍</h2>
+                        <br>
+                        <p>1. 网站地图是一种格式化的XML文件（sitemap.xml）、HTML文件(sitemap.html)、TXT文件(sitemap.txt)或RSS文件(rss.xml)。</p>
+                        <p>2. 它用于把一个网站的所有（或大多数）网址集中在一个按一定的标准组织的地图文件中。以便于第三方（比如搜索引擎）、新闻订阅软件使用和更新。</p>
+                        <p>3. 目前的网站地图最流行的方式是使用sitemap.xml格式，它被主流搜索引擎（比如：百度、Google、Bing等）所使用。 </p>
+                        <p>4. 当网站有新网页时，把新的页面的URL地址更新到网站地图有利于搜索引擎的即时抓取。 </p>
+                        <p>5. 因此网站地图应该是一个随时保持更新的用于表达一个站点全部网页的文件。。 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12 ">
+                <blockquote class="layui-elem-quote es-tool-desc"><i class="layui-icon layui-icon-util"></i> 扩展知识
+                </blockquote>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">网站地图的使用方法</h2>
+                        <br>
+                        <p>
+                            网站地图文件使用最多的是向搜索引擎提交网站的网址列表。像百度在站长工具中，可以把自己的网站的sitemap.xml的网站地图URL提交上去，这样百度的蜘蛛就可以定期进行更新你的网站URL了。
+                            当然网站地图是用于表示你网站的全部页面的URL列表，因此网站管理员需要定期更新网站地图中的URL列表，以便于搜索引擎可以更快发现网站的新页面。</p>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <h2 style="color:#009688">Sitemap的重要性</h2>
+                        <br>
+                        <p>
+                            Sitemap是一个网站的全部URL列表，应该自动不定期更新这个列表，以使得使用sitemap的第三方搜索引擎、订阅软件可以即时发现你网站中的新的URL。
+                            Sitemap是SEO中的首要任务，网站站长应向搜索引擎定期提交更新的URL列表，这就是网站地图（Sitemap），以让搜索引擎可以全面获得网站的网址信息和即时更新信息。
+                            因此sitemap对于一个网站来说，它是十分重要的，同时定期更新网站地图，也是必不可少的环节。有些网站，内容增加了不少，但站点地图还是很老旧的，这样使用站点地图的软件就难以快速发现自己网站中的新增的网址。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/static/js/vue.global.prod.js"></script>
+<ul class="layui-fixbar" style="right: 50px; bottom: 100px;">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#393D49"></li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(57, 61, 73); display: none;">
+    </li>
+</ul>
+<script src="/static/other/jquery.js"></script>
+<script>
+
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                site: "https://ztf.net.cn/tools/qrcode.html",
+                id: "", //任务ID
+                show_sitemap: false,
+                show_error: false,
+                result: "",
+                progress: {
+                    url: "",
+                    find_num: 0,  //
+                    datetime: "",
+                    time: 0,
+                    error: "",
+                    sitemap: ""
+                },
+                timer: undefined, //定时器
+                options: {
+                    year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    hour12: false, timeZoneName: 'short'
+                },
+                start_time: "" // 开始执行时间
+            };
+        },
+        methods: {
+            run() {
+                fetch("/api/sitemap/gen?site=" + this.site).then(async res => {
+                    const {data, success} = await res.json()
+                    if (data.id) {
+                        {#console.time()#}
+                        this.start_time = window.performance.now();
+                        this.id = data.id
+                        this.timer = setInterval(this.getStatus, 1000);
+                    }
+                })
+            },
+            showSiteMap() {
+                this.show_result = !this.show_result
+            },
+            generateSiteMap(list_url) {
+                if (!list_url) return
+                let result = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">\n`
+                for (var i = 0; i < list_url.length; i++) {
+                    result += `<url>\n     <loc>${list_url[i]}</loc>\n      <priority>1.00</priority>\n</url>\n`
+                }
+                result += "</urlset>"
+                return result
+            },
+            downloadXML() {
+                {#console.log("downloadXML", this.progress.sitemap)#}
+                if (!this.progress.sitemap) return
+                let blob = new Blob([this.progress.sitemap], {type: 'text/xml;charset=utf-8'});
+                let url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = "sitemap.xml";
+                link.click();
+                //URL.revokeObjectURL() 静态方法用来释放一个之前已经存在的、通过调用 URL.createObjectURL() 创建的 URL 对象。当你结束使用某个 URL 对象之后，应该通过调用这个方法来让浏览器知道不用在内存中继续保留对这个文件的引用了。
+                window.URL.revokeObjectURL(url);
+            },
+            getStatus() {
+                fetch("/api/sitemap/gen?id=" + this.id).then(async res => {
+                    const {data, success} = await res.json()
+                    if (!success) {
+                        this.progress.url = "该任务出现问题，请联系管理员"
+                        clearInterval(this.timer)
+                        return
+                    }
+                    if (data && data.result) {
+                        // 有结果
+                        this.progress.url = "已完成"
+                        this.progress.error = data.error.join("\n")
+                        this.progress.sitemap = this.generateSiteMap(data.result)
+                        clearInterval(this.timer)
+                        return
+                    }
+                    // 返回状态
+                    var end = window.performance.now();
+                    this.progress.url = data.url
+                    this.progress.find_num = data.find_num
+                    this.progress.datetime = new Date().toLocaleString('en-US', this.options)
+                    this.progress.time = ((end - this.start_time) / 1000).toFixed(2) + "s";
+                })
+                {#if (typeof(EventSource) !== "undefined") {#}
+                {#    var source = new EventSource("/api/sitemap/gen?id=" + "26028ac9-585b-4ba9-a231-c3789b91833e");#}
+                {#    source.onmessage = function (event) {#}
+                {#        document.getElementById("result").innerHTML += event.data + "<br>";#}
+                {#    };#}
+                {# } else {#}
+                {#    document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";#}
+                {# }#}
+            }
+        },
+        mounted: function () {
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+

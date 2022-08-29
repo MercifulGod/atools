@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link REL="SHORTCUT ICON" href="/favicon.ico"/>
+
+    <title>无需上传文件的多功能图片批量处理程序v</title>
+    <meta name=description
+          content="在线多功能图片批量处理程序，无需上传文件,可转换格式webp转jpg、png无损压缩、svg压缩、heic转jpg、heif转jpg、tiff转jpg、hdr转jpg、png转jpg。指出输入png,jpg,jpeg,webp，可批量添加文字水印、批量调整图片的宽度和高度，修剪图片">
+    <meta name=keywords content="webp2jpg,psd转jpg,webp转jpg,png无损压缩,tiff转jpg,hdr转jpg,png转jpg,psd转png,批量添加图片水印,批量添加文字水印,批量调整图片尺寸,批量,修剪图片">
+
+
+    <script src="/static/font/iconfont.js"></script>
+    <style type="text/css">
+        body, button {
+            background-color: #202223;
+            color: #fff
+        }
+
+        .c_gray {
+            color: gray;
+        }
+
+        {#button.accordion {#}
+        {#    cursor: pointer;#}
+        {#    padding: 18px;#}
+        {#    width: 100%;#}
+        {#    border: none;#}
+        {#    text-align: left;#}
+        {#    outline: none;#}
+        {#    font-size: 15px;#}
+        {#    transition: 0.4s;#}
+        {# }#}
+        {##}
+        {#button.accordion.active, button.accordion:hover {#}
+        {#    background-color: #141414;#}
+        {# }#}
+        {##}
+        {#div.panel {#}
+        {#    padding: 0 18px;#}
+        {#    max-height: 0;#}
+        {#    overflow: hidden;#}
+        {#    transition: max-height 0.2s ease-out;#}
+        {# }#}
+
+        {# 布局 start#}
+        .layout_left_right {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+        }
+
+        {# 布局 end#}
+
+        .photoHub_file {
+            height: 100%;
+            max-height: 550px;
+            width: 90%;
+            padding: 76px 16px;
+            cursor: pointer;
+            text-align: center;
+            display: grid;
+        }
+
+        {#.photoHub_file .p2 span {#}
+        {#    text-align: center;#}
+        {#    display: inline-block;#}
+        {# }#}
+
+        .photoHub_file ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .photoHub_file ul li::marker {
+            content: "✔ ️";
+        }
+
+        .photoHub_file ul li {
+            font-size: 14px;
+            width: 23%;
+            min-width: 70px;
+            text-align: left;
+        }
+
+        .var_color {
+            color: #37d1c8;
+            font-weight: 900;
+            -webkit-background-clip: text;
+        }
+
+        .switch-button {
+            display: none; /*隐藏表单元素*/
+        }
+
+        .switch-button + label { /*+选择器选择紧跟“+”左边选择器的第一个元素*/
+            display: inline-block;
+            position: relative;
+            transition: all .3s;
+            width: 60px;
+            height: 25px;
+            border: 1px solid #999;
+            border-radius: 15px;
+            background-color: #ccc;
+        }
+
+        .switch-button:checked + label { /*选中表单后的样式，:checked表示checkbox被选中后的状态*/
+            background-color: lightgreen;
+        }
+
+        .switch-button + label::before { /*使用伪元素生成一个按钮*/
+            content: '';
+            display: block;
+            height: 25px;
+            width: 25px;
+            position: absolute;
+            border-radius: 25px;
+        {#left: 2px;#}{#top: 2px;#} background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+            transition: all .3s;
+        }
+
+        .switch-button:checked + label::before { /*checkbox选中时按钮的样式*/
+            left: 32px;
+            transition: all .2s linear;
+        }
+
+        :root {
+            --color: #37d1c8;
+            --color_sub: #2eb5de;
+            --color_opt: rgba(70, 212, 255, 0.1);
+            --white: #141414;
+        {#--border: #2a2b2c;#} --black: #fff;
+            --text: #f3f4f5;
+
+            --red: #ff477e;
+            --yellow: #ffbe33;
+            --green: #28b969;
+            --gray: #dfd2d2;
+
+            --color_sub_opt: rgba(176, 194, 255, 0.5176470588235295);
+            --red_sub: rgba(255, 65, 51, 0.07);
+            --yellow_sub: rgba(196, 152, 58, 0.12);
+            --green_sub: rgba(66, 167, 74, 0.12);
+            --white_opt: hsla(0, 0%, 100%, 0.8);
+            --black_opt: rgba(0, 0, 0, 0.07);
+        {#--text_sub: #7b7e80;#}{#--border: #2a2b2c;#}{#--border2: #2f3032;#}{#--border3: #2f3032;#}{#--bg: #fff;#}{#--bg2: #1b1b1c;#} --text_sub: #8c8d91;
+            --border: #2a2b2c;
+            --border2: #2f3032;
+            --border3: #2f3032;
+            --bg: #202122;
+            --bg2: #1b1b1c;
+
+            --bg_sub: #f3f4f5;
+            --bg_opt: rgba(229, 231, 233, 0.4);
+            --shadow: -6px 12px 28px 0px rgba(0, 0, 0, 0.14);
+        }
+
+        .operation {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid var(--border);
+            padding: 5px 10px 0 10px;
+        }
+
+        .vue-button.strong {
+            height: 32px;
+            border: none;
+            color: var(--white);
+            font-weight: 700;
+            background-color: var(--color);
+            background-image: linear-gradient(-34deg, var(--color_sub), var(--color));
+            box-shadow: -6.691px 7.431px 18px 0 var(--color_opt);
+        }
+
+        .vue-button {
+            height: 36px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            position: relative;
+            color: var(--text);
+            border-radius: 4px;
+            line-height: 14px;
+        }
+
+        .green_text {
+            color: var(--green);
+        }
+
+        ul.list li .butBox {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        ul.list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 10px;
+            border-bottom: 1px solid var(--border);
+
+        }
+
+        ul.list li .pic {
+            cursor: zoom-in;
+            flex-shrink: 0;
+            width: 80px;
+            height: 50px;
+            margin: 6px;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        ul.list li .text {
+            cursor: zoom-in;
+        }
+
+        ul.list li .text .t {
+            padding: 5px 0 0 0;
+            color: var(--text_sub);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        ul.list li .pic, ul.list li .pnt {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+
+        .icon.active {
+            font-weight: bold;
+        }
+
+        .listMode .errorPhoto.successPhoto {
+            color: var(--green);
+            background-color: var(--green_sub);
+        }
+
+        .listMode .errorPhoto {
+            color: var(--red);
+            background-color: var(--red_sub);
+            padding: 3px 10px;
+            margin: 10px;
+            border-radius: 4px;
+        }
+
+        .listMode .errorPhoto p {
+            margin: 0;
+        }
+
+        .endText {
+            color: var(--text_sub);
+            text-align: center;
+        }
+
+        ul.list li .pic img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .ellipsis01, .ellipsis02 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            margin: 0;
+        }
+
+        .ellipsis01 {
+            -webkit-line-clamp: 1;
+        }
+
+        ul.list li .text .t p {
+            border-radius: 100px;
+            line-height: 12px;
+            font-size: 12px;
+            padding: 2px 6px 2px 0;
+            margin: 0 10px 4px 0;
+        }
+
+        .configMore .cBox {
+            padding: 0 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .configMore .cBox p {
+            font-size: 12px;
+            line-height: 18px;
+            color: var(--text_sub);
+            padding-left: 13px;
+        }
+
+        .vue-button.bg {
+            background-color: var(--border3);
+            border: none;
+        }
+
+        .vue-input-div {
+            height: 42px;
+            border-radius: 4px;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+            border: none;
+        }
+
+        .vue-input-div input {
+            border-radius: 4px;
+            width: 100%;
+            height: 70%;
+            font-size: 16px;
+            font-weight: 700;
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0 0 0 6px;
+        }
+
+        .vue-input-div .unit {
+            flex-shrink: 0;
+            padding: 0 0 0 3px;
+            opacity: .6;
+            font-size: 12px;
+            transform: translateX(-27px);
+            width: 3px;
+        }
+
+        .vue-input-div input:focus {
+            border-color: var(--color);
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        /* 火狐浏览器 */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        :focus {
+            outline: none;
+            box-shadow: 10.876px 5.071px 18px 0 var(--color_sub_opt), -5.905px -6.792px 8px 0 var(--bg2);
+        }
+
+        .form-group h5 {
+            margin: 0;
+            color: var(--text_sub);
+            line-height: 16px;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .form-group .vue-input-div {
+            width: 75%;
+            display: inline-flex;
+        }
+
+        select.form-control {
+            width: 83%;
+            height: 31px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0 0 0 6px;
+        }
+
+        ul.watermark {
+            display: flex;
+            padding: 10px 5px;
+            background-color: var(--black_opt);
+            border-radius: 4px;
+            width: 100%;
+            margin: 0 0 0 0;
+            flex-direction: column;
+        }
+    </style>
+    <style type="text/css">
+        {#    添加文本水印    #}
+        {#:root {#}
+        {#    --color: #37d1c8;#}
+        {#    --color_sub: #2eb5de;#}
+        {#    --color_opt: rgba(70, 212, 255, 0.1);#}
+        {#    --white: #141414;#}
+        {#    --black: #fff;#}
+        {#    --text: #f3f4f5;#}
+        {##}
+        {#    --red: #ff477e;#}
+        {#    --yellow: #ffbe33;#}
+        {#    --green: #28b969;#}
+        {#    --gray: #dfd2d2;#}
+        {##}
+        {#    --color_sub_opt: rgba(176, 194, 255, 0.5176470588235295);#}
+        {#    --red_sub: rgba(255, 65, 51, 0.07);#}
+        {#    --yellow_sub: rgba(196, 152, 58, 0.12);#}
+        {#    --green_sub: rgba(66, 167, 74, 0.12);#}
+        {#    --white_opt: hsla(0, 0%, 100%, 0.8);#}
+        {#    --black_opt: rgba(0, 0, 0, 0.07);#}
+        {#    --text_sub: #7b7e80;#}
+        {#    --border: #2a2b2c;#}
+        {#    --border2: #2f3032;#}
+        {#    --border3: #2f3032;#}
+        {#    --bg: #fff;#}
+        {#    --bg_sub: #f3f4f5;#}
+        {#    --bg_opt: rgba(229, 231, 233, 0.4);#}
+        {#    --shadow: -6px 12px 28px 0px rgba(0, 0, 0, 0.14);#}
+        {# }#}
+
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+
+        .icon.active {
+            font-weight: bold;
+        }
+
+        .popupsBox {
+            width: 100vw;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            position: fixed;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popupsBox > .conLayout {
+            background-color: var(--bg);
+            padding: 30px;
+            min-width: 100px;
+            min-height: 100px;
+            max-height: 98vh;
+            overflow: auto;
+            border-radius: 8px;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--shadow);
+        }
+
+        :focus {
+            outline: none;
+            box-shadow: 10.876px 5.071px 18px 0 var(--color_sub_opt),
+            -5.905px -6.792px 8px 0 var(--bg2);
+        }
+
+        .popupsBox > .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-color: rgba(10, 10, 10, 0.9);
+        }
+
+        .popupsBox > .closeBut {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            right: 20px;
+            top: 15px;
+            background-color: var(--border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf {
+            width: 94vw;
+            max-width: 1600px;
+            min-height: 80vh;
+            display: flex;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .conBox {
+            width: 100%;
+            padding: 0 20px;
+        {#max-width: 430px;#}
+        }
+
+        @media (max-width: 1000px) {
+            .mkoufjqoamucujfflgndooejjkpiynzrf {
+                flex-direction: column;
+            }
+
+            .mkoufjqoamucujfflgndooejjkpiynzrf .conBox {
+                padding: 0;
+                max-width: 90vw;
+            }
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf b,
+        .mkoufjqoamucujfflgndooejjkpiynzrf p {
+            color: var(--text_sub);
+        }
+
+        .selectGroup {
+            z-index: 10;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .selectGroup .tile,
+        .selectGroup .tile ul {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .selectGroup .tile ul li {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: flex;
+        }
+
+        .selectGroup .tile .button {
+            background-color: var(--border2);
+        }
+
+        .button.current {
+            background-color: var(--color);
+            color: var(--white);
+            border: 0 solid var(--border);
+            font-weight: 900;
+        }
+
+        .button.noCurrent {
+            background-color: var(--white);
+            border: 1px solid var(--border);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            height: 38px;
+            font-size: 16px;
+            background-color: var(--white);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .current,
+        .var_color {
+            background-image: linear-gradient(-34deg, var(--color_sub), var(--color));
+        }
+
+        .current {
+            background-color: var(--color);
+            box-shadow: -6.691px 7.431px 18px 0 var(--color_opt);
+        }
+
+        button,
+        button .more {
+            border-radius: 4px;
+        }
+
+        .button span {
+            padding: 0 0 0 3px;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .mode {
+            padding: 10px 20px;
+            background-color: var(--white);
+            border-radius: 4px;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf b,
+        .mkoufjqoamucujfflgndooejjkpiynzrf p {
+            color: var(--text_sub);
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrfText textarea {
+            border: none;
+            background-color: transparent;
+            font-size: 22px;
+            color: var(--text);
+            border: 2px solid var(--border);
+            padding: 10px;
+            min-height: 120px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .botBar {
+            position: sticky;
+            bottom: -30px;
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--border);
+            padding: 10px;
+            z-index: 10;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .botBar .vue-button {
+            height: 40px;
+            padding: 0 10px;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .vue-button {
+            height: 30px;
+            padding: 0 5px;
+        }
+
+        .vue-button {
+            height: 36px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            position: relative;
+            color: var(--text);
+            border-radius: 4px;
+            line-height: 14px;
+        }
+
+        .vue-button i {
+            opacity: 0.7;
+            padding: 0 4px;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .conBox .set > div > div {
+            display: flex;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .picPos {
+            border: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            border-radius: 4px;
+            width: 200px;
+            margin-bottom: 20px;
+            padding: 5px;
+        }
+
+        .mkoufjqoamucujfflgndooejjkpiynzrf .picPos button {
+            width: 30%;
+            margin: 1%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 32px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .vue-input-range.isLeftRight {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        .vue-input-range {
+            position: relative;
+            z-index: 10;
+        }
+
+        .vue-input-range > div {
+            height: 42px;
+            border-radius: 4px;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .vue-input-range.isLeftRight > div.number input {
+            min-width: 80px;
+            margin-left: 12px;
+            height: 80%;
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .vue-input-range > div.number input {
+            border-radius: 4px;
+            width: 100%;
+            height: 70%;
+            font-size: 16px;
+            font-weight: 700;
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0 0 0 6px;
+        }
+
+        .vue-input-range > div input:focus {
+            border-color: var(--color);
+        }
+
+        .vue-input-range > div .unit {
+            flex-shrink: 0;
+            padding: 0 0 0 3px;
+            opacity: 0.6;
+            font-size: 12px;
+            transform: translateX(-27px);
+            width: 3px;
+            color: var(--text);
+        }
+
+        .vue-input-range .moreBox {
+            width: 100%;
+            min-width: 180px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            -webkit-appearance: none;
+            border: 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 1px; /*横条的高度*/
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none; /*number 按钮*/
+        }
+
+        select.form-control {
+            width: 83%;
+            height: 31px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0 0 0 6px;
+        }
+
+        /* input style end */
+
+        .popupsBox > .conLayout {
+            background-color: var(--bg);
+            padding: 30px;
+            min-width: 100px;
+            min-height: 100px;
+            max-height: 98vh;
+            overflow: auto;
+            border-radius: 8px;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--shadow);
+        }
+    </style>
+    {% include "innerHeader.html" %}
+</head>
+<body>
+
+<div class="layout_left_right" id="app">
+    <div class="popupsBox" v-show="isShowTextWin">
+        <div class="conLayout">
+            <div class="mkoufjqoamucujfflgndooejjkpiynzrf mkoufjqoamucujfflgndooejjkpiynzrfText">
+                <div class="pic">
+                    <p>水印查看文字预览</p>
+                    <canvas
+                            id="watermarkPreview"
+                            width="486"
+                            height="291"
+                            class="lower-canvas"
+                            style="width: 486px; height: 291.6px"
+                    ></canvas>
+                </div>
+                <div class="conBox">
+                    <div class="mode">
+                        <div class="set">
+                            <div>
+                                <p>内容 <i class="iconfont icon-download"></i></p>
+                                <textarea v-model="waterMark.text"></textarea>
+                            </div>
+                            <div>
+                                <p>字体大小</p>
+                                <div style="padding-bottom: 0px">
+                                    <div class="vue-input-range isLeftRight" style="width: 100%">
+                                        <div class="number">
+                                            <input
+                                                    type="number"
+                                                    min="3"
+                                                    max="100"
+                                                    step="1"
+                                                    placeholder=""
+                                                    style="padding-right: 30px"
+                                                    v-model="waterMark.fontSize"
+                                                    @change="changeWater()"
+                                            /><span class="unit">px</span>
+                                        </div>
+                                        <div class="moreBox left right">
+                                            <input
+                                                    type="range"
+                                                    min="3"
+                                                    max="100"
+                                                    step="1"
+                                                    v-model="waterMark.fontSize"
+                                                    @change="changeWater()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; margin-bottom: 15px">
+                                <button class="vue-button" :class="{'strong':waterMark.bold}"
+                                        @click="waterMark.bold=!waterMark.bold;changeWater()"
+                                        style="margin-right: 5px">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-zitijiacu"></use>
+                                    </svg>
+                                </button>
+                                <button class="vue-button" :class="{'strong':waterMark.italic}"
+                                        @click="waterMark.italic=!waterMark.italic;changeWater()"
+                                        style="margin-right: 5px">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-zitixieti"></use>
+                                    </svg>
+                                </button>
+                                <div class="backgroudColor" id="waterMarkColor"></div>
+                                <select class="form-control" style="width: 50%; height: 31px" v-model="waterMark.fontFamily" @change="changeWater()">
+                                    <option value="SimSun">宋体</option>
+                                    <option value="SimHei">黑体</option>
+                                    <option value="Microsoft Yahei">微软雅黑</option>
+                                    <option value="Microsoft JhengHei">微软正黑体</option>
+                                    <option value="KaiTi">楷体</option>
+                                    <option value="NSimSun">新宋体</option>
+                                    <option value="FangSong">仿宋</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <p>不透明度</p>
+                                <div>
+                                    <div class="vue-input-range isLeftRight" style="width: 100%">
+                                        <div class="number">
+                                            <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="1"
+                                                    step="0.1"
+                                                    placeholder=""
+                                                    style="padding-right: 30px"
+                                                    v-model="waterMark.alpha"
+                                                    @change="changeWater()"
+                                            /><span class="unit">%</span>
+                                        </div>
+                                        <div class="moreBox left right">
+                                            <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="1"
+                                                    step="0.1"
+                                                    v-model="waterMark.alpha"
+                                                    @change="changeWater()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>位置上下</p>
+                                <div>
+                                    <div class="vue-input-range isLeftRight" style="width: 100%">
+                                        <div class="number">
+                                            <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    placeholder=""
+                                                    style="padding-right: 30px"
+                                                    v-model="waterMark.top"
+                                                    @change="changeWater()"
+                                            /><span class="unit">%</span>
+                                        </div>
+                                        <div class="moreBox left right">
+                                            <input
+                                                    type="range"
+                                                    name="volume"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    v-model="waterMark.top"
+                                                    @change="changeWater()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>位置左右</p>
+                                <div>
+                                    <div class="vue-input-range isLeftRight" style="width: 100%">
+                                        <div class="number">
+                                            <input
+                                                    type="number"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    placeholder=""
+                                                    style="padding-right: 30px"
+                                                    v-model="waterMark.left"
+                                                    @change="changeWater()"
+                                            /><span class="unit">%</span>
+                                        </div>
+                                        <div class="moreBox left right">
+                                            <input
+                                                    type="range"
+                                                    name="volume"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    v-model="waterMark.left"
+                                                    @change="changeWater()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>旋转</p>
+                                <div>
+                                    <div class="vue-input-range isLeftRight" style="width: 100%">
+                                        <div class="number">
+                                            <input
+                                                    type="number"
+                                                    min="-180"
+                                                    max="180"
+                                                    step="1"
+                                                    placeholder=""
+                                                    style="padding-right: 30px"
+                                                    v-model="waterMark.rotate"
+                                                    @change="changeWater()"
+                                            /><span class="unit">%</span>
+                                        </div>
+                                        <div class="moreBox left right">
+                                            <input
+                                                    type="range"
+                                                    name="volume"
+                                                    min="-180"
+                                                    max="180"
+                                                    step="1"
+                                                    v-model="waterMark.rotate"
+                                                    @change="changeWater()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="botBar">
+                        <div></div>
+                        <button @click="addTextWaterMark" class="vue-button normal">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg"></div>
+        <div class="closeBut" @click="isShowTextWin=false">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-guanbi"></use>
+            </svg>
+        </div>
+    </div>
+    <div class="configMore ">
+        <div class="cBox" style="z-index: 20;">
+            <div class="conBox">
+                <p> 输出格式 </p>
+                <div class="form-group">
+                    <select class="form-control" style="width: 83%;height: 31px;" v-model="config.output_format">
+                        <option value="image/png">PNG</option>
+                        <option value="image/jpeg">JPEG</option>
+                        <option value="image/webp">WEBP</option>
+                    </select>
+                </div>
+            </div>
+            <div class="cBox" style="z-index: 19;">
+                <p> 尺寸(空为原始尺寸) </p>
+                <div class="form-group">
+                    <h5>宽度: </h5>
+                    <div class="vue-input-div">
+                        <input type="number" v-model="config.width" min="1" max="5000" step="5" placeholder="" style="padding-right: 30px;">
+                        <span class="unit">px</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h5>高度: </h5>
+                    <div class="vue-input-div">
+                        <input type="number" v-model="config.height" min="1" max="5000" step="5" placeholder="" style="padding-right: 30px;">
+                        <span class="unit">px</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cBox" style="z-index: 17;">
+                <p> 水印 </p>
+                <div class="conBox" style="z-index: 19;"><br>
+                    <button class="vue-button bg" style="min-width: 120px; margin-right: 22px;display: inline-block;">添加图片</button>
+                    <button @click="openTextWaterWindow()" class="vue-button bg" style="min-width: 120px; margin-right: 22px;display: inline-block;">
+                        添加文字
+                    </button>
+                </div>
+                <p> 文字 (1)</p>
+                <ul class="list watermark">
+                    <li v-for="(item, index) in textWaterMarkList" :key="index">
+                        <div class="pnt">
+                            <div class="pic"><img src="#" alt=""></div>
+                            <div class="text">
+                                <h5 class="ellipsis01"> {[ item.text ]} </h5>
+                                <div class="t"><p><b> {[ item.width ]} x {[ item.height ]} </b></p></div>
+                            </div>
+                        </div>
+                        <div class="butBox">
+                            <button class="vue-button border">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-shanchu"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="cBox" style="z-index: 14;">
+                <p> 自动下载 </p>
+                <div class="conBox" style="z-index: 19;">
+                    <div class="switch-wrapper">
+                        <input type="checkbox" class="switch-button" id="switch-button" v-model="config.autoDownload">
+                        <label for="switch-button"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="listMode" id="listMode" v-show="values.length!==0">
+            <div class="operation"><label for="photoHub_file">
+                <div class="vue-button normal strong" onclick="document.getElementById('upload').click()">选择图片
+                    <input type="file" id="upload" multiple style="display: none" @change="selectImg">
+                </div>
+            </label>
+{#                <button class="vue-button ">下载zip</button>#}
+{#                <button class="vue-button normal">一个一个下载</button>#}
+            </div>
+            <div class="errorPhoto successPhoto"><p> {[values.length]} <span> 文件处理成功，时间： {[ timeConsuming ]} s </span></p></div>
+            <ul class="list" style="list-style-type: none;">
+                <li v-for="(item, index) in values" :key="index">
+                    <div class="pnt">
+                        <div class="pic">
+                            <img :src="item.preview" alt="">
+                            <div class="h"><i class="iconfont icon-fullscreen"></i></div>
+                        </div>
+                        <div class="text">
+                            <p class="ellipsis01"> {[ item.name ]} </p>
+                            <div class="t">
+                                <p><b class="green_text">-{[ item.compress ]}%</b>
+                                    {[ item.originSize ]}
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-jiantou_xiangyou"></use>
+                                    </svg>
+                                    <span> {[ item.size ]}</span></p>&emsp;
+                                <p>{[ item.origin_format.slice(6) ]}
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-jiantou_xiangyou"></use>
+                                    </svg>
+                                    <span>{[ item.format.slice(6) ]}&emsp;</span></p>
+                                <p>{[ item.origin_width ]}x{[ item.origin_height ]}
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-jiantou_xiangyou"></use>
+                                    </svg>
+                                    <span>{[ item.width ]}x{[ item.height ]}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="butBox butBoxBase64" style="display: none">
+                        <button class="vue-button border"><span> Base64</span></button>
+                    </div>
+                    <div class="butBox">
+                        <button class="vue-button border">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#icon-jiantou_xiangxia"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            <div class="endText"> - 结束 -</div>
+        </div>
+
+        <div class="photoHub_file" id="photoHub_file" v-show="values.length===0" onclick="document.getElementById('upload1').click()">
+            <input type="file" id="upload1" multiple style="display: none" @change="selectImg">
+            <h1 style="text-align: center; font-size: 40px; line-height: 50px; padding: 0px 20px;">多功能图片转换器</h1>
+            <p><strong class="var_color"> 拖入或选择图片 or Ctrl+V </strong></p>
+            <p class="c_gray">支持输入格式</p>
+            <ul>
+                <li> jpg</li>
+                <li> png</li>
+                <li> webp</li>
+                <li> gif</li>
+                <li> psd/psb</li>
+                <li> heic/heif</li>
+                <li> avif</li>
+                <li> svg</li>
+                <li> ico</li>
+                <li> bmp</li>
+                <li> hdr</li>
+                <li> tif/tiff</li>
+            </ul>
+            <div class="tip c_gray">
+                <span>更多</span>
+                <div style="display: none">tga , xcf , miff , dcm , xpm , pcx , fits , ppm , pgm ,pfm , mng , dds , otb</div>
+            </div>
+
+            <p class="p2" style="width: 175px;text-align: left;margin: 0 auto;">
+                <span>推荐文件总数:</span><b> &lt; 1000</b><br>
+                <span>推荐文件大小:</span><b> &lt; 20Mb</b>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/vue.global.prod.js"></script>
+<script src="/static/font/iconfont.js"></script>
+{#<script src="/static/other/jquery.js"></script>#}
+<script src="/static/js/core-tools.js"></script>
+<script>
+
+    const HelloVueApp = {
+        delimiters: ['{[', ']}'],
+        data() {
+            return {
+                values: [],
+                config: {
+                    "autoDownload": false,
+                    "output_format": "image/jpeg",
+                    "quality": 1,
+                    "width": "",
+                    "height": "",
+                },
+                textWaterMarkList: [],
+                timeConsuming: 0,
+                isShowTextWin: false, // 是否开启添加水印弹窗
+                waterMark: {  // 添加文本水印窗口
+                    "text": "Hello world!", //水印文本
+                    "width": "",
+                    "height": "",
+                    "rotate": 0, //旋转角度
+                    "top": 30,  // 顶部距离
+                    "left": 30,  // 左边距离
+                    "fontSize": "30",
+                    "fontFamily": "SimSun",
+                    "alpha": 0.6, //透明度
+                    "italic": false, //斜体字
+                    "bold": false, //粗体
+                },
+                waterPicker: undefined,
+                swatches: [
+                    'rgba(244, 67, 54, 1)',
+                    'rgba(233, 30, 99, 0.95)',
+                    'rgba(156, 39, 176, 0.9)',
+                    'rgba(103, 58, 183, 0.85)',
+                    'rgba(63, 81, 181, 0.8)',
+                    'rgba(33, 150, 243, 0.75)',
+                    'rgba(3, 169, 244, 0.7)',
+                    'rgba(0, 188, 212, 0.7)',
+                    'rgba(0, 150, 136, 0.75)',
+                    'rgba(76, 175, 80, 0.8)',
+                    'rgba(139, 195, 74, 0.85)',
+                    'rgba(205, 220, 57, 0.9)',
+                    'rgba(255, 235, 59, 0.95)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                components: {
+                    preview: true,
+                    hue: true,
+                    opacity: true,
+                    interaction: {
+                        input: true,
+                        clear: true,
+                        save: true
+                    }
+                }
+            };
+        },
+        methods: {
+            /**
+             * 上传图片，并处理图片
+             */
+            selectImg(event) {
+                this.values = []
+                const t0 = Date.now()
+                for (var i = 0; i < event.target.files.length; i++) {
+                    processImg(event.target.files[i], (imgInfo) => {
+                        this.values.push(imgInfo)
+                        if (!this.config.autoDownload) return
+                        downloadByBlob(imgInfo.preview, imgInfo.name)
+                    }, this.config)
+                }
+                this.timeConsuming = Date.now() - t0
+            },
+
+            /**
+             * 文本水印发生改变，重绘
+             */
+            changeWater() {
+                this.previewWaterMark()
+            },
+            /**
+             * 打开添加文本水印的窗口
+             */
+            openTextWaterWindow() {
+                if (this.values.length < 1) {
+                    alert("请先添加图片")
+                    return
+                }
+                this.isShowTextWin = true
+                this.previewWaterMark()
+            },
+            /**
+             * 添加文本水印
+             */
+            addTextWaterMark() {
+                this.isShowTextWin = false;
+                console.log(this.waterMark);
+                this.textWaterMarkList.push(this.waterMark)
+            },
+            /**
+             * 预览文本水印
+             */
+            previewWaterMark() {
+                let canvas = document.getElementById('watermarkPreview')
+                let ctx = canvas.getContext("2d");
+
+                {#  上传的第一张作为演示 #}
+                let img = this.values[0];
+                let max_width = 600;
+                let width = img.origin_width > max_width ? max_width : img.origin_width;
+                let height = parseInt(width * img.origin_height / img.origin_width);
+                ctx.drawImage(img.file, 0, 0, width, height)
+                drawTextWater(canvas, [this.waterMark])
+            }
+        },
+        mounted: function () {
+        }
+    };
+    Vue.createApp(HelloVueApp).mount("#app");
+</script>
+</body>
+</html>
+
