@@ -23,7 +23,7 @@ class Action(str, Enum):
 
 
 class MaterialType(IntEnum):
-    codepin = 1
+    codepen = 1
     yuanma = 2  # 源码
 
 

@@ -20,7 +20,7 @@ async def init_sucai():
         sucai_list = json.load(f)
 
     # 素材页标签初始化
-    data = ["网页模版", "网页素材", "网页特效", "整站源码", "小程序源码", "CodePin"]
+    data = ["网页模版", "网页素材", "网页特效", "整站源码", "小程序源码", "CodePen"]
     for item in data:
         if not await Tag.filter(name=item, business_type=TagType.material).first():
             await Tag.create(name=item, business_type=TagType.material)
@@ -83,7 +83,7 @@ async def yuque_download_material(namespace="km8554", callback=None):
         yuanma_dict = json.load(f)
 
     async def update_tags(m, yuque_slug):
-        """更新下载材料分类和标签,  CodePin 目前只有一个标签【写死的】"""
+        """更新下载材料分类和标签,  CodePen 目前只有一个标签【写死的】"""
 
         category = yuanma_dict.get(yuque_slug, {}).get("category", "整站源码")
         doc_tags = yuanma_dict.get(yuque_slug, {}).get("tags", [])

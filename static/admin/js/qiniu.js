@@ -20,24 +20,38 @@ function qiniu_compress_upload(file, token, observer) {
     }
 
     let config = {
-        useCdnDomain: false,
-        region: qiniu.region.z2,
-        debugLogLevel: 'INFO'
+        checkByMD5: true,
+        checkByServer: true,
+        debugLogLevel: "INFO",
+        disableStatisticsReport: false,
+        forceDirect: false,
+        region: "z2",
+        retryCount: 6,
+        useCdnDomain: false
     };
     let putExtra = {
-        fname: "",
-        params: {},
-        mimeType: null
+        customVars: {}
     };
-    // console.log(options)
 
-    // URL.revokeObjectURL($(".distImage img").attr("src"));
-    // $(".distImage img").attr("src", URL.createObjectURL(data.dist))
-    qiniu.compressImage(file, options).then(data => {
-        const observable = qiniu.upload(data.dist, undefined, token, putExtra, config)
-        const subscription = observable.subscribe(observer) // 上传开始
-    }).catch(res => {
-        console.log(res)
-    })
+    // gif 无法压缩
+    if ("image/gif" === file.type) {
+        try {
+            const observable = qiniu.upload(file, undefined, token, putExtra, config)
+            const subscription = observable.subscribe(observer) // 上传开始
+        }
+        catch (err) {
+            console.log(err)
+        }
+
+    }
+    else {
+        qiniu.compressImage(file, options).then(data => {
+            const observable = qiniu.upload(data.dist, undefined, token, putExtra, config)
+            const subscription = observable.subscribe(observer) // 上传开始
+        }).catch(res => {
+            console.log(res)
+        })
+    }
+
 }
 

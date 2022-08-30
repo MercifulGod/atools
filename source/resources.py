@@ -156,7 +156,7 @@ class MaterialResource(Model):
         Field(
             name="_type",
             label="素材类型",
-            input_=inputs.RadioEnum(enums.MaterialType, default=enums.MaterialType.codepin),
+            input_=inputs.RadioEnum(enums.MaterialType, default=enums.MaterialType.codepen),
         ),
         Field(name="desc", label="描述", display=my_inputs.ListDisplay(), input_=my_inputs.Editor()),
         Field(

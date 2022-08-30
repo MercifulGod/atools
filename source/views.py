@@ -82,7 +82,7 @@ async def game_index(request: Request, pk: int = None):
     await obj.viewed()
     view_more = await Material.filter(is_delete=False).order_by("-views").limit(4)
 
-    if obj._type == MaterialType.codepin:
+    if obj._type == MaterialType.codepen:
         obj.html_str = re.sub("</script>", "<\/script>", obj.html_str)
         context = {"request": request, "obj": obj}
         return templates.TemplateResponse('t/onlinecode.html', context)
